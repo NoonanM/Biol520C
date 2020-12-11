@@ -86,6 +86,11 @@ $y_i = \beta_0 + \beta_1 \times x_{i} + \varepsilon_i \quad\quad \varepsilon_i \
 
 The diagonal in the variance-covariance matrix defines the variances. All 1s indicates homogeneity of variances. The off-diagonals define the co-variances and the 0s indicate independence. This standard format does not permit any covariance between the residuals, and violation of this assumption can bias parameter estimates and negatively impact our capacity to learn from our models. Correcting for autocorrelation `simply' involves identifying the autocorrelation structure of the residuals and modifying the variance-covariance matrix such that the off-diagonals $\neq$ 0.
 
+</br>
+<center>
+$V = \sigma^2 \underbrace{{\begin{bmatrix}1& \rho &\cdots & \rho \\ \rho & 1 & \cdots & \rho \\ \vdots &\vdots &\ddots &\vdots \\ \rho & \rho & \cdots &1 \end{bmatrix}}}_{\mathrm{correlation \, matrix}}$
+</center>
+</br>
 
 ### Identifying temporal autocorrelation
 
@@ -121,6 +126,12 @@ Note: The default residuals do not incorporate the correlation structure, which 
 
 The simplest case is when all the co-variances are constant, non-zero value (referred to as `compound symmetry'). With compound symmetric error structures the degree of correlation between residuals ($\rho$) is equal to $\rho=\frac{\theta}{\theta + \sigma^2}$.
 
+</br>
+<center>
+$V = \underbrace{{\begin{bmatrix}\theta + \sigma^2& \theta &\cdots & \theta \\ \theta & \theta + \sigma^2 & \cdots & \theta \\ \vdots &\vdots &\ddots &\vdots \\ \theta & \theta & \cdots &\theta + \sigma^2 \end{bmatrix}}}_{\mathrm{variance-covariance \, matrix}}$
+</center>
+</br>
+
 Compound symmetric errors can be applied via the `corCompSymm()` function from the `nlme` package.
 
 1. <ol>
@@ -137,6 +148,11 @@ Compound symmetric errors can be applied via the `corCompSymm()` function from t
 
 The first order auto-regressive (AR1) structure defines a correlation structure in which the degree of correlation between two observations is proportional to the relative amount of elapsed time. With AR-1 error structures the degree of correlation between a pair of residuals is defined as $\rho^{\vert t-s\vert}$, where $\vert t-s\vert$ is the absolute difference between the current time ($t$) and the previous time ($s$).
 
+</br>
+<center>
+$V = \sigma^2 \underbrace{{\begin{bmatrix}1& \rho & \rho^2 &\cdots & \rho^i \\ \rho & 1 & \rho & \ddots & \vdots \\ \rho^2 & \rho & 1 & \ddots & \rho^2 \\ \vdots &\ddots &\ddots &\ddots & \rho \\ \rho^1 & \cdots & \rho^2 & \rho &1 \end{bmatrix}}}_{\mathrm{correlation \, matrix}}$
+</center>
+</br>
 
 AR-1 errors can be applied via the `corAR1()` function from the `nlme` package.
 
