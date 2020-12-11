@@ -1,7 +1,7 @@
 name: "Course Website for Biol 520C"
 navbar:
   title: "Biol 520C"
-  left:
+  right:
     - text: "Home"
       href: index.html
     - text: "Practicals"

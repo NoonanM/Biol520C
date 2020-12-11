@@ -463,11 +463,7 @@ Hint: Using for loops that store values in a list is a straightforward approach 
 <h2>Temporal autocorrelation</h2>
 <p>Anything that causes some data points in a dataset to be more similar to each other than others can result in statistically detectable autocorrelation. Temporal autocorrelation is a phenomenon that occurs because events that occur close to each other in time tend to be more similar than events that occur further apart in time. This pattern can be found in many different situations, not only in biology but in any field where data are measured over time. As biologists we often find ourselves working in systems where the best (or at least the most pragmatic) way to understand what is going on is to collect data over time.</p>
 <p>To this end, standard linear regression models are of the form</p>
-</br>
-<center>
-<span class="math inline">\(y_i = \beta_0 + \beta_1 \times x_{i} + \varepsilon_i \quad\quad \varepsilon_i \sim \mathcal{N}(0,\, V) \quad\quad V = \sigma^2 {{\begin{bmatrix}1&amp; 0 &amp;\cdots &amp; 0 \\ 0 &amp; 1 &amp; \cdots &amp; 0 \\ \vdots &amp;\vdots &amp;\ddots &amp;\vdots \\ 0 &amp; 0 &amp; \cdots &amp;1 \end{bmatrix}}}\)</span>
-</center>
-<p></br></p>
+<pre class="math"><code>y_i = \beta_0 + \beta_1 \times x_{i} + \varepsilon_i \quad\quad \varepsilon_i \sim \mathcal{N}(0,\, V) \quad\quad V = \sigma^2 {{\begin{bmatrix}1&amp; 0 &amp;\cdots &amp; 0 \\ 0 &amp; 1 &amp; \cdots &amp; 0 \\ \vdots &amp;\vdots &amp;\ddots &amp;\vdots \\ 0 &amp; 0 &amp; \cdots &amp;1 \end{bmatrix}}}</code></pre>
 <p>The diagonal in the variance-covariance matrix defines the variances. All 1s indicates homogeneity of variances. The off-diagonals define the co-variances and the 0s indicate independence. This standard format does not permit any covariance between the residuals, and violation of this assumption can bias parameter estimates and negatively impact our capacity to learn from our models. Correcting for autocorrelation `simply’ involves identifying the autocorrelation structure of the residuals and modifying the variance-covariance matrix such that the off-diagonals <span class="math inline">\(\neq\)</span> 0.</p>
 </br>
 <center>
