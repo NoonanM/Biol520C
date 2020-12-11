@@ -18,7 +18,7 @@ This course combines lectures on theory and concepts with time practicing statis
 
 Learning Outcomes:
 
-*	Fit regression models via maximum likelihood
+* Fit regression models via maximum likelihood
 *	Interpret residuals to assess/improve a model’s fit
 *	Fit models with fixed and random effects
 *	Fit models with non-Gaussian error distributions
