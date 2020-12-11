@@ -1,0 +1,464 @@
+---
+title: "Practical 01 - An introduction to R as a programming language"
+#author: "Michael Noonan"
+output:
+  html_document:
+    css: tutorial.css
+    fig_caption: yes
+    highlight: textmate
+    theme: flatly
+    toc: yes
+    toc_float: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.width=6, fig.height=4)
+```
+This page was last updated on `r format(Sys.time(), '%B %d, %Y')`.
+
+* * *
+## Background
+Programming is a structured way of telling the computer what to do. A key advantage of `R` relative to other statistics packages (e.g., SPSS) is that it is also a full-featured programming language. This mean you can do far more than just statistics.
+
+There are many benefits of working in `R`, including:
+
+* It’s free
+* It’s open (anyone can build on it and  inspect every element)
+* It’s popular (which means that all main streams analytical methods are probably implemented, and there is a large, active support community)
+* You can carry out complex data manipulation
+* You can write your own statistical procedures
+* You can build and explore dynamic models of your specific study system instead of relying entirely on 'off-the-shelf' methods
+* You can easily retrace your steps and allow others to reproduce your work
+* You can keep your data, and data analysis separate which means you are less likely to experience irreparable data alteration and/or loss
+
+However, working with `R` is not without its downsides, including:
+
+* There’s a learning curve
+* Unlike point-and-click programs, `R` Doesn't guide you down an analytical path, so you need to know what tests to apply to each situation. In other words, it assumes you know where you want to go and gives you the tools to get there, but doesn't provide you with statistical guidance along the way.
+* Because of the popularity and open-source nature of `R`, package quality is highly variable. Anybody can make an `R` package and there is no quality control on whether it is doing anything meaningful under the hood. This means you need to be very careful with which packages you chose to use.
+
+
+In this practical you will be asked to:
+
+* Execute basic `R` commands
+* Apply built in functions
+* Write your own `R` functions
+* Import and inspect data sets
+* Subset elements of a data set
+
+
+* * *
+## Installing R
+In order to complete the practicals for this course you will need to install `R`, R Studio, and `rmarkdown`. If these are already installed on your computer, feel free to skip this section.
+
+You will first need to download and install the most recent version of `R`. The software is freely available from https://cran.r-project.org. Once complete, the installation process should provide you with a clickable icon that can be used to start the program. Run the program to ensure your installation ran through to completion without issue.
+
+After installing `R`, you are encouraged to install R Studio. While not strictly necessary, R Studio provides an enhanced interface that makes working with `R` significantly more user friendly. R Studio Desktop is freely available from https://rstudio.com/products/rstudio/download/.
+
+The final piece of software that is required for completing the practicals is `rmarkdown`. R Markdown documents weave together narrative text and code to produce formatted, fully reproducible outputs. If you are unfamiliar with R Markdown, a short tutorial is available from https://rmarkdown.rstudio.com/articles_intro.html
+
+R Markdown files are designed to be used with the `rmarkdown` package. `rmarkdown` comes installed with the R Studio, but you can also acquire `rmarkdown` from CRAN by entering the command (see below for more information on installing packages)
+
+`install.packages("rmarkdown")`
+
+
+
+* * *
+## Conceptual overview of R
+### Concept 1: Command line
+`R` is a command line program that takes in written commands and passes them to the computer to run. When you start R, the first thing you see is a command prompt `>`. This tells you that the program is waiting for a command. After entering a command, and issuing it by hitting ENTER, one of three things can happen:
+
+A correctly issued command will run through to completion
+```{r}
+2+2
+```
+
+An incomplete command will ask to be completed (indicated by a hanging + sign)
+
+`2+`
+
+`+`
+
+An incorrect command will return an error message
+```{r, error=TRUE}
+2+X
+```
+
+
+When entering commands, it is important to know that `R` will ignore any text that follows after a hash symbol `#`. This is a useful way for adding comments in an `R` script, or blocking out certain unwanted commands without deleting them outright.
+
+```{r, error=TRUE}
+The following text returns an error so the command underneath doesnt run
+2+2
+```
+```{r}
+#But the hash allows you to include readable text without generating errors
+#Allowing for code to be `commented` without issue
+2+2
+```
+
+
+### Concept 2: Procedural work flow
+When working in `R`, you issue statements that the program evaluates sequentially.
+
+```{r}
+#Statement 1
+2+2
+
+#Statement 2
+2-2
+```
+
+Statements spanning multiple lines use blocks denoted by `{}` to define where that statement’s code begins and ends
+
+```{r}
+#Statement 1
+2+2
+
+#Statement 2
+{2-2
+2/2
+  }
+```
+Note how only the last result of the blocked statement has been printed to the screen.
+
+### Concept 3: Variables
+Variables are just named pieces of the computer’s memory. You can name them almost anything, but names need to start with a letter. They can contain letters, numbers, `.`, or `_`, but can not be one of R’s reserved words/names/symbols. You can store values in variables (which stores them in the computer's memory), and use those values in later calculations. Variables are signed using the assignment operator `<-`. Variables are also case sensitive, which means that x is not the same as X.
+
+```{R}
+X <- 2+7
+
+Y <- FALSE
+
+pizza <- "tasty"
+```
+
+
+In `R`, vectors are fundamental to programming, and many programs you write will build up vectors of values. All elements of a vector must be of the same type: integers, real numbers, character strings, etc...
+
+```{R}
+Z <- c(1,2,3)
+```
+
+
+Variables can also be deleted (i.e., removed from the computer's memory) using the `rm()` function
+```{R, error = TRUE}
+Z
+rm(Z)
+Z
+```
+
+1. <ol> 
+* Calculate 10 minus 6 
+* Calculate 2 times 3 and store the results in a variable called 'x'
+* Calculate x/4 and store the results in a variable called 'y'
+* Calculate 2x plus y
+* Make a vector of length 5, call it anything you’d like
+* Comment every step with `#`
+</ol>
+
+```{R}
+```
+
+### Concept 4: Functions
+Functions are the core workhorses of the `R` environment. They are pieces of packaged code that take some input (the arguments) and return some output. `R` has many built-in functions: `mean()`, `sd()`, `cor()`, `anova()`, `t.test()`, etc... If you want more information on a function you can use the `?` operator to see the documentation (e.g., `?mean`). Alternatively, you can use `help('mean')`
+
+```{r}
+Z <- c(1,2,3,4,5)
+
+mean(Z)
+```
+
+You can also write your own functions using the `function()` function. Let's write an `R` function that multiples any input number by 5.
+
+```{r}
+times.five <- function(input){
+  input*5
+}
+
+times.five(1)
+times.five(5)
+times.five(100)
+
+```
+Note the use of the block code operator.
+
+1. <ol> 
+
+* Write a function that takes any input and repeats it 10 times
+* Apply that function to a number, and a piece of text
+
+</ol>
+
+```{r}
+```
+
+### Concept 5: The working directory
+
+When you run an `R` session, the program is always 'pointing' towards a location on your computer. This is called the working directory. It is the location where `R` will search for, and/or save any files. The first step in any project should be to set the working directory so you know where `R` will be pulling files from (so you can import the right data), and saving files (so you can find and inspect any results).
+
+1. <ol>
+* Create a folder on your computer for this course. Create a sub folder called "Practicals". Create another sub folder called "01_R_Introduction".
+* Get the current working directory using the `getwd()` function
+* Set the working directory to the folder you created for this practical using the `setwd()` function
+* Check to make sure you have indeed changed the working directory
+* List all the files in the current working directory using `list.files()`
+* Comment every step using `#`
+</ol>
+```{r}
+```
+
+*** 
+## Working with variables
+### Data import
+Data sets are essentially complex variables. They can be imported into `R` using the `read.csv()` function. `R`, and many `R` packages also have a number of built in data sets that can be imported using the `data()` function. For example the `iris` data set gives the measurements in centimeters of the variables sepal length, sepal width, petal length and petal width, for 50 flowers from each of 3 species of iris.
+
+```{r}
+data("iris")
+```
+
+
+### Data inspection
+When you import a data set, R tries to automatically determine what class of information is in each column (e.g., numeric, factor, string of text, etc...). The first steps after importing a data set should always be to inspect the data to make sure the import was correct. This is done by applying the following functions to the data set variable: `str()`, `summary()`, `class()`, `names()`, `head()`, `tail()`, `View()`.
+
+1. <ol>
+* Apply `str()`, `summary()`, `class()`, `names()`, `head()`, `tail()`, `View()` to the `mtcars` data set and briefly describe the outcome.
+</ol>
+
+```{r}
+```
+
+### Sub setting elements
+
+There are three operators that can be used to extract subsets of R objects.
+
+* The `[` operator always returns an object of the same class as the original. It can be used to select multiple elements of an object
+
+* The `[[` operator is used to extract elements of a list or a data frame. It can only be used to extract a single element and the class of the returned object will not necessarily be a list or data frame.
+
+* The `$` operator is used to extract elements of a list or data frame by name.
+
+In a standard data set with some number of rows and columns, the `[` operator can be used to extract specific values from a data set: DATA[row,column]. Rows are typically indexed by i and columns indexed by j, such that DATA[i,j] denotes the ith row in the jth column.
+
+The command [,1] will return the first column of a data set
+```{r}
+mtcars[,1]
+```
+
+The first column of a data set can also be extracted by name
+```{r}
+mtcars$mpg
+```
+
+The command [1,] will return the first row of a data set
+```{r}
+mtcars[1,]
+```
+
+### Conditional sub setting
+
+You will often want to select certain parts of a data set if some condition is `TRUE`, and/or remove parts if that condition is `FALSE`. The `which()` function allows you to identify elements that satisfy a condition (e.g., `==`, `>`, `<=`, `!=`).
+
+```{r}
+#Identify which cars have a miles/gallon greater than or equal to 25
+KEEPERS <- which(mtcars$mpg >=25)
+
+#Extract those rows
+mtcars[KEEPERS,]
+```
+
+1. <ol>
+Using the iris data set:
+
+* Get the mean petal length 
+* Select the first, third, and sixth rows of the first and third columns
+* Make a new variable called 'SUBSET' from rows where sepal length is greater than 7
+* Find the median petal width of Iris setosa
+* Comment every step
+</ol>
+
+```{r}
+```
+
+***
+## Vectors
+A vector is the simplest type of data structure in R. Simply, a vector is a sequence of data elements, each of the same basic type. Vectors can be created by using the `c()` function, which is a generic function that combines its arguments.
+
+```{r}
+help('c')
+
+X <- c(2,3,4)
+
+X
+
+X[1] # 2
+
+X[2] # 3
+
+X[3] # 4
+
+class(X)
+```
+
+1. <ol>
+* Create a vector named "Y" that is the reverse of "X"
+* Then check "Y" by printing it out
+</ol>
+
+```{r}
+```
+
+### Vector classes
+As was just noted, a vector is a sequence of data elements, each of the SAME BASIC TYPE. This means that all arguments are coerced to a common type which is the type of the returned value, and all attributes except names are removed.
+
+```{r, error = TRUE}
+# numeric vector
+2:4
+
+# character vector
+c('cat','dog','bat')
+
+# logical vector
+c(TRUE,FALSE,TRUE)
+
+# vector (and array) elements must all be the same 'class'
+Z <- c(1,'cat','dog')
+# vector (and array) elements can only be simple classes
+
+Z[1]
+
+Z[1] + 1
+
+class(Z[1])
+```
+
+1. <ol>
+* Create a vector of the numbers 1, 2, and 3
+* Create a character vector "COL" with 3 color names from the output of colors()
+* Plot the vector, colouring each point with your chosen colors
+</ol>
+
+```{r}
+```
+
+***
+## Sequences
+Sequences of numbers are used in many different tasks, from plotting the axes of graphs to generating simulated data. The simplest way to create a sequence of numbers in `R` is by using the `:` operator, or the `seq()` function
+
+```{r}
+help('seq')
+
+seq(from=2,to=4,by=1)
+
+seq(2,4,1)
+
+seq(2,4)
+
+help(':')
+
+2:4
+```
+
+1. <ol>
+* Create a sequence from 1 to 100 in steps of 1
+</ol>
+
+```{r}
+```
+
+
+***
+## Lists
+A list is a generic vector containing other objects. The elements of a list (also called slots) can be of different types like − numbers, strings, vectors, even other lists. A list can also contain a matrix or a function as its elements. List is created using `list()` function.
+
+```{r, error = TRUE}
+#Vectors cannot combine multiple input types
+A <- vector(1,TRUE,'cat')
+
+#But lists are more flexible
+A <- list(1,TRUE,'cat')
+A
+```
+
+Indexing lists is slightly more complicated than indexing a vector
+```{r}
+A[1] # a list of length one
+
+class(A[1])
+
+A[[1]] # the first element of the list
+
+class(A[[1]])
+
+A[[1]] + 1
+```
+We can also pull out list elements by name
+
+```{r}
+# the same list, but with named elements
+B <- list(number=1,mammal=TRUE,taxa='cat')
+B
+
+# different ways of accessing list elements
+B[[3]] # indexed by number
+B[['taxa']] # indexed by name
+B$taxa # "slot" by name
+```
+
+1. <ol>
+* Create a list "C" with your favorite number, color, and species---named "number", "color", "species" (the color must be selected from the output of `colors()`)
+* Run the following: `plot(C$number,col=C$color,main=C$species)`
+</ol>
+
+```{r}
+```
+
+***
+## for loops
+
+Let's say we have a repeated task like naming all of R's colours (note the `print()`function will print out whatever you input).
+```{r}
+COLS <- colors()[1:10]
+print(COLS[1])
+print(COLS[2])
+print(COLS[3])
+```
+
+but we don't want to type (or copy/paste/edit) the same code over and over. A for loop is a way to repeat a blocked sequence of instructions. This will allow you to automate parts of your code that are in need of repetition.
+
+```{r}
+for(i in 1:length(COLS)){
+  print(COLS[i])
+}
+```
+
+An easy way to understand what is going on in the for loop is by reading it as follows: For each number from 1 to the number of colours in your vector COLS, you execute the code chunk `print(COLS[i])`, which prints the indexed colour. Once the for loop has executed the code chunk for every colour in the vector, the loop stops and goes to the next command after the loop block.
+
+
+1. <ol>
+* Create a for loop that prints out the square root of numbers 1 through 20
+</ol>
+
+```{r}
+```
+
+
+
+***
+## Saving your progress
+
+`R` makes it easy to re-create the steps of an analysis, but some analyses can take a long time to run. It’s always a good idea to save important variables for future use. To save a data set as a file you can open in other applications use the `write.csv()` function. To save a data set as an `R` specific file format you can use the `save()` function.
+
+
+***
+## Review
+
+You should now know how to:
+
+* Pass commands to R
+* Import a data set
+* Inspect a data set after import
+* Subset your data according to desired conditions
+* Apply functions to your data
+* Repeat a task multiple times
+* Save your progress after completing important steps
