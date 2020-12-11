@@ -6,10 +6,10 @@ navbar:
       href: index.html
     - text: "Practicals"
       menu:
-    - text: "Practical 01"
-      href: 01_R_Introduction.html
-    - text: "Practical 02"
-      href: 02_Regression.html
+        - text: "Practical 01"
+          href: 01_R_Introduction.html
+        - text: "Practical 02"
+          href: 02_Regression.html
 output_dir: "."
 output:
   html_document:
