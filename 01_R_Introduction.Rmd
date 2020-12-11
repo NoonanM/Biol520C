@@ -1,6 +1,7 @@
 ---
 title: "Practical 01 - An introduction to R as a programming language"
 #author: "Michael Noonan"
+output: html_document
 ---
 
 ```{r setup, include=FALSE}

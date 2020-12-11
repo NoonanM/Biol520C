@@ -4,6 +4,9 @@ navbar:
   left:
     - text: "Home"
       href: index.html
+    - text: "Practicals"
+      icon: fa-gear
+      menu:
     - text: "Practical 01"
       href: 01_R_Introduction.html
     - text: "Practical 02"
