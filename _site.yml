@@ -5,7 +5,7 @@ navbar:
       href: index.html
     - text: "Practical 01"
       href: 01_R_Introduction.html
-    - text: "Practical 01"
+    - text: "Practical 02"
       href: 02_Regression.html
 output_dir: "."
 output:
