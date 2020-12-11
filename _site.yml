@@ -3,8 +3,10 @@ navbar:
   top:
     - text: "Home"
       href: index.html
-    - text: "Tutorial 01"
+    - text: "Practical 01"
       href: 01_R_Introduction.html
+    - text: "Practical 01"
+      href: 02_Regression.html
 output_dir: "."
 output:
   html_document:
