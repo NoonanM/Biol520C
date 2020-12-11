@@ -12,14 +12,32 @@ knitr::opts_chunk$set(echo = TRUE, fig.width=6, fig.height=4)
 ```
 This page was last updated on `r format(Sys.time(), '%B %d, %Y')`.
 
-<script type="text/x-mathjax-config">
-MathJax.Hub.Register.StartupHook('TeX Jax Ready', function () {
-  MathJax.InputJax.TeX.prefilterHooks.Add(function (data) {
-    data.math = data.math.replace(/^% <!\[CDATA\[/, '').replace(/%\]\]>$/, '');
-  });
-});
+<script>
+MathJax = {
+  startup: {
+    ready: function() {
+      var HTMLDomStrings = MathJax._.handlers.html.HTMLDomStrings.HTMLDomStrings;
+      var handleTag = HTMLDomStrings.prototype.handleTag;
+      HTMLDomStrings.prototype.handleTag = function (node, ignore) {
+        if (this.adaptor.kind(node) === '#comment') {
+          var text = this.adaptor.textContent(node);
+          if (text.match(/^\[CDATA\[(?:\n|.)*\]\]$/)) {
+            this.string += '<!'
+            this.extendString(node, text);
+            this.string += '>';
+            return this.adaptor.next(node);
+          }
+        }
+        return handleTag.call(this, node, ignore);
+      }
+      MathJax.startup.defaultReady();
+      MathJax.startup.document.inputJax[0].preFilters.add(function (data) {
+        data.math.math = data.math.math.replace(/^% <!\[CDATA\[/, '').replace(/%\]\]>$/, '');
+      });
+    }
+  }
+};
 </script>
-<script type="text/javascript" id="MathJax-script" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/latest.js"></script>
 
 * * *
 ## Background
