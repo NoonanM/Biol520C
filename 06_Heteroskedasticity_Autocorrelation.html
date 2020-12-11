@@ -355,7 +355,7 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Biol 520C</a>
+      <a class="navbar-brand" href="index.html">Biol 520C Statistical modelling for biological data</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
@@ -477,6 +477,11 @@ Hint: Using for loops that store values in a list is a straightforward approach 
 </center>
 <p></br></p>
 <p>The diagonal in the variance-covariance matrix defines the variances. All 1s indicates homogeneity of variances. The off-diagonals define the co-variances and the 0s indicate independence. This standard format does not permit any covariance between the residuals, and violation of this assumption can bias parameter estimates and negatively impact our capacity to learn from our models. Correcting for autocorrelation `simply’ involves identifying the autocorrelation structure of the residuals and modifying the variance-covariance matrix such that the off-diagonals <span class="math inline">\(\neq\)</span> 0.</p>
+</br>
+<center>
+<span class="math inline">\(V = \sigma^2 \underbrace{{\begin{bmatrix}1&amp; \rho &amp;\cdots &amp; \rho \\ \rho &amp; 1 &amp; \cdots &amp; \rho \\ \vdots &amp;\vdots &amp;\ddots &amp;\vdots \\ \rho &amp; \rho &amp; \cdots &amp;1 \end{bmatrix}}}_{\mathrm{correlation \, matrix}}\)</span>
+</center>
+<p></br></p>
 <div id="identifying-temporal-autocorrelation" class="section level3">
 <h3>Identifying temporal autocorrelation</h3>
 <p>We are going to use data from:</p>
