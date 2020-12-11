@@ -365,9 +365,17 @@ div.tocify {
         <li>
   <a href="index.html">Home</a>
 </li>
-<li class="dropdown-header">Lectures</li>
-<li>
-  <a href="/Lectures/Course_Intro.pdf">Lecture 01</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Lectures
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Lectures/Course_Intro.pdf">Lecture 01</a>
+    </li>
+  </ul>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -417,7 +425,18 @@ div.tocify {
 <div id="course-objectives" class="section level2">
 <h2>Course Objectives</h2>
 <p>This course combines lectures on theory and concepts with time practicing statistical tools in <code>R</code> based software packages. The course is designed to equip students with the tools and knowledge they need to perform a variety of regression-based analyses that can model common features of biological data. For each topic, there will be a core lecture module and a lab based practical module. With the lectures, students will learn the theory behind core modelling tools including multiple linear regression, mixed effects models, generalised linear models, and generalised least squares, while the lab modules are intended to provide a pathway that students can follow over the longer term as their skills develop.</p>
-<p>Learning Outcomes: * Fit regression models via maximum likelihood * Interpret residuals to assess/improve a model’s fit * Fit models with fixed and random effects * Fit models with non-Gaussian error distributions * Fit non-linear models * Handle non-independence in data, including phylogenetic inertia and temporal/spatial autocorrelation * Perform AIC-based model selection * Build models to simulate data and conduct power analyses * Link questions, analyses, and studying design</p>
+<p>Learning Outcomes:</p>
+<ul>
+<li>Fit regression models via maximum likelihood</li>
+<li>Interpret residuals to assess/improve a model’s fit</li>
+<li>Fit models with fixed and random effects</li>
+<li>Fit models with non-Gaussian error distributions</li>
+<li>Fit non-linear models</li>
+<li>Handle non-independence in data, including phylogenetic inertia and temporal/spatial autocorrelation</li>
+<li>Perform AIC-based model selection</li>
+<li>Build models to simulate data and conduct power analyses</li>
+<li>Link questions, analyses, and studying design</li>
+</ul>
 </div>
 
 <p>Biol 520C: Statistical modelling for biological data.</p>
