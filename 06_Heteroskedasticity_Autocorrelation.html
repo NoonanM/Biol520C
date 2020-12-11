@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Practical 06 - Heteroskedasticity, Temporal Autocorrelation, and the IID Assumption</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="tutorial.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Biol 520C</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Practicals
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="01_R_Introduction.html">Practical 01</a>
+    </li>
+    <li>
+      <a href="02_Regression.html">Practical 02</a>
+    </li>
+    <li>
+      <a href="03_MLR_Residuals.html">Practical 03</a>
+    </li>
+    <li>
+      <a href="04_Visualisation.html">Practical 04</a>
+    </li>
+    <li>
+      <a href="05_MEM_Model_Selection.html">Practical 05</a>
+    </li>
+    <li>
+      <a href="06_Heteroskedasticity_Autocorrelation.html">Practical 06</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Practical 06 - Heteroskedasticity, Temporal Autocorrelation, and the IID Assumption</h1>
+
+</div>
+
+
+<p>This page was last updated on December 11, 2020.</p>
+<hr />
+<div id="background" class="section level2">
+<h2>Background</h2>
+<p>The linear regression models we’ve been working with so far assume that the residuals should be Independent and Identically Distributed (IID). More specifically, they should be normally distributed with a constant variance <span class="math inline">\(\sigma^{2}\)</span>:</p>
+</br>
+<center>
+<span class="math inline">\(\varepsilon_i \sim \mathcal{N}(0,\,\sigma^{2})\)</span>
+</center>
+<p></br></p>
+<p>Biological data are often very noise and, in real systems, variances can differ across groups, times, etc. The IID assumption is therefore likely to be broken in many real datasets. Modification of the variance-covariance matrix can help correct for issues related to autocorrelation and/or variances that differ systematically.</p>
+<p>In this Practical we will:</p>
+<ul>
+<li>Use simulations to explore the impact of <em>unmodelled</em> heteroskedasticity.</li>
+<li>Explore the impact of <em>modelling</em> heteroskedasticity as a correction.</li>
+<li>Identify temporal autocorrelation in residuals.</li>
+<li>Build mixed effects models that correct for temporal autocorrelation.</li>
+<li>Identify the best autocorrelation structure via AIC based model selection.</li>
+</ul>
+<hr />
+</div>
+<div id="impact-of-heteroskedasticity" class="section level2">
+<h2>Impact of heteroskedasticity</h2>
+<p>This week we learned that when the IID assumption is violated by <em>unmodelled</em> heteroskedasticity, variances, and hence standard errors, can be poorly estimated resulting in misleading p-values. When this is the case, the deterministic part of the model may be correctly specified, but any inference is likely to be unreliable. Not the emphasis on unmodelled. This is because, unless there are extreme issues with the data, it is by ignoring key features that we run into issues (not just the presence of heteroskedasticity). Let’s explore that concept using a simulation experiment.</p>
+<div id="unmodelled-heteroskedasticity" class="section level3">
+<h3>Unmodelled heteroskedasticity</h3>
+<ol style="list-style-type: decimal">
+<li><ol></li>
+</ol>
+<ul>
+<li>Create a function for simulating from a linear model which has the following parameters: an intercept, <span class="math inline">\(\beta_0\)</span>, of 0, <span class="math inline">\(\beta_1 = 2\)</span> and <span class="math inline">\(\beta_2 = 0.5\)</span>. Have the errors for these data be drawn from a power variance error structure <span class="math inline">\(\varepsilon_{ij} \sim \mathcal{N}(0,\,\sigma^{2} \times \vert x_{1,i} \vert ^{2\delta_j})\)</span> that is a function of <span class="math inline">\(x_1\)</span> and with <span class="math inline">\(\sigma^2\)</span> = 4.</li>
+<li>Create a sequence of <span class="math inline">\(\delta\)</span> values ranging from 0 to 1 by an interval of 0.05.</li>
+<li>For each of the <span class="math inline">\(\delta\)</span> values: i) simulate 50 uniformly sampled <span class="math inline">\(x_1\)</span> and 50 uniformly sampled <span class="math inline">\(x_2\)</span> values each ranging from 0 to 20; ii) use these data and your function to generate the y values; iii) fit a linear model to the data; iv) extract and store the p-values for the intercept,<span class="math inline">\(\beta_1\)</span> and <span class="math inline">\(\beta_2\)</span>.</li>
+<li>Repeat this 100 times per <span class="math inline">\(\delta\)</span> value.</li>
+<li>Plot the mean <span class="math inline">\(p\)</span>-value for each parameter at each <span class="math inline">\(\delta\)</span> value.</li>
+<li>Describe the impact of unmodelled heteroskedasticity.</li>
+</ul>
+Hint: Using for loops that store values in a list is a straightforward approach to this exercise. The following <code>R</code> functions can help make this exercise easier: <code>aggregate()</code>, <code>do.call()</code>
+</ol>
+</div>
+<div id="modelled-heteroskedasticity" class="section level3">
+<h3>Modelled heteroskedasticity</h3>
+<ol style="list-style-type: decimal">
+<li><ol></li>
+</ol>
+<ul>
+<li>Repeat the above simulation experiment but this time, instead of ignoring the heteroskedasticity, fit a model with a power variance structure.</li>
+<li>Describe the impact that modelling heteroskedasticity has on the capacity to identify significant parameters.
+</ol></li>
+</ul>
+<hr />
+</div>
+</div>
+<div id="temporal-autocorrelation" class="section level2">
+<h2>Temporal autocorrelation</h2>
+<p>Anything that causes some data points in a dataset to be more similar to each other than others can result in statistically detectable autocorrelation. Temporal autocorrelation is a phenomenon that occurs because events that occur close to each other in time tend to be more similar than events that occur further apart in time. This pattern can be found in many different situations, not only in biology but in any field where data are measured over time. As biologists we often find ourselves working in systems where the best (or at least the most pragmatic) way to understand what is going on is to collect data over time.</p>
+<p>To this end, standard linear regression models are of the form</p>
+</br>
+<center>
+<span class="math inline">\(y_i = \beta_0 + \beta_1 \times x_{i} + \varepsilon_i \quad\quad \varepsilon_i \sim \mathcal{N}(0,\, V) \quad\quad V = \sigma^2 {\begin{bmatrix}1&amp; 0 &amp;\cdots &amp; 0 \\ 0 &amp; 1 &amp; \cdots &amp; 0 \\ \vdots &amp;\vdots &amp;\ddots &amp;\vdots \\ 0 &amp; 0 &amp; \cdots &amp;1 \end{bmatrix}}\)</span>
+</center>
+<p></br></p>
+<p>The diagonal in the variance-covariance matrix defines the variances. All 1s indicates homogeneity of variances. The off-diagonals define the co-variances and the 0s indicate independence. This standard format does not permit any covariance between the residuals, and violation of this assumption can bias parameter estimates and negatively impact our capacity to learn from our models. Correcting for autocorrelation `simply’ involves identifying the autocorrelation structure of the residuals and modifying the variance-covariance matrix such that the off-diagonals <span class="math inline">\(\neq\)</span> 0.</p>
+</br>
+<center>
+<span class="math inline">\(V = \sigma^2 \underbrace{{\begin{bmatrix}1&amp; \rho &amp;\cdots &amp; \rho \\ \rho &amp; 1 &amp; \cdots &amp; \rho \\ \vdots &amp;\vdots &amp;\ddots &amp;\vdots \\ \rho &amp; \rho &amp; \cdots &amp;1 \end{bmatrix}}}_{\mathrm{correlation \, matrix}}\)</span>
+</center>
+<p></br></p>
+<div id="identifying-temporal-autocorrelation" class="section level3">
+<h3>Identifying temporal autocorrelation</h3>
+<p>We are going to use data from:</p>
+<p>Freitas, C., E. M. Olsen, H. Knutsen, J. Albretsen, and E. Moland. 2016. Temperature-associated habitat selection in a cold-water marine fish. Journal of Animal Ecology 85:628–637.</p>
+<p>In this paper, the authors looked at the effect of ocean temperature on how deep individually tagged Atlantic cod (<em>Gadus morhua</em>) dove along the Norwegian coast. Variables in this dataset include:</p>
+<ul>
+<li><code>fish</code>: The ID of the fish</li>
+<li><code>date</code>: The date the data were collected</li>
+<li><code>depth_mean_day</code>: The mean dive depth during the day</li>
+<li><code>depth_mean_night</code>: The mean dive depth at night</li>
+<li><code>temperature</code>: The surface water temperature</li>
+</ul>
+<ol style="list-style-type: decimal">
+<li><ol></li>
+</ol>
+<ul>
+<li>Import the Cod_daily_depth_data dataset (make sure the variable data is of the class date and make sure fish is a factor).</li>
+<li>Mean center the temperature data to reduce correlation between the intercepts and slopes.</li>
+<li>Fit a mixed-effects model predicting cod dive depth during the day from surface temperature that allows the intercept and slope to vary with each fish (i.e., include a random intercept and random <code>temperature_centered</code> slope grouped by <code>fish</code>). For this model, log transform the dive depth data. Use the <code>lme()</code> function from the <code>nlme</code> package.</li>
+<li>Inspect the summary overview of the model.</li>
+<li>Plot the normalized residuals against the fitted values.</li>
+<li>Plot the normalized residuals against date.</li>
+<li>Plot the acf of the normalized residuals. Note: The default residuals do not incorporate the correlation structure, which is not very helpful when we are trying to correct for autocorrelation. This is why we always plot normalized residuals when trying to deal with autocorrelation.
+</ol></li>
+</ul>
+</div>
+<div id="correcting-temporal-autocorrelation" class="section level3">
+<h3>Correcting temporal autocorrelation</h3>
+<div id="compound-symmetric-error-structure" class="section level4">
+<h4>Compound Symmetric Error Structure</h4>
+<p>The simplest case is when all the co-variances are constant, non-zero value (referred to as `compound symmetry’). With compound symmetric error structures the degree of correlation between residuals (<span class="math inline">\(\rho\)</span>) is equal to <span class="math inline">\(\rho=\frac{\theta}{\theta + \sigma^2}\)</span>.</p>
+</br>
+<center>
+<span class="math inline">\(V = \underbrace{{\begin{bmatrix}\theta + \sigma^2&amp; \theta &amp;\cdots &amp; \theta \\ \theta &amp; \theta + \sigma^2 &amp; \cdots &amp; \theta \\ \vdots &amp;\vdots &amp;\ddots &amp;\vdots \\ \theta &amp; \theta &amp; \cdots &amp;\theta + \sigma^2 \end{bmatrix}}}_{\mathrm{variance-covariance \, matrix}}\)</span>
+</center>
+<p></br></p>
+<p>Compound symmetric errors can be applied via the <code>corCompSymm()</code> function from the <code>nlme</code> package.</p>
+<ol style="list-style-type: decimal">
+<li><ol></li>
+</ol>
+<ul>
+<li>Refit the same model using <code>lme</code>, but this time add a compound symmetric correlation structure.</li>
+<li>Examine the residuals and acf as above. Visually, do you see an improvement?</li>
+<li>Check the improvement via AIC.</li>
+<li>Describe the effect
+</ol></li>
+</ul>
+</div>
+<div id="ar-1-error-structure" class="section level4">
+<h4>AR-1 Error Structure</h4>
+<p>The first order auto-regressive (AR1) structure defines a correlation structure in which the degree of correlation between two observations is proportional to the relative amount of elapsed time. With AR-1 error structures the degree of correlation between a pair of residuals is defined as <span class="math inline">\(\rho^{\vert t-s\vert}\)</span>, where <span class="math inline">\(\vert t-s\vert\)</span> is the absolute difference between the current time (<span class="math inline">\(t\)</span>) and the previous time (<span class="math inline">\(s\)</span>).</p>
+</br>
+<center>
+<span class="math inline">\(V = \sigma^2 \underbrace{{\begin{bmatrix}1&amp; \rho &amp; \rho^2 &amp;\cdots &amp; \rho^i \\ \rho &amp; 1 &amp; \rho &amp; \ddots &amp; \vdots \\ \rho^2 &amp; \rho &amp; 1 &amp; \ddots &amp; \rho^2 \\ \vdots &amp;\ddots &amp;\ddots &amp;\ddots &amp; \rho \\ \rho^1 &amp; \cdots &amp; \rho^2 &amp; \rho &amp;1 \end{bmatrix}}}_{\mathrm{correlation \, matrix}}\)</span>
+</center>
+<p></br></p>
+<p>AR-1 errors can be applied via the <code>corAR1()</code> function from the <code>nlme</code> package.</p>
+<ol style="list-style-type: decimal">
+<li><ol></li>
+</ol>
+<ul>
+<li>Refit the same model using <code>lme</code>, but this time add an AR-1 correlation structure.</li>
+<li>Examine the residuals and acf as above. Visually, do you see an improvement?</li>
+<li>Check the improvement via AIC.</li>
+<li>Describe the effect
+</ol></li>
+</ul>
+</div>
+</div>
+</div>
+
+<p>Biol 520C: Statistical modelling for biological data.</p>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

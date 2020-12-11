@@ -10,6 +10,14 @@ navbar:
           href: 01_R_Introduction.html
         - text: "Practical 02"
           href: 02_Regression.html
+        - text: "Practical 03"
+          href: 03_MLR_Residuals.html        
+        - text: "Practical 04"
+          href: 04_Visualisation.html
+        - text: "Practical 05"
+          href: 05_MEM_Model_Selection.html
+        - text: "Practical 06"
+          href: 06_Heteroskedasticity_Autocorrelation.html
 output_dir: "."
 output:
   html_document:

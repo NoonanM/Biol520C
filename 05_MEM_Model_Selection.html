@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Practical 05 - Mixed Effect Models, Model Selection, and Model Averaging</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="tutorial.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Biol 520C</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Practicals
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="01_R_Introduction.html">Practical 01</a>
+    </li>
+    <li>
+      <a href="02_Regression.html">Practical 02</a>
+    </li>
+    <li>
+      <a href="03_MLR_Residuals.html">Practical 03</a>
+    </li>
+    <li>
+      <a href="04_Visualisation.html">Practical 04</a>
+    </li>
+    <li>
+      <a href="05_MEM_Model_Selection.html">Practical 05</a>
+    </li>
+    <li>
+      <a href="06_Heteroskedasticity_Autocorrelation.html">Practical 06</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Practical 05 - Mixed Effect Models, Model Selection, and Model Averaging</h1>
+
+</div>
+
+
+<p>This page was last updated on December 11, 2020.</p>
+<hr />
+<div id="background" class="section level2">
+<h2>Background</h2>
+<p>Linear mixed effects models provide a powerful tool for accounting for non-independence in nested data. In matrix notation a linear mixed effects model can be represented as</p>
+<center>
+<span class="math inline">\(\overbrace{\mathbf{y}}^{\mbox{N x 1}} \quad = \quad \overbrace{\underbrace{\mathbf{X}}_{\mbox{N x p}} \quad \underbrace{\boldsymbol{\beta}}_{\mbox{p x 1}}}^{\mbox{N x 1}} \quad + \quad \overbrace{\underbrace{\mathbf{Z}}_{\mbox{N x qJ}} \quad \underbrace{\boldsymbol{b}}_{\mbox{qJ x 1}}}^{\mbox{N x 1}} \quad + \quad \overbrace{\boldsymbol{\varepsilon}}^{\mbox{N x 1}}\)</span>
+</center>
+<p></br></p>
+<p><span class="math inline">\(\boldsymbol{y_i}\)</span> is the vector of observations (<span class="math inline">\(N \times 1\)</span> vector);</p>
+<p><span class="math inline">\(X_i\)</span> is a matrix of our `fixed’ predictor variables (<span class="math inline">\(N \times p\)</span> matrix);</p>
+<p><span class="math inline">\(\boldsymbol{\beta}\)</span> is a vector of fixed effects (<span class="math inline">\(p \times 1\)</span> vector);</p>
+<p><span class="math inline">\(Z_i\)</span> is a matrix of our random predictor variables (<span class="math inline">\(N \times qJ\)</span> matrix for <span class="math inline">\(q\)</span> random effects and <span class="math inline">\(J\)</span> groups);</p>
+<p><span class="math inline">\(\boldsymbol{b_i}\)</span> is a vector of random effects <span class="math inline">\(\sim \mathcal{N}(0,G_i)\)</span> (<span class="math inline">\(qJ \times 1\)</span> vector);</p>
+<p><span class="math inline">\(G_i\)</span> is the variance-covariance matrix of <span class="math inline">\(\boldsymbol{b_i}\)</span>;</p>
+<p><span class="math inline">\(\boldsymbol{\varepsilon_i}\)</span> is our distribution of errors <span class="math inline">\(\sim \mathcal{N}(0,\sigma_i)\)</span>.</p>
+<p></br></p>
+<p>In this Practical you will use the model to:</p>
+<ul>
+<li>Account for within-group correlations in linear mixed effects model fit to empirical data.</li>
+<li>Perform AICc based model selection</li>
+<li>Estimate the effective sample size of a mixed effects model</li>
+<li>Perform model averaging</li>
+<li>Visualise parameter estimates</li>
+<li>Describe the biological importance of a model</li>
+</ul>
+<hr />
+</div>
+<div id="linear-mixed-effects-regression-model" class="section level2">
+<h2>Linear mixed effects regression model</h2>
+<p>We will continue our exploration into mixed effects regression using data that were collected by <a href="https://doi.org/10.1016/j.anbehav.2007.01.027">Roulin and Bersier (2007)</a> to explore whether the sex of the parent influenced how much nestling barn owls begged for food. To collect these data they set up cameras in 27 barn owl (<em>Tyto alba</em>) nests and studied the begging behaviour of nestlings in response to the presence of the father and of the mother. The main response variable we will be looking at is ‘NegPerChick’, which is the number of counted calls coming from a nest in the 30-s interval before the arrival of the parent, divided by the number of nestlings in that nest. The explanatory variables in these data are:</p>
+<ul>
+<li>Sex of the parent (Male/Female)</li>
+<li>Food treatment (Deprived/Satiated)</li>
+<li>Arrival time of the parent at the nest with a prey item (scaled such that 21h30 is time ‘0’ and 05h30 is time ‘8’)</li>
+<li>Nest ID</li>
+</ul>
+<p>Over the course of this practical you will follow a step-wise procedure aimed at identifying the best possible model for these data. Remember that the ultimate goal of Roulin and Bersier was to determine whether the sex of the parent influenced how much nestling barn owls begged for food. With that in mind the first step is to import the data and visually inspect them to get a feel for their structure.</p>
+<div id="data-import-and-visual-diagnostics" class="section level3">
+<h3>Data import and visual diagnostics</h3>
+<ol style="list-style-type: decimal">
+<li><ol></li>
+</ol>
+<ul>
+<li>Import the owl dataset.</li>
+<li>Plot a histogram of the response variable NegPerChick. Describe what you see.</li>
+<li>Plot the relationship between NegPerChick and the 4 potential explanatory variables and briefly describe what you see in each figure.
+</ol></li>
+</ul>
+</div>
+<div id="initial-model-fit-and-inspection" class="section level3">
+<h3>Initial model fit and inspection</h3>
+<p>As a first step in any model fitting process, it is a good idea to fit a basic multiple linear regression model to your data as ‘quick and dirty’ approach to getting a feel for what direction you need to go.</p>
+<ol style="list-style-type: decimal">
+<li><ol></li>
+</ol>
+<ul>
+<li>Fit a multiple linear regression model to predict NegPerChick as a function of the interaction between the sex of the parent and the food treatment, and the sex of the parent and arrival time.</li>
+<li>Plot and inspect the ordinary residuals and describe what you see.</li>
+<li>Apply a <span class="math inline">\(\log_{10}(Y + 1)\)</span> transformation to the NegPerChick variable and re-fit the model (why the +1?).</li>
+<li>Plot and inspect the ordinary residuals, describe what you see.</li>
+<li>Visually check for a ‘nest’ effect by using a boxplot to compare the residuals against the nest ID. Describe what you see.
+</ol></li>
+</ul>
+</div>
+<div id="chose-a-random-effect-structure" class="section level3">
+<h3>Chose a random effect structure</h3>
+<p>After getting a general feel for the features you will need to account for in your data, the next step is to identify the most appropriate random effect structure for the data and model. Starting with a multiple linear regression model that contains the full range of fixed effects that we will be interested in testing, we compare 3 models:</p>
+<ul>
+<li>A model with only fixed effects</li>
+<li>A mixed effects model with a random intercept</li>
+<li>A mixed effects model with a random intercept and slope</li>
+</ul>
+<p>These models are then compared using likelihood ratio tests and AIC values.</p>
+<ol style="list-style-type: decimal">
+<li><ol></li>
+</ol>
+<ul>
+<li>Use the <code>gls()</code> function to fit a multiple linear regression model to predict log transformed NegPerChick as a function of the interaction between the sex of the parent and the food treatment, and the sex of the parent and arrival time.</li>
+<li>Use the <code>lme()</code> function to fit the same model, but with a random intercept around data from the same nest.</li>
+<li>Fit a third model with a random intercept and slope. Here assume the relationship between sibling negotiation and arrival time changes between nests.</li>
+<li>Use the <code>anova()</code> function to compare the models. Describe the results and decide which random effect structure you should use for these data. In particular what are the results of the likelihood ratio tests, and what model does AIC model selection favour?</li>
+</ul>
+</br> <strong>Note:</strong> Make sure that all of the models are fit using REML. Models fit by a mix of ML and REML can not be compared using likelihood ratio tests or AIC values.
+</ol>
+</div>
+<div id="inspect-the-model-for-any-new-issues" class="section level3">
+<h3>Inspect the model for any new issues</h3>
+<p>After identifying the correct random effects structure, we should next perform some diagnostic checks to ensure there are no glaring issues remaining.</p>
+<ol style="list-style-type: decimal">
+<li><ol></li>
+</ol>
+<ul>
+<li>Plot the residuals against the fitted values for the best fit model you identified in exercise 3. Describe what you see.</li>
+<li>Use a boxplot to plot the residuals against the sex of the parent. Describe what you see.</li>
+<li>Use a boxplot to plot the residuals against the food treatment. Describe what you see.</li>
+<li>Plot the residuals against arrival time and describe what you see.</li>
+<li>Use a boxplot to plot the residuals against which nest the data came from. Visually check for a remaining ‘nest’ effect and describe what you see.
+</ol></li>
+</ul>
+</div>
+<div id="identify-the-fixed-effects-structure" class="section level3">
+<h3>Identify the fixed effects structure</h3>
+<p>After identifying the correct random effects structure, and having confirmed that there are no glaring issues remaining, the next step is to identify which of the fixed effects we should keep in our model. There are two ways to do this. Manually, using likelihood ratio tests and AIC values, or automatically using the <code>dredge()</code> function from the <code>MuMin</code> package. We will explore both options.</p>
+<ol style="list-style-type: decimal">
+<li><ol></li>
+</ol>
+<ul>
+<li>Use the <code>summary()</code> function to obtain the parameter estimates for the model. Looking at the parameter estimates, the standard errors, and p-values, which terms do you think might be worth dropping?</li>
+<li>Re-fit the model using maximum likelihood (this is needed to make likelihood ratio tests on models with different fixed effects meaningful).</li>
+<li>Use likelihood ratio tests to test whether the interaction terms are worth keeping. Describe the results.</li>
+<li>Obtain a summary of the reduced model. Are there any terms that look like they could be dropped?</li>
+<li>Use likelihood ratio tests to test whether the remaining fixed effects terms are worth keeping. Describe the results at each step.</li>
+<li>Perform AICc based model selection using the <code>dredge()</code> function from the <code>MuMin</code> package.</li>
+<li>Compare the results of the two processes.
+</ol></li>
+</ul>
+</div>
+<div id="re-fit-the-model-with-reml" class="section level3">
+<h3>Re-fit the model with REML</h3>
+<p>The selected model should be re-fit using REML to reduce the small-sample-size biases of ML.</p>
+<ol style="list-style-type: decimal">
+<li><ol></li>
+</ol>
+<ul>
+<li>Re-fit the selected model using REML.
+</ol></li>
+</ul>
+</div>
+<div id="inspect-the-model-for-any-issues" class="section level3">
+<h3>Inspect the model for any issues</h3>
+<p>After identifying the correct fixed and random effects structure, we should perform a (hopefully) final round of diagnostic checks to ensure there are no issues remaining with our model</p>
+<ol style="list-style-type: decimal">
+<li><ol></li>
+</ol>
+<ul>
+<li>Plot the residuals against the fitted values. Are there any patterns?</li>
+<li>Check for normality of the residuals using a histogram.</li>
+<li>Obtain a summary of the selected model. How much correlation is there between the fxed effects. Is there any cause for concern?</li>
+<li>Try mean centering arrival time and re-fitting the selected model. Compare the these results with what you just saw.</li>
+<li>What is the inter-class correlation for data from the same nest? What is the design effect for the mean number of samples per nest box? What is the <span class="math inline">\(\approx\)</span>effective sample size?
+</ol></li>
+</ul>
+</div>
+<div id="model-averaging" class="section level3">
+<h3>Model Averaging</h3>
+<p>Because a number of the top models are all within <span class="math inline">\(\Delta\)</span>AICc of 2 of the top model, this may be a situation that could benefit from model averaging.</p>
+<ol style="list-style-type: decimal">
+<li><ol></li>
+</ol>
+<ul>
+<li>Subset all models within <span class="math inline">\(\Delta\)</span>AICc of 2 of the top model (see <code>help(subset.model.selection)</code>).</li>
+<li>Perform model averaging on these models using the <code>model.avg()</code> function.</li>
+<li>Plot the parameter estimates <span class="math inline">\(\pm\)</span> the 95% confidence intervals of the averaged model (see <code>help(coef)</code> and <code>help(confint)</code>).</li>
+<li>Use the <code>prettify()</code> function from the <code>papeR</code> package to plot the parameter estimates <span class="math inline">\(\pm\)</span> the 95% confidence intervals of the previously selected model.</li>
+<li>Describe how the average fit compares to the previously selected model.
+</ol></li>
+</ul>
+</div>
+<div id="describe-the-importance-of-the-model" class="section level3">
+<h3>Describe the importance of the model</h3>
+<p>The whole point of fitting this model was to identify the factors influencing begging behaviour of nestling owls.</p>
+<ol style="list-style-type: decimal">
+<li><ol></li>
+</ol>
+<ul>
+<li>Provide a breif biological description the selected model (you can read how <a href="https://doi.org/10.1016/j.anbehav.2007.01.027">Roulin and Bersier (2007)</a> described their results from these same data).</li>
+<li>Use <span class="math inline">\(\Delta\)</span>AICc values and effect sizes to compare the selected model to a random effects model with only a fixed intercept (i.e., the information gained by including the fixed parameters).
+</ol></li>
+</ul>
+</div>
+</div>
+
+<p>Biol 520C: Statistical modelling for biological data.</p>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
