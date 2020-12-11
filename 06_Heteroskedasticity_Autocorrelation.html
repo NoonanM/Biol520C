@@ -407,6 +407,13 @@ div.tocify {
 
 
 <p>This page was last updated on December 11, 2020.</p>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Register.StartupHook('TeX Jax Ready', function () {
+  MathJax.InputJax.TeX.prefilterHooks.Add(function (data) {
+    data.math = data.math.replace(/^% <!\[CDATA\[/, '').replace(/%\]\]>$/, '');
+  });
+});
+</script>
 <hr />
 <div id="background" class="section level2">
 <h2>Background</h2>
