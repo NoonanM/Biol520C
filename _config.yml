@@ -5,4 +5,7 @@ navbar:
     - text: "Tutorial 01"
       href: 01_R_Introduction.html
 output_dir: "."
-theme: jekyll-theme-slate
+output:
+  html_document:
+    theme: jekyll-theme-slate
+    highlight: textmate
