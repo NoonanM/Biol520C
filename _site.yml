@@ -1,6 +1,6 @@
 name: "Course Website for Biol 520C"
 navbar:
-  title: "Biol 520C"
+  title: "Biol 520C Statistical modelling for biological data"
   right:
     - text: "Home"
       href: index.html
