@@ -4,6 +4,10 @@ navbar:
   right:
     - text: "Home"
       href: index.html
+    - text: "Lectures"
+      menu:
+    - text: "Lecture 01"
+      href: "/Lectures/Course_Intro.pdf"
     - text: "Practicals"
       menu:
         - text: "Practical 01"
