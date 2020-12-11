@@ -1,14 +1,6 @@
 ---
 title: "Practical 01 - An introduction to R as a programming language"
 #author: "Michael Noonan"
-output:
-  html_document:
-    css: tutorial.css
-    fig_caption: yes
-    highlight: textmate
-    theme: flatly
-    toc: yes
-    toc_float: yes
 ---
 
 ```{r setup, include=FALSE}
