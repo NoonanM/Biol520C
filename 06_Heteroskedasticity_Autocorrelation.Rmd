@@ -72,7 +72,7 @@ To this end, standard linear regression models are of the form
 
 </br>
 <center>
-$$y_i = \beta_0 + \beta_1 \times x_{i} + \varepsilon_i \quad\quad \varepsilon_i \sim \mathcal{N}(0,\, V) \quad\quad V = \sigma^2 {{\begin{bmatrix}1& 0 &\cdots & 0 \\ 0 & 1 & \cdots & 0 \\ \vdots &\vdots &\ddots &\vdots \\ 0 & 0 & \cdots &1 \end{bmatrix}}}$$
+$$y_i = \beta_0 + \beta_1 \times x_{i} + \varepsilon_i \quad\quad \varepsilon_i \sim \mathcal{N}(0,\, V) \quad\quad V = \sigma^2 {\begin{bmatrix}1& 0 &\cdots & 0 \\ 0 & 1 & \cdots & 0 \\ \vdots &\vdots &\ddots &\vdots \\ 0 & 0 & \cdots &1 \end{bmatrix}}}$$
 </center>
 </br>
 
