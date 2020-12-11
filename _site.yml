@@ -9,4 +9,9 @@ navbar:
 output_dir: "."
 output:
   html_document:
+    css: tutorial.css
+    fig_caption: yes
+    highlight: textmate
     theme: flatly
+    toc: yes
+    toc_float: yes
