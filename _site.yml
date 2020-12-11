@@ -7,4 +7,4 @@ navbar:
 output_dir: "."
 output:
   html_document:
-    theme: jekyll-theme-slate
+    theme: flatly
