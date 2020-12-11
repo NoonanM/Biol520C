@@ -86,6 +86,11 @@ $y_i = \beta_0 + \beta_1 \times x_{i} + \varepsilon_i \quad\quad \varepsilon_i \
 
 The diagonal in the variance-covariance matrix defines the variances. All 1s indicates homogeneity of variances. The off-diagonals define the co-variances and the 0s indicate independence. This standard format does not permit any covariance between the residuals, and violation of this assumption can bias parameter estimates and negatively impact our capacity to learn from our models. Correcting for autocorrelation `simply' involves identifying the autocorrelation structure of the residuals and modifying the variance-covariance matrix such that the off-diagonals $\neq$ 0.
 
+</br>
+<center>
+$V = \sigma^2 \underbrace{{\begin{bmatrix}1& \rho &\cdots & \rho \\ \rho & 1 & \cdots & \rho \\ \vdots &\vdots &\ddots &\vdots \\ \rho & \rho & \cdots &1 \end{bmatrix}}}_{\mathrm{correlation \, matrix}}$
+</center>
+</br>
 
 ### Identifying temporal autocorrelation
 
