@@ -78,6 +78,12 @@ Anything that causes some data points in a dataset to be more similar to each ot
 
 To this end, standard linear regression models are of the form
 
+</br>
+<center>
+$y_i = \beta_0 + \beta_1 \times x_{i} + \varepsilon_i \quad\quad \varepsilon_i \sim \mathcal{N}(0,\, V) \quad\quad V = \sigma^2 {\begin{bmatrix}1& 0 &\cdots & 0 \\ 0 & 1 & \cdots & 0 \\ \vdots &\vdots &\ddots &\vdots \\ 0 & 0 & \cdots &1 \end{bmatrix}}$
+</center>
+</br>
+
 The diagonal in the variance-covariance matrix defines the variances. All 1s indicates homogeneity of variances. The off-diagonals define the co-variances and the 0s indicate independence. This standard format does not permit any covariance between the residuals, and violation of this assumption can bias parameter estimates and negatively impact our capacity to learn from our models. Correcting for autocorrelation `simply' involves identifying the autocorrelation structure of the residuals and modifying the variance-covariance matrix such that the off-diagonals $\neq$ 0.
 
 
