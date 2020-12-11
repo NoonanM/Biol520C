@@ -1,5 +1,5 @@
 ---
-title: "R Markdown Website"
+title: "Course website for Biol 520C: Statistical modelling for biological data"
 output: html_document
 ---
 
