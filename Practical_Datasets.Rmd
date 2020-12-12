@@ -7,11 +7,17 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+This page contains the datasets needed to complete the practicals for this course. To download, left click on the links and download the files as needed.
+
+</br>
+
 ### Practical 02 - Deterministic models, stochastic models, simple linear regression, and maximum likelihood
 
 <a href="Practical_Datasets/Musteloid_Data.csv" >Musteloid traits</a>
 
 <a href="Practical_Datasets/Wasp_Choice.csv" >Wasp choice.</a>
+
+</br>
 
 ### Practical 03 - Multiple linear regression and model residuals
 
@@ -19,13 +25,19 @@ knitr::opts_chunk$set(echo = TRUE)
 
 <a href="Practical_Datasets/Ismail.csv" >Forest degredation.</a>
 
+</br>
+
 ### Practical 04 - Visualising Nested Data Prior to Analysis
 
 <a href="Practical_Datasets/Owls.csv" >Owl begging behaviour</a>
 
+</br>
+
 ### Practical 05 - Mixed Effect Models, Model Selection, and Model Averaging
 
 <a href="Practical_Datasets/Owls.csv" >Owl begging behaviour</a>
+
+</br>
 
 ### Practical 06 - Heteroskedasticity, Temporal Autocorrelation, and the IID Assumption
 

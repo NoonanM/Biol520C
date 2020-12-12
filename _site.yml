@@ -25,9 +25,9 @@ navbar:
         - text: "Practicals"
           href: Practical_Datasets.html
         - text: "Paper 1"
-          href: Practical_Datasets.html
+          href: Paper1_Datasets.html
         - text: "Paper 2"
-          href: Practical_Datasets.html       
+          href: Paper2_Datasets.html      
 
 output_dir: "."
 output:
