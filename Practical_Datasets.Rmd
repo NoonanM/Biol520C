@@ -1,0 +1,32 @@
+---
+title: "Datasets for practicals"
+output: html_document
+---
+  
+  ```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Practical 02 - Deterministic models, stochastic models, simple linear regression, and maximum likelihood
+
+<a href="Practical_Datasets/Musteloid_Data.csv" >Musteloid traits</a>
+
+<a href="Practical_Datasets/Wasp_Choice.csv" >Wasp choice.</a>
+
+### Practical 03 - Multiple linear regression and model residuals
+
+<a href="Practical_Datasets/Seedling.csv" >Seedlings.</a>
+
+<a href="Practical_Datasets/Ismail.csv" >Forest degredation.</a>
+
+### Practical 04 - Visualising Nested Data Prior to Analysis
+
+<a href="Practical_Datasets/Owls.csv" >Owl begging behaviour</a>
+
+### Practical 05 - Mixed Effect Models, Model Selection, and Model Averaging
+
+<a href="Practical_Datasets/Owls.csv" >Owl begging behaviour</a>
+
+### Practical 06 - Heteroskedasticity, Temporal Autocorrelation, and the IID Assumption
+
+<a href="Practical_Datasets/Cod_daily_depth_data.csv" >Cod depths</a>
