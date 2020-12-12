@@ -7,7 +7,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-This page contains the datasets needed to prepare Paper 1. Each link leads to a folder containing a dataset and a brief description file. To download, left click on the links and download the files as needed.
+This page contains links for downloading the datasets needed to prepare Paper 1. Each link leads to a folder containing a dataset and a brief description file.
 
 </br>
 

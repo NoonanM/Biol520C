@@ -7,27 +7,27 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-This page contains the datasets needed to prepare Paper 2. Each link leads to a folder containing a dataset and a brief description file. To download, left click on the links and download the files as needed.
+This page contains links for downloading the datasets needed to prepare Paper 2. Each link leads to a folder containing a dataset and a brief description file.
 
 </br>
 
 
-<a href="Paper_2_Datasets/Antarctic_Birds" >Antarctic Birds</a>
+<a href="Paper_2_Datasets/Antarctic_Birds.zip" >Antarctic Birds</a>
 
-<a href="Paper_2_Datasets/Anteaters" >Anteaters</a>
+<a href="Paper_2_Datasets/Anteaters.zip" >Anteaters</a>
 
-<a href="Paper_2_Datasets/Bird_Abundance" >Bird Abundance</a>
+<a href="Paper_2_Datasets/Bird_Abundance.zip" >Bird Abundance</a>
 
-<a href="Paper_2_Datasets/California_Birds" >California Birds</a>
+<a href="Paper_2_Datasets/California_Birds.zip" >California Birds</a>
 
-<a href="Paper_2_Datasets/Carnivore_Traits" >Carnivore Traits</a>
+<a href="Paper_2_Datasets/Carnivore_Traits.zip" >Carnivore Traits</a>
 
-<a href="Paper_2_Datasets/Cod_Parasites" >Cod Parasites</a>
+<a href="Paper_2_Datasets/Cod_Parasites.zip" >Cod Parasites</a>
 
-<a href="Paper_2_Datasets/Deer_Tb" >Deer Tb</a>
+<a href="Paper_2_Datasets/Deer_Tb.zip" >Deer Tb</a>
 
-<a href="Paper_2_Datasets/RoadKills" >RoadKills</a>
+<a href="Paper_2_Datasets/RoadKills.zip" >RoadKills</a>
 
-<a href="Paper_2_Datasets/Seals" >Seals</a>
+<a href="Paper_2_Datasets/Seals.zip" >Seals</a>
 
-<a href="Paper_2_Datasets/Wild_Boar" >Wild Boar</a>
+<a href="Paper_2_Datasets/Wild_Boar.zip" >Wild Boar</a>
