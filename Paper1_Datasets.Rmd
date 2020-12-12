@@ -12,27 +12,27 @@ This page contains the datasets needed to prepare Paper 1. Each link leads to a 
 </br>
 
 
-<a href="Paper_1_Datasets/Arabidopsis" >Arabidopsis</a>
+<a href="Paper_1_Datasets/Arabidopsis.zip" >Arabidopsis</a>
 
-<a href="Paper_1_Datasets/Badger_Testosterone" >Badger Testosterone</a>
+<a href="Paper_1_Datasets/Badger_Testosterone.zip" >Badger Testosterone</a>
 
-<a href="Paper_1_Datasets/Bees" >Bees</a>
+<a href="Paper_1_Datasets/Bees.zip" >Bees</a>
 
-<a href="Paper_1_Datasets/Biodiversity" >Biodiversity</a>
+<a href="Paper_1_Datasets/Biodiversity.zip" >Biodiversity</a>
 
-<a href="Paper_1_Datasets/Bird_Abundance" >Bird Abundance</a>
+<a href="Paper_1_Datasets/Bird_Abundance.zip" >Bird Abundance</a>
 
-<a href="Paper_1_Datasets/Carnivore_SSD" >Carnivore SSD</a>
+<a href="Paper_1_Datasets/Carnivore_SSD.zip" >Carnivore SSD</a>
 
-<a href="Paper_1_Datasets/Cetaceans" >Cetaceans</a>
+<a href="Paper_1_Datasets/Cetaceans.zip" >Cetaceans</a>
 
-<a href="Paper_1_Datasets/Mammal_Movement" >Mammal Movement</a>
+<a href="Paper_1_Datasets/Mammal_Movement.zip" >Mammal Movement</a>
 
-<a href="Paper_1_Datasets/Methane_Flux" >Methane Flux</a>
+<a href="Paper_1_Datasets/Methane_Flux.zip" >Methane Flux</a>
 
-<a href="Paper_1_Datasets/Sparrows" >Sparrows</a>
+<a href="Paper_1_Datasets/Sparrows.zip" >Sparrows</a>
 
-<a href="Paper_1_Datasets/Sparrows_2" >Sparrows 2</a>
+<a href="Paper_1_Datasets/Sparrows_2.zip" >Sparrows 2</a>
 
-<a href="Paper_1_Datasets/Squid" >Squid</a>
+<a href="Paper_1_Datasets/Squid.zip" >Squid</a>
 
