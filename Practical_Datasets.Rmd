@@ -13,7 +13,7 @@ This page contains the datasets needed to complete the practicals for this cours
 
 ### Practical 02 - Deterministic models, stochastic models, simple linear regression, and maximum likelihood
 
-<a href="Practical_Datasets/Musteloid_Data.zip" >Musteloid traits</a>
+<a href="Practical_Datasets/Musteloid_Data.csv" >Musteloid traits</a>
 
 <a href="Practical_Datasets/Wasp_Choice.csv" >Wasp choice.</a>
 
