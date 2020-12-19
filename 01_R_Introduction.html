@@ -393,6 +393,9 @@ div.tocify {
     <li>
       <a href="06_Heteroskedasticity_Autocorrelation.html">Practical 06</a>
     </li>
+    <li>
+      <a href="07_Spatial_and_Phylogenetic_Autocorrelation.html">Practical 07</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -618,14 +621,10 @@ times.five(1)</code></pre>
 <p>In a standard data set with some number of rows and columns, the <code>[</code> operator can be used to extract specific values from a data set: DATA[row,column]. Rows are typically indexed by i and columns indexed by j, such that DATA[i,j] denotes the ith row in the jth column.</p>
 <p>The command [,1] will return the first column of a data set</p>
 <pre class="r"><code>mtcars[,1]</code></pre>
-<pre><code>##  [1] 21.0 21.0 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 17.8 16.4 17.3 15.2 10.4
-## [16] 10.4 14.7 32.4 30.4 33.9 21.5 15.5 15.2 13.3 19.2 27.3 26.0 30.4 15.8 19.7
-## [31] 15.0 21.4</code></pre>
+<pre><code>##  [1] 21.0 21.0 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 17.8 16.4 17.3 15.2 10.4 10.4 14.7 32.4 30.4 33.9 21.5 15.5 15.2 13.3 19.2 27.3 26.0 30.4 15.8 19.7 15.0 21.4</code></pre>
 <p>The first column of a data set can also be extracted by name</p>
 <pre class="r"><code>mtcars$mpg</code></pre>
-<pre><code>##  [1] 21.0 21.0 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 17.8 16.4 17.3 15.2 10.4
-## [16] 10.4 14.7 32.4 30.4 33.9 21.5 15.5 15.2 13.3 19.2 27.3 26.0 30.4 15.8 19.7
-## [31] 15.0 21.4</code></pre>
+<pre><code>##  [1] 21.0 21.0 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 17.8 16.4 17.3 15.2 10.4 10.4 14.7 32.4 30.4 33.9 21.5 15.5 15.2 13.3 19.2 27.3 26.0 30.4 15.8 19.7 15.0 21.4</code></pre>
 <p>The command [1,] will return the first row of a data set</p>
 <pre class="r"><code>mtcars[1,]</code></pre>
 <pre><code>##           mpg cyl disp  hp drat   wt  qsec vs am gear carb
