@@ -20,6 +20,8 @@ navbar:
           href: 05_MEM_Model_Selection.html
         - text: "Practical 06"
           href: 06_Heteroskedasticity_Autocorrelation.html
+        - text: "Practical 07"
+          href: 07_Spatial_and_Phylogenetic_Autocorrelation.html
     - text: "Datasets"
       menu:
         - text: "Practicals"

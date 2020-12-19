@@ -42,3 +42,11 @@ This page contains the datasets needed to complete the practicals for this cours
 ### Practical 06 - Heteroskedasticity, Temporal Autocorrelation, and the IID Assumption
 
 <a href="Practical_Datasets/Cod_daily_depth_data.csv" >Cod depths</a>
+
+### Practical 07 - Spatial and Phylogenetic Autocorrelation
+
+<a href="Practical_Datasets/SDI2003.csv" >SDI and pH</a>
+
+<a href="Practical_Datasets/rockfish.csv" >Rockfish traits</a>
+
+<a href="Practical_Datasets/rockfish.phy.txt" >Rockfish phylogenetic tree</a>

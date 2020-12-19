@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Practical 07 - Spatial and Phylogenetic Autocorrelation</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="tutorial.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Biol 520C Statistical modelling for biological data</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="Lectures.html">Lectures</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Practicals
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="01_R_Introduction.html">Practical 01</a>
+    </li>
+    <li>
+      <a href="02_Regression.html">Practical 02</a>
+    </li>
+    <li>
+      <a href="03_MLR_Residuals.html">Practical 03</a>
+    </li>
+    <li>
+      <a href="04_Visualisation.html">Practical 04</a>
+    </li>
+    <li>
+      <a href="05_MEM_Model_Selection.html">Practical 05</a>
+    </li>
+    <li>
+      <a href="06_Heteroskedasticity_Autocorrelation.html">Practical 06</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Datasets
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Practical_Datasets.html">Practicals</a>
+    </li>
+    <li>
+      <a href="Paper1_Datasets.html">Paper 1</a>
+    </li>
+    <li>
+      <a href="Paper2_Datasets.html">Paper 2</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Practical 07 - Spatial and Phylogenetic Autocorrelation</h1>
+
+</div>
+
+
+<p>This page was last updated on December 18, 2020.</p>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Register.StartupHook('TeX Jax Ready', function () {
+  MathJax.InputJax.TeX.prefilterHooks.Add(function (data) {
+    data.math = data.math.replace(/^% <!\[CDATA\[/, '').replace(/%\]\]>$/, '');
+  });
+});
+</script>
+<hr />
+<div id="background" class="section level2">
+<h2>Background</h2>
+<p>Biological data are often collected by measuring quantities over space, time, or comparing differences across species. When collecting data in this way, measurements that are close together in space or time, or from species that are closely related (depending on what you’re measuring) will be more similar to each other than other measurements. This phenomenon is known as autocorrelation. Autocorrelated data can be highly informative, and the autocorrelation structure may actually help you learn more about how a system operates, but the data must be treated with greater statistical care than IID data. In statistically independent data, the nominal sample size <span class="math inline">\(n\)</span> accurately reflects the true amount of information contained within the data (i.e., the effective sample size <span class="math inline">\(n_{\textrm{effective}}\)</span>). This is not the case in autocorrelated data and <span class="math inline">\(n \neq n_{\textrm{effective}}\)</span>. If the discrepancy between <span class="math inline">\(n\)</span> and <span class="math inline">\(n_{\textrm{effective}}\)</span> is not accounted for in the analyses, the results can be misrepresentative and should not be trusted. The larger the discrepancy between <span class="math inline">\(n\)</span> and <span class="math inline">\(n_{\textrm{effective}}\)</span>, the more untrustworthy the results. Seen another way, collecting data in a way that increases the amount of autocorrelation (e.g., closer in time/space or for many closely related species) can actually make our models worse if not accounted for.</p>
+<p>To this end, standard linear regression models are of the form</p>
+</br>
+<center>
+<span class="math inline">\(y_i = \beta_0 + \beta_1 \times x_{i} + \varepsilon_i \quad\quad \varepsilon_i \sim \mathcal{N}(0,\, V) \quad\quad V = \sigma^2 {\begin{bmatrix}1&amp; 0 &amp;\cdots &amp; 0 \\ 0 &amp; 1 &amp; \cdots &amp; 0 \\ \vdots &amp;\vdots &amp;\ddots &amp;\vdots \\ 0 &amp; 0 &amp; \cdots &amp;1 \end{bmatrix}}\)</span>
+</center>
+<p></br></p>
+<p>As we have seen previously, the diagonal in the variance-covariance matrix defines the variances. All 1s indicates homogeneity of variances. The off-diagonals define the co-variances and the 0s indicate independence. This standard format does not permit any covariance between the residuals, and violation of this assumption can bias parameter estimates and negatively impact our capacity to learn from our models. Correcting for autocorrelation (spatial, temporal, phylogenetic, etc.) requires modifying the variance-covariance matrix such that the off-diagonals <span class="math inline">\(\neq\)</span> 0.</p>
+<p>In this Practical we will:</p>
+<ul>
+<li>Fit models to spatially autocorrelated data</li>
+<li>Learn how missing covariates can introduce spatial autocorrelation that can not be corrected for by autocorrelated error structures alone.</li>
+<li>Learn how to work with phylogenetic trees/data in <code>R</code></li>
+<li>Fit models that correct for phylogenetic autocorrelation.</li>
+</ul>
+<hr />
+</div>
+<div id="spatial-autocorrelation" class="section level2">
+<h2>Spatial Autocorrelation</h2>
+<p>Spatial autocorrelation can arise when the variation between the values of the datapoints is affected by their spatial distance. The underlying reason for this is typically that many of the drivers of biological patterns such as environmental conditions, topography, ecosystem structure/composition act at large spatial scales, making data that are spatially close more similar than data collected further apart. To explore this we are going to use data from:</p>
+<p>Cruikshanks, R., Lauridsen, R., Harrison, A., Hartl, M. G., Kelly-Quinn, M., Giller, P. S., &amp; O’Halloran, J. (2006). Evaluation of the use of the Sodium Dominance Index as a potential measure of acid sensitivity. WATERAC Final Report. EPA and COFORD, Ireland.</p>
+<p>And follow a workflow based partially on that described by:</p>
+<p>Zuur, A., Ieno, E. N., Walker, N., Saveliev, A. A., &amp; Smith, G. M. (2009). Mixed effects models and extensions in ecology with R. Springer Science &amp; Business Media.</p>
+<p>In Cruikshanks et al.’s technical report, the authors looked at different ways of identifying the acid-sensitivity of rivers. Methods at the time relied on pH, but pH is highly variable within catchments as it is sensitive to local flow conditions, geology, etc. They proposed the Sodium Dominance Index (SDI) as an alternative. SDI is essentially a ratio of the concentration of Na+, divided by the sum of the concentrations of Na+, Ca2+, and Mg2+, expressed as a percentage. The motivation of their work was to demonstrate a need for increasing the amount of forest cover in Irish landscapes. Variables in this dataset include:</p>
+<ul>
+<li><code>ID</code>: The ID of the datapoint</li>
+<li><code>Rivername</code>: The name of the river where the data were collected</li>
+<li><code>Easting</code>: The easting of the sample site</li>
+<li><code>Northing</code>: The northing of the sample site</li>
+<li><code>Altitude</code>: The altitude of the sample site</li>
+<li><code>Forested</code>: A factor indicating whether the site was forested or not (1 = forested 2= not forested)</li>
+<li><code>Date</code>: The date of data collection</li>
+<li><code>Date2</code>: The date of data collection transformed</li>
+<li><code>FieldpH</code>: The field pH</li>
+<li><code>pH</code>: The pH of the water</li>
+<li><code>Temperature</code>: The water temperature</li>
+<li><code>SDI</code>: Sodium Dominance Index expressed as a percentage</li>
+</ul>
+<ol style="list-style-type: decimal">
+<li><ol></li>
+</ol>
+<ul>
+<li>Load the <code>nlme</code> package.</li>
+<li>Import the SDI2003 dataset (make sure the variable <code>Forested</code> is a factor).</li>
+<li>Log transform the altitude data and store this as a new variable in the same dataset.</li>
+<li>Create a scatterplot with <code>SDI</code> on the X and <code>pH</code> on the Y. Do you expect there to be a significant relationship?</li>
+<li>Plot the spatial coordinates of the data and colour the locations by whether or not the site was forested. Do you see any patterns in the spatial distribution of forest cover? Describe whether or not this might impact spatial autocorrelation in pH.</li>
+<li>Fit a fixed-effects model predicting pH from the 3-way interaction between SDI, log-scaled altitude, and forest cover using the <code>gls</code> function. (Fit the model via ML not REML).</li>
+<li>Inspect the summary overview of the model.</li>
+<li>Plot the normalized residuals against the fitted values.</li>
+<li>Make a plot of the residuals in space by plotting the spatial coordinates of the data and colour the locations by the value of the residuals. What do you see?
+</ol></li>
+</ul>
+<div id="detecting-spatial-autocorrelation" class="section level3">
+<h3>Detecting spatial autocorrelation</h3>
+<p>Spatial autocorrelation can be difficult to see in a simple residuals vs. fitted plot because they are not designed for this purpose.`Bubble plots’ are an easy tool to quickly assess the residuals for potential autocorrelation, but can be hard to read and not very formal. We will cover two tools for assesing your data for spatial autocorrelation: Moran’s I and variograms.</p>
+<div id="morans-i" class="section level4">
+<h4>Moran’s I</h4>
+<p>Moran’s I is a correlation coefficient that measures the overall spatial autocorrelation of a data set (think of it as <span class="math inline">\(\sim\)</span> weighted covariance):</p>
+</br>
+<center>
+<span class="math inline">\(I = {\frac {N}{W}}{\frac {\sum _{i}\sum _{j}w_{ij}(x_{i}-{\bar {x}})(x_{j}-{\bar {x}})}{\sum _{i}(x_{i}-{\bar {x}})^{2}}}\)</span>
+</center>
+<p></br></p>
+<p><span class="math inline">\(N\)</span> is the number of spatial units indexed by <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span>; <span class="math inline">\(x\)</span> is the variable of interest and <span class="math inline">\(\bar{x}\)</span> is the mean of <span class="math inline">\(x\)</span>; <span class="math inline">\(w_{ij}\)</span> is a matrix of spatial weights and <span class="math inline">\(W\)</span> is the sum of all <span class="math inline">\(w_{ij}\)</span>.</p>
+<p>Values of Moran’s I usually range from -1 to +1. There are Many <code>R</code> packages for calculating Moran’s I but today we will work with the implementation in the <code>ape</code> package.</p>
+<ol style="list-style-type: decimal">
+<li><ol></li>
+</ol>
+<ul>
+<li>Load the <code>ape</code> and <code>fields</code> packages.</li>
+<li>Create a vector of spatial coordinates for the SDI dataset</li>
+<li>Use the <code>rdist</code> function from the <code>fields</code> package to generate a matrix of distances between the coordinates that will be used as the weights.</li>
+<li>Calculate Moran’s I of the residuals using the <code>Moran.I</code> function from the <code>ape</code> package.</li>
+<li>Breifly describe the outcome.
+</ol></li>
+</ul>
+</div>
+<div id="semi-variograms" class="section level4">
+<h4>Semi-variograms</h4>
+<p>Moran’s I can be a useful tool for identifying the presence of autocorrelation and is quite popular. The challenge is how to act on this information? In other words, it lets you know if you have a problem or not, but doesn’t help in finding an appropriate spatial correlation structure to act as a solution. Semi-variograms (or just variograms) are spatial data’s equivalent of the ACF facilitate visual assessment of spatial autocorrelations in the data. Semi-variance is a measure of the degree of similarity between pairs of points separated by a specific distance <span class="math inline">\(h\)</span>. Plot of semi-variance vs. separation distance is called a variogram. Usefully, the different spatial correlation models all have differently shaped theoretical variograms. In other words the shape of a dataset’s empirical variogram can provide clues on which spatial correlation model is most appropriate. Let’s see what that looks like for the SDI data.</p>
+<ol style="list-style-type: decimal">
+<li><ol></li>
+</ol>
+<ul>
+<li>Create a vector of spatial coordinates for the SDI dataset</li>
+<li>Use the <code>Variogram</code> function from the <code>nlme</code> package to calculate the semi-variogram of the linear model. Be sure to include a <code>nugget</code> effect, and remember to specify the spatial coordinates via the <code>form</code> argument (see <code>help(Variogram.lme)</code>).</li>
+<li>Plot the fitted variogram and describe the outcome.
+</ol></li>
+</ul>
+</div>
+</div>
+<div id="applying-spatially-autocorrelated-error-structures" class="section level3">
+<h3>Applying Spatially Autocorrelated Error Structures</h3>
+<p>There are several models that can be used to define the error structures of spatially autocorrelated data. These can be applied via the <code>corExp</code>, <code>corGaus</code>, <code>corLin</code>, <code>corRatio</code>, <code>corSpher</code>, functions from the <code>nlme</code> package. The empirical variogram will often provide clues on which model is most appropriate for the data, but here we are not so lucky. There is a clear nugget, but otherwise not much of a patter to work with.</p>
+<ol style="list-style-type: decimal">
+<li><ol></li>
+</ol>
+<ul>
+<li>Refit the same model, but this time add each of the different spatial autocorrelation structures in turn.</li>
+<li>Identify the best spatial autocorrelation structure via AIC.</li>
+<li>Calculate the semi-variogram of the best-fit model.</li>
+<li>Plot the fitted variogram and describe the outcome.</li>
+<li>Calculate Moran’s I on the residuals of the best-fit model.
+</ol></li>
+</ul>
+</div>
+<div id="spatially-autocorrelated-errors-due-to-missing-data" class="section level3">
+<h3>Spatially Autocorrelated Errors due to Missing Data</h3>
+<p>We might try to manually tune the parameters of the variogram to better fit the data. We might also try a number of data transformations, but the real issue here is that there is a missing co-variate. This can be seen in a bubble plot of the normalized residuals.</p>
+<ol style="list-style-type: decimal">
+<li><ol></li>
+</ol>
+<ul>
+<li>load the <code>gstat</code> and <code>sp</code> packages.</li>
+<li>Create a new dataframe with three columns: the normalised residuals from the first linear model, the easting of each location, and the northing of each location.</li>
+<li>Use the <code>coordinates()</code> function to define the easting and northing as spatial coordinates (see <code>?sp::coordinates</code>).</li>
+<li>Use the <code>bubble()</code> function to create a bubble plot of the residuals. Do you see any patterns?
+</ol></li>
+</ul>
+<p>The negative residuals are clustered in the south and south-east, whereas the positive residuals are clustered in the west and north-west. Remember, the underlying reason for spatial autocorrelation is that many of the drivers of biological patterns such as environmental conditions, topography, ecosystem structure/composition act at large spatial scales. Here, some factor is causing pH to differ systematically between catchments in the south and south-east and those in the west and north-west, but without information on what this factor is we can not fully correct the issue. Remember our earlier exercises, any pattern that remains in the residuals is a pattern that isn’t being explained by the model. Here there is a clear pattern, so if you were working with these data you would need to think hard about what additional co-variate you might be able to include (geology? human development?). For the time being, it is best to refrain from making any general conclusions about the relationship between SDI, forest cover, and pH from these data alone.</p>
+<hr />
+</div>
+</div>
+<div id="phylogenetic-autocorrelation" class="section level2">
+<h2>Phylogenetic Autocorrelation</h2>
+<p>As biologists, we often find ourselves trying to understand drivers of patterns across species. If we can identify such patterns, it allows us to make general statements about the way that life on earth operates, and the results can be highly informative. These types of analyses can be used to test evolutionary hypotheses and have a long history in evolutionary biology. Indeed, Charles Darwin used differences and similarities between species as a major source of evidence in ‘The Origin of Species’. When we’re carrying out these types of analyses, we’re interested in between species comparisons. As we saw in this week’s lecture, however, the problem here is that species are part of a hierarchically structured phylogeny, and cannot be considered to be statistically independent. This type of non-independence can be accounted for by incorporating information on the species’ phylogenetic relationships.</p>
+<p>We will explore how that works in practice on a dataset of rockfish traits. Rockfish (<em>Sebastes spp</em>) are a diverse group of fishes that live primarily in the north Pacific Ocean. Rockfish range from the inter-tidal zone to depths of <span class="math inline">\(\sim\)</span> 3,000 m. The are usually benthic, living in and around various substrates, often rock outcrops. Some rockfish species are extremely long-lived for their size, and are amongst the longest-living fish on earth, with a maximum reported age of 205 years.</p>
+<p>We are going to use data on 56 species gathered from a mix of sources and obtained from <a href="https://www.zoology.ubc.ca/~bio501/R/workshops/phylogenetic.html#Rockfish_evolution">here</a></p>
+<p>Variables in this dataset include:</p>
+<ul>
+<li><code>species</code>: The species ID of the datapoint (Genus.species)</li>
+<li><code>maxlength.cm</code>: The species’ maximum body size in cm</li>
+<li><code>maxage.y</code>: The maximum recorded age of the species (in years)</li>
+<li><code>maxdepth.m</code>: The maximum recorded depth the species lives ar (in m)</li>
+</ul>
+<p>We will also use a is a consensus tree of the 56 species based on 7 mitochondrial and 2 nuclear genes, based on:</p>
+<p>Hyde, J. R., &amp; Vetter, R. D. (2007). The origin, evolution, and diversification of rockfishes of the genus Sebastes (Cuvier). Molecular phylogenetics and evolution, 44(2), 790-811.</p>
+<p>We will use these data to explore the correlation between lifespan, body size, and depth, and we’ll begin with a naive analysis that ignores phylogenetic relationships, so that we have a baseline for comparison.</p>
+<ol style="list-style-type: decimal">
+<li><ol></li>
+</ol>
+<ul>
+<li>Import the rockfish dataset and log-transform the variables.</li>
+<li>Fit a model predicting maximum age from either depth or body size (your choice). As before, fit the model using <code>gls()</code> via ML not REML.</li>
+<li>Inspect the summary overview of the model.</li>
+<li>Plot the normalized residuals against the fitted values.
+</ol></li>
+</ul>
+<div id="working-with-phylogenies" class="section level3">
+<h3>Working with Phylogenies</h3>
+<p>The first step in a phylogentically controlled regression is importing and inspecting the phylogentic tree, and generating some basic visual diagnostics. The phylogenetic trees we will be working with get imported as a special type of list of the class “phylo”, defined by the developers of the <code>ape</code> package. There are multiple slots in this list that contain some of the information stored in the phylo object. this includes:</p>
+<ul>
+<li>the slots <code>tip.label</code> (the names of the taxa)</li>
+<li>the slots <code>edge.length</code> (the lengths of all tree branches)</li>
+<li>the slots <code>edge</code> (the identity of branches from node, to node)</li>
+</ul>
+<ol style="list-style-type: decimal">
+<li><ol></li>
+</ol>
+<ul>
+<li>Import the rockfish phylogeny using the <code>read.tree()</code> function from the <code>ape</code> package.</li>
+<li>Run the <code>summary()</code> and <code>plot()</code> commands on the tree to get a feel for what you’re working with.</li>
+<li>Plot the tree again, but now experiment with the <code>type</code> argument.</li>
+<li>Plot the tree again, but now colour the tip labels by age using the <code>tip.color</code> argument.</li>
+<li>Plot the tree one more time, but now colour the tip labels by the value of the residuals.</li>
+<li>Describe what you have learned from these figures.
+</ol></li>
+</ul>
+</div>
+<div id="including-phylogenic-correlation-structures" class="section level3">
+<h3>Including phylogenic correlation structures</h3>
+<p>With a phylogeny in hand we can now correct our original model for phylogenetic dependence using the correlation structures provided by the <code>ape</code> package.</p>
+<ol style="list-style-type: decimal">
+<li><ol></li>
+</ol>
+<ul>
+<li>Refit the same model as above but this time add a correlation structure based on Pagel’s <span class="math inline">\(\lambda\)</span>.</li>
+<li>Check the AIC of this model against your previous fit. Was there any noticeable improvement?</li>
+<li>Return a summary of the fitted model. What is the value of <span class="math inline">\(\lambda\)</span> Does this suggest a strong phylogenetic signal?</li>
+<li>Plot the age as a function of the variable you chose in your models. Add the two fitted regression lines and compare the results.</li>
+<li>Describe the effect of accounting for phylogenetic inertia on the regression model.
+</ol></li>
+</ul>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
