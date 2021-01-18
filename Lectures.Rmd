@@ -10,3 +10,5 @@ knitr::opts_chunk$set(echo = TRUE)
 <a href="Lectures/Course_Intro.pdf" target="_blank">Lecture 01 Course Intro.</a>
 
 <a href="Lectures/02_Regression.pdf" target="_blank">Lecture 02 Simple Linear Regression.</a>
+
+<a href="Lectures/03_Probability.pdf" target="_blank">Lecture 02 Probability.</a>
