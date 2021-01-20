@@ -22,6 +22,8 @@ navbar:
           href: 06_Heteroskedasticity_Autocorrelation.html
         - text: "Practical 07"
           href: 07_Spatial_and_Phylogenetic_Autocorrelation.html
+        - text: "Practical 08"
+          href: 08_GLMs_for_Count_Data.html
     - text: "Datasets"
       menu:
         - text: "Practicals"

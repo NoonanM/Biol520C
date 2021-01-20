@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Practical 08 - Generalised Linear Models for Count Data</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="tutorial.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Biol 520C Statistical modelling for biological data</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="Lectures.html">Lectures</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Practicals
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="01_R_Introduction.html">Practical 01</a>
+    </li>
+    <li>
+      <a href="02_Regression.html">Practical 02</a>
+    </li>
+    <li>
+      <a href="03_MLR_Residuals.html">Practical 03</a>
+    </li>
+    <li>
+      <a href="04_Visualisation.html">Practical 04</a>
+    </li>
+    <li>
+      <a href="05_MEM_Model_Selection.html">Practical 05</a>
+    </li>
+    <li>
+      <a href="06_Heteroskedasticity_Autocorrelation.html">Practical 06</a>
+    </li>
+    <li>
+      <a href="07_Spatial_and_Phylogenetic_Autocorrelation.html">Practical 07</a>
+    </li>
+    <li>
+      <a href="08_GLMs_for_Count_Data.html">Practical 08</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Datasets
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Practical_Datasets.html">Practicals</a>
+    </li>
+    <li>
+      <a href="Paper1_Datasets.html">Paper 1</a>
+    </li>
+    <li>
+      <a href="Paper2_Datasets.html">Paper 2</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Practical 08 - Generalised Linear Models for Count Data</h1>
+
+</div>
+
+
+<p>This page was last updated on January 19, 2021.</p>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Register.StartupHook('TeX Jax Ready', function () {
+  MathJax.InputJax.TeX.prefilterHooks.Add(function (data) {
+    data.math = data.math.replace(/^% <!\[CDATA\[/, '').replace(/%\]\]>$/, '');
+  });
+});
+</script>
+<hr />
+<div id="background" class="section level2">
+<h2>Background</h2>
+<p>We started this course with simple linear regression and we saw how increasing the number of parameters can soak up variance and improve a model’s explanatory power, how we can use mixed effects models to account for hierarchical data structures, how we can modify the variance structure to account for heteroskedasticity, and how we can modify the correlation matrix to correct for temporal, spatial, or phylogenetic autocorrelation. All of these improvements took place in a linear regression framework, with models of the general form:</p>
+</br>
+<center>
+<span class="math inline">\(y_i = \beta_0 + \beta_1 \times x_{1,i} + ... \beta_n \times x_{1,n} + \varepsilon_i \quad\quad \varepsilon_i \sim \mathcal{N}(0,\, V) \quad\quad V = \sigma^2 {\begin{bmatrix}1&amp; 0 &amp;\cdots &amp; 0 \\ 0 &amp; 1 &amp; \cdots &amp; 0 \\ \vdots &amp;\vdots &amp;\ddots &amp;\vdots \\ 0 &amp; 0 &amp; \cdots &amp;1 \end{bmatrix}}\)</span>
+</center>
+<p></br></p>
+<p>We can get a <strong><em>lot</em></strong> of mileage out of this formulation, but the problem with this structure is that the range of the Gaussian distribution is <span class="math inline">\(-\infty, \infty\)</span>. This means that if we set up our problem this way our models tell us that our residuals should be normally distributed and that our response can, theoretically, take any value between <span class="math inline">\(-\infty, \infty\)</span>. For many datasets, this assumption is perfectly appropriate. But what if it’s not? Does this make sense for response variables that can only take positive values? Or for discrete outcomes? Or if we’re working with proportions that are bound between 0 and 1?</p>
+<p>There are three steps you can take if you think that Gaussian distributed residuals is not a reasonable assumption for your data:</p>
+<ul>
+<li><strong>Nothing.</strong> If the residuals are <span class="math inline">\(\sim\)</span>normally distributed and the spread isn’t bad, this isn’t a terrible assumption (remember, no model is ever going to be 100% correct).</li>
+<li><strong>Transform your data.</strong> Shoehorning your data to fit the assumptions of normality can work, but it changes the relationship between your response and your predictors. It’s also not very practical for discrete response variables because most transformations will not make these continuous in any meaningful way.</li>
+<li><strong>Choose another distribution.</strong> Switching from applying linear models to generalised linear models (GLMs) can give you more flexibility when modelling data that do not easily fit into the standard Gaussian framework.</li>
+</ul>
+<div id="generalised-linear-models-glms" class="section level3">
+<h3>Generalised Linear Models (GLMs)</h3>
+<p>``<em>In statistics, the generalized linear model (GLM) is a flexible generalization of ordinary linear regression that allows for response variables that have error distribution models other than a normal distribution.</em>’’ — <a href="https://en.wikipedia.org/wiki/Generalized_linear_model">Wikipedia</a></p>
+<p>In 1972, Nelder &amp; Wedderburn (1972) worked out a generalisation of the linear regression model that extended the models we’ve been working with so far to any member of the family of exponential distributions (Gaussian, Poisson, binomial, negative binomial, gamma, etc.). In particular, they showed how all of these distributions can be expressed by the general formulation:</p>
+</br>
+<center>
+<span class="math inline">\(f(Y ; \theta, \phi)=e^{\frac{y \times \theta - b(\theta)}{a(\phi)}+c(y,\theta)}\)</span>
+</center>
+<p></br></p>
+<p>This means that a single set of equations can be used when modelling random variables drawn from any of the distributions from the exponential family. Now that we have a general expression for the stochastic component of our model, we just need to find a way to `link’ the expectation value of our model with the expectation value of the distribution. To do this we need to carry out 3 steps when fitting GLMs:</p>
+<ul>
+<li>Make a distributional assumption on the response variable <span class="math inline">\(Y_i\)</span>. This also defines the mean and variance of <span class="math inline">\(Y_i\)</span>.</li>
+<li>Specify the deterministic part of the model.</li>
+<li>Formally specify the `link’ between the mean of <span class="math inline">\(Y_i\)</span> and the deterministic part based on your distributional assumption.</li>
+</ul>
+<p>Although it can be challenging to work with these complex distributions, the <code>glm()</code> function in <code>R</code> streamlines this process for us. Note: This is not the only function for fitting GLMs, but it’s a good place to start.</p>
+<p></br></p>
+<p>In this Practical we will:</p>
+<ul>
+<li>Fit models to generalised linear regression models (GLMs) to count data using a number of different distributions</li>
+<li>Learn how to check a Poisson GLM for overdispersion.</li>
+<li>Learn how to plot GLM regression models</li>
+<li>Learn why switching to using GLMs is the prefered alternative as compared to transformations and model manipulations in a standard Gaussian framework.</li>
+</ul>
+<hr />
+</div>
+</div>
+<div id="modelling-count-data" class="section level2">
+<h2>Modelling Count Data</h2>
+<p>As biologists we often find ourselves with count data. Count data usually range between 0 and <span class="math inline">\(\infty\)</span>. They’re also usually discrete integers because we don’t count fractions of things (unless those things were very unlucky…). The Gaussian distribution is continuous and has support between <span class="math inline">\(-\infty, \infty\)</span>, so we can already tell it’s probably not a good option. If we model count data using a linear regression model, the stochastic part of our model will be misspecified, so there is a good chance that our model’s predictive power will be low. This means that if we’re working with count data, we’re probably going to need to build our models in a GLM framework. To explore this concept we are going to use data from:</p>
+<p><a href="https://science.sciencemag.org/content/179/4076/893">M. P. Johnson and P. H. Raven (1973) “Species number and endemism: The Galapagos Archipelago revisited” Science, 179, 893-895</a></p>
+<p>These data are openly available as part of the <code>faraway</code> package.</p>
+<p>In Johnson and Raven’s paper, the authors used regression analyses to explore the relationship between an island’s area and the number of plant species found on the island. They measured species abundance and area for 30 Galapagos islands. The motivation of their work was to build on the theory of <a href="https://en.wikipedia.org/wiki/Insular_biogeography">Island Biogeography</a>. Variables in this dataset include:</p>
+<ul>
+<li><code>Species</code>: The number of plant species found on the island</li>
+<li><code>Endemics</code>: The number of endemic species</li>
+<li><code>Area</code>: The area of the island (km<span class="math inline">\(^2\)</span>)</li>
+<li><code>Elevation</code>: The highest elevation of the island (m)</li>
+<li><code>Nearest</code>: The distance from the nearest island (km)</li>
+<li><code>Scruz</code>: The distance from Santa Cruz island (km)</li>
+<li><code>Adjacent</code>: The area of the adjacent island (km<span class="math inline">\(^2\)</span>)</li>
+</ul>
+<div id="modelling-count-data-the-wrong-way" class="section level3">
+<h3>Modelling Count Data the wrong way</h3>
+<p>One of the simples places to start when fitting a model to a datset is with a simple linear regression model. This can work fine in many cases, so let’s see if we can get away with this here.</p>
+<ol style="list-style-type: decimal">
+<li><ol></li>
+</ol>
+<ul>
+<li>Install and load the <code>faraway</code> and <code>nlme</code> package and import the <code>gala</code> dataset.</li>
+<li>Log10 transform the <code>Area</code> data and store this as a new variable in the same dataset called <code>log.area</code>.</li>
+<li>Create a scatterplot with the log10 transformed <code>Area</code> on the X and <code>Species</code> on the Y. Do you expect there to be a significant relationship? Does a Gaussian linear model look appropriate for these data?</li>
+<li>Fit a linear model predicting <code>Species</code> from log10 transformed <code>Area</code> using the <code>gls</code> function.</li>
+<li>Inspect the summary overview of the model.</li>
+<li>Create a scatterplot with the log10 transformed <code>Area</code> on the X and <code>Species</code> on the Y. Use the <code>abline()</code> function to plot the fitted model.</li>
+<li>Plot the residuals against the fitted values.</li>
+<li>Use the <code>predict()</code> function on this model to predict the most likely outcomes for the fitted values. Do these numbers seem plausible?</li>
+<li>Inspect the fitted model and all of the outputs you just generated. Do you think that this is a good model for these data?
+</ol></li>
+</ul>
+</div>
+<div id="attempting-corrections" class="section level3">
+<h3>Attempting corrections</h3>
+<p>The data look non-linear, so if we knew nothing about GLMs, we could try to fit a second order polynomial model to correct for the disconnect between the fitted model and the data.</p>
+<ol style="list-style-type: decimal">
+<li><ol></li>
+</ol>
+<ul>
+<li>Add a second order polynomial term to the first model.</li>
+<li>Inspect the summary overview of this new model.</li>
+<li>Create a scatterplot with the log10 transformed <code>Area</code> on the X and <code>Species</code> on the Y.</li>
+<li>Plot the fitted model.</li>
+<li>Plot the residuals against the fitted values.</li>
+<li>Inspect the fitted model and all of the outputs you just generated. Do you think that this correction is sufficient?
+</ol></li>
+</ul>
+</div>
+<div id="modelling-count-data-using-glms" class="section level3">
+<h3>Modelling Count Data using GLMs</h3>
+<p>We could keep trying <em>ad hoc</em> corrections to improve the model (e.g., maybe log-scaling the species abundance data to smooth out some of the non-linearity), but these are all going to be half measures because the real issue here is that we are using the wrong distribution to model these data. Because we’re working with counts of species, what we’re looking for is a discrete distribution with support between 0 and <span class="math inline">\(\infty\)</span>. Given these requirements, the Poisson distribution is a good candidate for modelling these data.</p>
+<p>In order to model these data using a Poisson distribution to describe the model’s stochastic component, we need to switch to a GLM workflow. To do this we need to carry out 3 steps before fitting our GLM:</p>
+<ul>
+<li>Make a distributional assumption on the response variable.</li>
+<li>Specify the deterministic part of the model.</li>
+<li>Formally specify the `link’ between the deterministic part based on your distributional assumption.</li>
+</ul>
+<p>We just said that we think working with a Poisson distribution is a good place to start, so after step 1 we get:</p>
+</br>
+<center>
+<span class="math inline">\(Y_i \sim Poisson(\lambda = \mathrm{Species}_i)\)</span>
+</center>
+<p></br></p>
+<p>The second step of a GLM is to specify deterministic part:</p>
+</br>
+<center>
+<span class="math inline">\(\eta = \beta_0 + \beta_1 \times \mathrm{log.area}_i\)</span>
+</center>
+<p></br></p>
+<p>The last step is to link <span class="math inline">\(\eta\)</span> and <span class="math inline">\(\mu_i\)</span>. Because our species abundance data can only be positive, we can’t use an identity link. Instead, we use a log-link to ensure the fitted values are always positive:</p>
+</br>
+<center>
+<span class="math inline">\(\log(\mathrm{Species}_i) = \beta_0 + \beta_1 \times \mathrm{log.area}_i \quad \mathrm{or} \quad \mathrm{Species}_i = e^{\beta_0 + \beta_1 \times \mathrm{log.area}_i}\)</span>
+</center>
+<p></br></p>
+<p>This whole process is streamlined via the <code>glm()</code> function, which we will now use to try and improve our model</p>
+<ol style="list-style-type: decimal">
+<li><ol></li>
+</ol>
+<ul>
+<li>Fit a generalised linear model predicting <code>Species</code> from log10 transformed <code>Area</code> using the <code>glm</code> function. Be sure to specify the distribution you want to model from and the link function.</li>
+<li>Inspect the summary overview of the model.</li>
+<li>Calculate the pseudo R-squared for the fitted GLM model. Does this seem good?</li>
+<li>Create a scatterplot with the log10 transformed <code>Area</code> on the X and <code>Species</code> on the Y.</li>
+<li>Use <code>abline()</code> to plot the fitted model. What happened?
+</ol></li>
+</ul>
+<p>In a GLM framework we have a link function that lies between <span class="math inline">\(\eta\)</span> and the response variable. If we simply plot the fitted model on a linear scale without factoring in the link function, we can not place our fitted model on the appropriate scale. We need to work around this when visualising GLMs.</p>
+<ol style="list-style-type: decimal">
+<li><ol></li>
+</ol>
+<ul>
+<li>Create a data frame called <code>New_Data</code> that is comprised of a single column called <code>log.area</code> that is made up of a sequence of 200 numbers between -2 to 4.</li>
+<li>Use these ‘data’ combined with the <code>predict()</code> function to generate predictions from the fitted GLM model. You will need to correctly specify some of the arguments of this function, so set <code>newdata = New_Data</code>, <code>type = "link"</code>, and <code>se = TRUE</code>. Run <code>class()</code> and <code>names()</code> on the output of <code>predict()</code>.</li>
+<li>The <code>fit</code> slot of this list contains the model’s deterministic prediction. The <code>fit.se</code> slot contains the standard errors of the predictions. Use the <code>fit</code> slot to plot the fitted GLM overlayed on the original data. Remember <span class="math inline">\(\mu_i = e^{\eta}\)</span>, so you need to transform the predictions before plotting them.</li>
+<li>Use the <code>fit.se</code> slot to plot the 95% confidence bands. Note: the 95% CIs = <span class="math inline">\(\mu_i \pm SE \times 1.96\)</span>.
+</ol></li>
+</ul>
+</div>
+<div id="overdispersion" class="section level3">
+<h3>Overdispersion</h3>
+<p>Remember that the potential problem with Poisson GLMs is overdispersion. Overdispersion means that the variance is larger than the mean (when we compare what we would expect from a Poisson distribution).</p>
+<ol style="list-style-type: decimal">
+<li><ol></li>
+</ol>
+<ul>
+<li>Check for overdispersion by calculating the following: Residual Deviance / degrees of freedom on the residual deviance. (Large values are bad in this context)</li>
+<li>It is also possible to check the significance of this using a chisquare test. Check if this overdispersion is significant by calculating the following: <code>1-pchisq(residual deviance, degrees of freedom on the residual deviance)</code></li>
+<li>Are the data over-dispersed, or is a Poisson assumption appropriate?</li>
+</ul>
+<p></br></p>
+<strong>Note:</strong> You can get the information needed for this exercise by running summary on the fitted model.
+</ol>
+</div>
+<div id="negative-binomial-glm-on-count-data" class="section level3">
+<h3>Negative binomial GLM on count data</h3>
+<p>Switching from a Gaussian distribution to a Poisson distribution is often a good fix for modelling count data, but it’s not always the most appropriate distribution for count data. One of the primary reasons why a Poisson won’t work very well on count data is over-dispersion (because the variance is tied to the mean and therefore less flexible). The negative binomial distribution is often a viable alternative to the Poisson distribution as it allows for more heterogeneity because variance <span class="math inline">\(\neq\)</span> mean.</p>
+<ol style="list-style-type: decimal">
+<li><ol></li>
+</ol>
+<ul>
+<li>Load in the <code>MASS</code> package.</li>
+<li>Fit a negative binomial model predicting <code>Species</code> from log10 transformed <code>Area</code> using the <code>glm.nb()</code> function from the <code>MASS</code> package. Be sure to specify the link function.</li>
+<li>Inspect the summary overview of the model.</li>
+<li>Plot the fitted model and 95% CIs using the same steps as in Exercise 4. How does this fit compare to the Poisson model?</li>
+<li>Which of the two GLM models would AIC favour?
+</ol></li>
+</ul>
+<hr />
+</div>
+</div>
+<div id="references" class="section level2">
+<h2>References</h2>
+<p>Johnson M.P. &amp; Raven, P.H. (1973) Species number and endemism: The Galapagos Archipelago revisited Science, 179, 893-895.</p>
+<p>Nelder, J.A. &amp; Wedderburn, R.W. (1972). Generalized linear models. Journal of the Royal Statistical Society: Series A (General), 135, 370–384.</p>
+<p>More information on plotting GLMs can be found <a href="https://www.r-bloggers.com/2015/06/confidence-intervals-for-prediction-in-glmms/">here</a></p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
