@@ -1,0 +1,232 @@
+---
+title: "Practical 08 - Generalised Linear Models for Count Data"
+#author: "Michael Noonan"
+output:
+  html_document:
+    css: tutorial.css
+    fig_caption: yes
+    highlight: textmate
+    theme: flatly
+    toc: yes
+    toc_float: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.width=6, fig.height=6)
+
+```
+
+This page was last updated on `r format(Sys.time(), '%B %d, %Y')`.
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Register.StartupHook('TeX Jax Ready', function () {
+  MathJax.InputJax.TeX.prefilterHooks.Add(function (data) {
+    data.math = data.math.replace(/^% <!\[CDATA\[/, '').replace(/%\]\]>$/, '');
+  });
+});
+</script>
+
+* * *
+## Background
+
+We started this course with simple linear regression and we saw how increasing the number of parameters can soak up variance and improve a model's explanatory power, how we can use mixed effects models to account for hierarchical data structures, how we can modify the variance structure to account for heteroskedasticity, and how we can modify the correlation matrix to correct for temporal, spatial, or phylogenetic autocorrelation. All of these improvements took place in a linear regression framework, with models of the general form:
+
+</br>
+<center>
+$y_i = \beta_0 + \beta_1 \times x_{1,i} + ... \beta_n \times x_{1,n} + \varepsilon_i \quad\quad \varepsilon_i \sim \mathcal{N}(0,\, V) \quad\quad V = \sigma^2 {\begin{bmatrix}1& 0 &\cdots & 0 \\ 0 & 1 & \cdots & 0 \\ \vdots &\vdots &\ddots &\vdots \\ 0 & 0 & \cdots &1 \end{bmatrix}}$
+</center>
+</br>
+
+We can get a ___lot___ of mileage out of this formulation, but the problem with this structure is that the range of the Gaussian distribution is $-\infty, \infty$. This means that if we set up our problem this way our models tell us that our residuals should be normally distributed and that our response can, theoretically, take any value between $-\infty, \infty$. For many datasets, this assumption is perfectly appropriate. But what if it's not? Does this make sense for response variables that can only take positive values? Or for discrete outcomes? Or if we're working with proportions that are bound between 0 and 1?
+
+
+There are three steps you can take if you think that Gaussian distributed residuals is not a reasonable assumption for your data:
+
+* __Nothing.__ If the residuals are $\sim$normally distributed and the spread isn't bad, this isn't a terrible assumption (remember, no model is ever going to be 100% correct).
+* __Transform your data.__ Shoehorning your data to fit the assumptions of normality can work, but it changes the relationship between your response and your predictors. It's also not very practical for discrete response variables because most transformations will not make these continuous in any meaningful way.
+* __Choose another distribution.__ Switching from applying linear models to generalised linear models (GLMs) can give you more flexibility when modelling data that do not easily fit into the standard Gaussian framework.
+
+### Generalised Linear Models (GLMs)
+
+``_In statistics, the generalized linear model (GLM) is a flexible generalization of ordinary linear regression that allows for response variables that have error distribution models other than a normal distribution._'' --- [Wikipedia](https://en.wikipedia.org/wiki/Generalized_linear_model)
+
+
+In 1972, Nelder & Wedderburn (1972) worked out a generalisation of the linear regression model that extended the models we've been working with so far to any member of the family of exponential distributions (Gaussian, Poisson, binomial, negative binomial, gamma, etc.). In particular, they showed how all of these distributions can be expressed by the general formulation:
+
+</br>
+<center>
+$f(Y ; \theta, \phi)=e^{\frac{y \times \theta - b(\theta)}{a(\phi)}+c(y,\theta)}$
+</center>
+</br>
+
+This means that a single set of equations can be used when modelling random variables drawn from any of the distributions from the exponential family. Now that we have a general expression for the stochastic component of our model, we just need to find a way to `link' the expectation value of our model with the expectation value of the distribution. To do this we need to carry out 3 steps when fitting GLMs:
+
+* Make a distributional assumption on the response variable $Y_i$. This also defines the mean and variance of $Y_i$.
+* Specify the deterministic part of the model.
+* Formally specify the `link' between the mean of $Y_i$ and the deterministic part based on your distributional assumption. 
+
+Although it can be challenging to work with these complex distributions, the `glm()` function in `R` streamlines this process for us. Note: This is not the only function for fitting GLMs, but it's a good place to start.
+
+</br>
+
+In this Practical we will:
+
+* Fit models to generalised linear regression models (GLMs) to count data using a number of different distributions
+* Learn how to check a Poisson GLM for overdispersion.
+* Learn how to plot GLM regression models
+* Learn why switching to using GLMs is the prefered alternative as compared to transformations and model manipulations in a standard Gaussian framework.
+
+* * *
+## Modelling Count Data
+As biologists we often find ourselves with count data. Count data usually range between 0 and $\infty$. They're also usually discrete integers because we don't count fractions of things (unless those things were very unlucky...). The Gaussian distribution is continuous and has support between $-\infty, \infty$, so we can already tell it's probably not a good option. If we model count data using a linear regression model, the stochastic part of our model will be misspecified, so there is a good chance that our model's predictive power will be low. This means that if we're working with count data, we're probably going to need to build our models in a GLM framework. To explore this concept we are going to use data from:
+
+[M. P. Johnson and P. H. Raven (1973) "Species number and endemism: The Galapagos Archipelago revisited" Science, 179, 893-895](https://science.sciencemag.org/content/179/4076/893)
+
+These data are openly available as part of the `faraway` package.
+
+In Johnson and Raven's paper, the authors used regression analyses to explore the relationship between an island's area and the number of plant species found on the island. They measured species abundance and area for 30 Galapagos islands. The motivation of their work was to build on the theory of [Island Biogeography](https://en.wikipedia.org/wiki/Insular_biogeography). Variables in this dataset include:
+
+* `Species`: The number of plant species found on the island
+* `Endemics`: The number of endemic species
+* `Area`: The area of the island (km$^2$)
+* `Elevation`: The highest elevation of the island (m)
+* `Nearest`: The distance from the nearest island (km)
+* `Scruz`: The distance from Santa Cruz island (km)
+* `Adjacent`: The area of the adjacent island (km$^2$)
+
+### Modelling Count Data the wrong way
+
+One of the simples places to start when fitting a model to a datset is with a simple linear regression model. This can work fine in many cases, so let's see if we can get away with this here.
+
+1. <ol>
+* Install and load the `faraway` and `nlme` package and import the `gala` dataset.
+* Log10 transform the `Area` data and store this as a new variable in the same dataset called `log.area`.
+* Create a scatterplot with the log10 transformed `Area` on the X and `Species` on the Y. Do you expect there to be a significant relationship? Does a Gaussian linear model look appropriate for these data?
+* Fit a linear model predicting `Species` from log10 transformed `Area` using the `gls` function.
+* Inspect the summary overview of the model.
+* Create a scatterplot with the log10 transformed `Area` on the X and `Species` on the Y. Use the `abline()` function to plot the fitted model.
+* Plot the residuals against the fitted values.
+* Use the `predict()` function on this model to predict the most likely outcomes for the fitted values. Do these numbers seem plausible?
+* Inspect the fitted model and all of the outputs you just generated. Do you think that this is a good model for these data?
+</ol>
+
+```{r, message=FALSE}
+```
+
+### Attempting corrections
+
+The data look non-linear, so if we knew nothing about GLMs, we could try to fit a second order polynomial model to correct for the disconnect between the fitted model and the data. 
+
+1. <ol>
+* Add a second order polynomial term to the first model.
+* Inspect the summary overview of this new model.
+* Create a scatterplot with the log10 transformed `Area` on the X and `Species` on the Y.
+* Plot the fitted model.
+* Plot the residuals against the fitted values.
+* Inspect the fitted model and all of the outputs you just generated. Do you think that this correction is sufficient?
+</ol>
+
+```{r, message=FALSE}
+```
+
+### Modelling Count Data using GLMs
+
+We could keep trying _ad hoc_ corrections to improve the model (e.g., maybe log-scaling the species abundance data to smooth out some of the non-linearity), but these are all going to be half measures because the real issue here is that we are using the wrong distribution to model these data. Because we're working with counts of species, what we're looking for is a discrete distribution with support between 0 and $\infty$. Given these requirements, the Poisson distribution is a good candidate for modelling these data.
+
+In order to model these data using a Poisson distribution to describe the model's stochastic component, we need to switch to a GLM workflow. To do this we need to carry out 3 steps before fitting our GLM:
+
+* Make a distributional assumption on the response variable.
+* Specify the deterministic part of the model.
+* Formally specify the `link' between the deterministic part based on your distributional assumption.
+
+
+We just said that we think working with a Poisson distribution is a good place to start, so after step 1 we get:
+
+</br>
+<center>
+$Y_i \sim  Poisson(\lambda = \mathrm{Species}_i)$
+</center>
+</br>
+
+
+The second step of a GLM is to specify deterministic part:
+
+</br>
+<center>
+$\eta = \beta_0 + \beta_1 \times \mathrm{log.area}_i$
+</center>
+</br>
+
+The last step is to link $\eta$ and $\mu_i$. Because our species abundance data can only be positive, we can't use an identity link. Instead, we use a log-link to ensure the fitted values are always positive:
+
+</br>
+<center>
+$\log(\mathrm{Species}_i) = \beta_0 + \beta_1 \times \mathrm{log.area}_i \quad \mathrm{or} \quad \mathrm{Species}_i = e^{\beta_0 + \beta_1 \times \mathrm{log.area}_i}$
+</center>
+</br>
+
+This whole process is streamlined via the `glm()` function, which we will now use to try and improve our model
+
+1. <ol>
+* Fit a generalised linear model predicting `Species` from log10 transformed `Area` using the `glm` function. Be sure to specify the distribution you want to model from and the link function.
+* Inspect the summary overview of the model.
+* Calculate the pseudo R-squared for the fitted GLM model. Does this seem good?
+* Create a scatterplot with the log10 transformed `Area` on the X and `Species` on the Y.
+* Use `abline()` to plot the fitted model. What happened?
+</ol>
+
+```{r, message=FALSE}
+```
+
+
+In a GLM framework we have a link function that lies between $\eta$ and the response variable. If we simply plot the fitted model on a linear scale without factoring in the link function, we can not place our fitted model on the appropriate scale. We need to work around this when visualising GLMs.
+
+1. <ol>
+* Create a data frame called `New_Data` that is comprised of a single column called `log.area` that is made up of a sequence of 200 numbers between -2 to 4.
+* Use these 'data' combined with the `predict()` function to generate predictions from the fitted GLM model. You will need to correctly specify some of the arguments of this function, so set `newdata = New_Data`, `type = "link"`, and `se = TRUE`. Run `class()` and `names()` on the output of `predict()`.
+* The `fit` slot of this list contains the model's deterministic prediction. The `fit.se` slot contains the standard errors of the predictions. Use the `fit` slot to plot the fitted GLM overlayed on the original data. Remember $\mu_i = e^{\eta}$, so you need to transform the predictions before plotting them.
+* Use the `fit.se` slot to plot the 95% confidence bands. Note: the 95% CIs = $\mu_i \pm SE \times 1.96$.
+</ol>
+
+```{R}
+```
+
+### Overdispersion
+
+Remember that the potential problem with Poisson GLMs is overdispersion. Overdispersion means that the variance is larger than the mean (when we compare what we would expect from a Poisson distribution).
+
+1. <ol>
+* Check for overdispersion by calculating the following: Residual Deviance / degrees of freedom on the residual deviance. (Large values are bad in this context)
+* It is also possible to check the significance of this using a chisquare test. Check if this overdispersion is significant by calculating the following: `1-pchisq(residual deviance, degrees of freedom on the residual deviance)`
+* Are the data over-dispersed, or is a Poisson assumption appropriate? 
+
+</br>
+
+__Note:__ You can get the information needed for this exercise by running summary on the fitted model.
+</ol>
+
+```{R}
+```
+
+### Negative binomial GLM on count data
+
+Switching from a Gaussian distribution to a Poisson distribution is often a good fix for modelling count data, but it's not always the most appropriate distribution for count data. One of the primary reasons why a Poisson won't work very well on count data is over-dispersion (because the variance is tied to the mean and therefore less flexible). The negative binomial distribution is often a viable alternative to the Poisson distribution as it allows for more heterogeneity because variance $\neq$ mean.
+
+1. <ol>
+* Load in the `MASS` package.
+* Fit a negative binomial model predicting `Species` from log10 transformed `Area` using the `glm.nb()` function from the `MASS` package. Be sure to specify the link function.
+* Inspect the summary overview of the model.
+* Plot the fitted model and 95% CIs using the same steps as in Exercise 4. How does this fit compare to the Poisson model?
+* Which of the two GLM models would AIC favour?
+</ol>
+
+```{R}
+```
+
+***
+## References
+Johnson M.P. & Raven, P.H. (1973) Species number and endemism: The Galapagos Archipelago revisited Science, 179, 893-895.
+
+Nelder, J.A. & Wedderburn, R.W. (1972). Generalized linear models. Journal of the Royal Statistical Society: Series A (General), 135, 370–384.
+
+More information on plotting GLMs can be found [here](https://www.r-bloggers.com/2015/06/confidence-intervals-for-prediction-in-glmms/)
