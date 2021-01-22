@@ -36,3 +36,5 @@ This page contains links for downloading the datasets needed to prepare Paper 1.
 
 <a href="Paper_1_Datasets/Squid.zip" >Squid</a>
 
+<a href="Paper_1_Datasets/Vegetation.zip" >Vegetation Richness</a>
+
