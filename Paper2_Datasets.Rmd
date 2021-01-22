@@ -26,6 +26,8 @@ This page contains links for downloading the datasets needed to prepare Paper 2.
 
 <a href="Paper_2_Datasets/Deer_Tb.zip" >Deer Tb</a>
 
+<a href="Paper_2_Datasets/Frogs.zip" >Frogs</a>
+
 <a href="Paper_2_Datasets/Newt_Detections.zip" >Newt Detections</a>
 
 <a href="Paper_2_Datasets/RoadKills.zip" >RoadKills</a>
