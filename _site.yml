@@ -1,6 +1,6 @@
 name: "Course Website for Biol 520C"
 navbar:
-  title: "Biol 520C Statistical modelling for biological data"
+  title: "Biol 520C Statistical modelling for biological data &mdash; UBC-Okanagan"
   right:
     - text: "Home"
       href: index.html
@@ -24,6 +24,8 @@ navbar:
           href: 07_Spatial_and_Phylogenetic_Autocorrelation.html
         - text: "Practical 08"
           href: 08_GLMs_for_Count_Data.html
+        - text: "Practical 09"
+          href: 09_Logistic_Regression.html
     - text: "Datasets"
       menu:
         - text: "Practicals"

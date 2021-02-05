@@ -52,3 +52,9 @@ This page contains the datasets needed to complete the practicals for this cours
 <a href="Practical_Datasets/rockfish.csv" >Rockfish traits</a>
 
 <a href="Practical_Datasets/rockfish.phy.txt" >Rockfish phylogenetic tree</a>
+
+</br>
+
+### Practical 09 - Logistic Regression: Generalised Linear Models for 0,1 and Proportion Data
+
+<a href="Practical_Datasets/gophertortoise.csv" >Gopher tortoise infection status</a>

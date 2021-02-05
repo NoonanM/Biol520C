@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Practical 09 - Logistic Regression: Generalised Linear Models for 0,1 and Proportion Data</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="site_libs/anchor-sections-1.0/anchor-sections.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="tutorial.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 60px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h2 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h3 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h4 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h5 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.section h6 {
+  padding-top: 65px;
+  margin-top: -65px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Biol 520C Statistical modelling for biological data &mdash; UBC-Okanagan</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="Lectures.html">Lectures</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Practicals
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="01_R_Introduction.html">Practical 01</a>
+    </li>
+    <li>
+      <a href="02_Regression.html">Practical 02</a>
+    </li>
+    <li>
+      <a href="03_MLR_Residuals.html">Practical 03</a>
+    </li>
+    <li>
+      <a href="04_Visualisation.html">Practical 04</a>
+    </li>
+    <li>
+      <a href="05_MEM_Model_Selection.html">Practical 05</a>
+    </li>
+    <li>
+      <a href="06_Heteroskedasticity_Autocorrelation.html">Practical 06</a>
+    </li>
+    <li>
+      <a href="07_Spatial_and_Phylogenetic_Autocorrelation.html">Practical 07</a>
+    </li>
+    <li>
+      <a href="08_GLMs_for_Count_Data.html">Practical 08</a>
+    </li>
+    <li>
+      <a href="09_Logistic_Regression.html">Practical 09</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Datasets
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Practical_Datasets.html">Practicals</a>
+    </li>
+    <li>
+      <a href="Paper1_Datasets.html">Paper 1</a>
+    </li>
+    <li>
+      <a href="Paper2_Datasets.html">Paper 2</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Practical 09 - Logistic Regression: Generalised Linear Models for 0,1 and Proportion Data</h1>
+
+</div>
+
+
+<p>This page was last updated on February 04, 2021.</p>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Register.StartupHook('TeX Jax Ready', function () {
+MathJax.InputJax.TeX.prefilterHooks.Add(function (data) {
+data.math = data.math.replace(/^% <!\[CDATA\[/, '').replace(/%\]\]>$/, '');
+});
+});
+</script>
+<hr />
+<div id="background" class="section level2">
+<h2>Background</h2>
+<p>Last practical we saw how generalised linear models (GLMs) can give you more flexibility when modelling count data that do not easily fit into the standard Gaussian framework. We learned that to fit a GLM we need to carry out 3 steps beyond those required by conventional regressional analyses:</p>
+<ul>
+<li>Make a distributional assumption on the response variable <span class="math inline">\(Y_i\)</span>. This also defines the mean and variance of <span class="math inline">\(Y_i\)</span>.</li>
+<li>Specify the deterministic part of the model.</li>
+<li>Formally specify the `link’ between the mean of <span class="math inline">\(Y_i\)</span> and the deterministic part based on your distributional assumption.</li>
+</ul>
+<p>Because <code>R</code> functions such as <code>glm()</code> streamline the process of fitting GLMs, the key step that’s left in your hands is knowing when you will need to switch from a Gaussian model to a GLM, and how to identify the correct distribution for your dataset. In this practical we are going to learn how to extend what we covered last practical about modelling count data to two other common data types in biology:</p>
+<ul>
+<li>0-1 data (e.g., presence-absence, infected or not, alive vs. dead, etc.)</li>
+<li>Proportional/percentage data (e.g.,proportion of population infected, percent forest cover, proportion of population with a mutation, etc.)</li>
+</ul>
+<p>Applying GLMs to these data is also commonly referred to as ‘logistic regression’. The term ‘logistic regression’ comes from the fact that the link function we use fits a logistic curve to the relationship between <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span>. The three step process we covered last practical is identical for these data types, we just need to familiarise ourselves with a new set of distributions, and a new link function.</p>
+<div id="logistic-regression-generalised-linear-models-glms-for-01-data" class="section level3">
+<h3>Logistic Regression: Generalised Linear Models (GLMs) for 0,1 data</h3>
+<p>Logistic regression is a method for fitting a regression curve, <span class="math inline">\(y = f(x)\)</span>, when <span class="math inline">\(y\)</span> consists of proportions, probabilities, or binary coded (0,1–failure,success) data (i.e., anything bound between 0 and 1). Like linear regression, logistic regression makes a number of key assumptions:</p>
+<ul>
+<li>The true conditional probabilities are a logistic function of the independent variables (i.e., correct model specification).</li>
+<li>No important variables are omitted &amp; no extra one included.</li>
+<li>The independent variables are measured without error.</li>
+<li>The observations are independent.</li>
+<li>There is no collinearity in the independent variables.</li>
+</ul>
+<p>The first step of fitting a GLM is to make a distributional assumption on our 0,1 or proportion data. A good candidate for data that scale between 0 and 1 is the binomial distribution. The binomial distribution describes the probability of obtaining <span class="math inline">\(k\)</span> yes/no successes in a sample of size <span class="math inline">\(n\)</span>, or in other words, the distribution of the number of successful trials among a defined number of trials. The Probability Mass Function (PMF) of the binomial distribution is given by:</p>
+</br>
+<center>
+<span class="math inline">\(\binom {n}{k}p^{k}(1-p)^{n-k}\)</span>, <span class="math inline">\(\quad\)</span> where <span class="math inline">\(\quad {\binom {n}{k}}={\frac {n!}{k!(n-k)!}}\)</span>
+</center>
+<p></br></p>
+<p>The second step is to specify the deterministic model. This is no different from fitting other regressional models.</p>
+</br>
+<center>
+<span class="math inline">\(\pi_i = \beta_0 + \beta_1 X + \ldots\)</span>
+</center>
+<p></br></p>
+<p>The last step is to specify a link function that maps the values between 0 and 1. The ‘logit’ link is a link function that maps values between <span class="math inline">\(0, 1\)</span> and the most routinely used link function for modelling <span class="math inline">\(0, 1\)</span> data.</p>
+</br>
+<center>
+<span class="math inline">\(\mu = \frac{e^{\beta_0 + \beta_1 X + \ldots}} {1 + e^{\beta_0 + \beta_1 X + \ldots}}\)</span>
+</center>
+<p></br></p>
+These are the three pieces the pieces we need for fitting a GLM to these data: </br>
+<center>
+<p><span class="math inline">\(Y_i \sim Binomial(1, \pi_i) \quad \quad E(Y_i) = \pi_i \quad \mathrm{and} \quad \mathrm{var}(Y_i) = \pi_i \times(1-\pi_i)\)</span></p>
+<span class="math inline">\(\pi_i = \frac{e^{\beta_0 + \beta_1 X + \ldots}} {1 + e^{\beta_0 + \beta_1 X + \ldots}}\)</span>
+</center>
+<p></br></p>
+<p>Although it can be challenging to work with these complex distributions and link functions, the <code>glm()</code> function in <code>R</code> streamlines this process for us. Again, this is not the only function for fitting GLMs, but it’s a good place to start.</p>
+<p></br></p>
+<p>In this Practical we will:</p>
+<ul>
+<li>Explore ways for visualising 0,1 data.</li>
+<li>Fit models to generalised linear regression models (GLMs) to 0,1 and proportion data using logistic regression.</li>
+<li>Learn how to plot and interpret fitted logistic regression models.</li>
+</ul>
+<hr />
+</div>
+</div>
+<div id="modelling-discrete-01-data" class="section level2">
+<h2>Modelling discrete 0,1 Data</h2>
+<p>As biologists we often find ourselves with discrete data with values that be either 0 or 1. The Gaussian distribution is continuous and has support between <span class="math inline">\(-\infty, \infty\)</span>, so it’s clearly not a good option when have this kind of data. If we model these data using a linear regression model, the stochastic part of our model will be misspecified, so our model’s predictive power will be low, the residuals will almost always look terrible and, typically, no amount of transformations will help us. We need a deterministic function that maps the values between 0 and 1, and a distribution that makes more sense. In other words, if we’re working with discrete, 0,1 data, we’re probably going to need to build our models in a logistic regression framework. To explore this concept we are going to use data from:</p>
+<p><a href="https://doi.org/10.1890/08-0219.1">Ozgul, A., Oli, M.K., Bolker, B.M. and Perez-Heydrich, C. (2009), Upper respiratory tract disease, force of infection, and effects on survival of gopher tortoises. Ecological Applications, 19: 786-798.</a></p>
+<p>These data are openly available <a href="https://github.com/bbolker/krakow_2018/find/master">here</a>.</p>
+<p>In Ozgul et al’s paper, the authors explored factors influencing the prevalence of upper respiratory tract disease (URTD) caused by <em>Mycoplasma agassizii</em> in gopher tortoises (<em>Gopherus polyphemus</em>). Variables in this dataset include:</p>
+<ul>
+<li><code>TortID</code>: Tortoise identification number</li>
+<li><code>Date</code>: Date of capture and sampling</li>
+<li><code>YEAR</code>: Year of capture and sampling</li>
+<li><code>CL</code>: Carapace length in millimeters</li>
+<li><code>Sex</code>: Sex of tortoise (M: Male, F: Female, Juv: Juvenile)</li>
+<li><code>ELISA</code>: Result of ELISA test (POSITIVE, negative)</li>
+<li><code>SITE</code>: Study site ID (all data from CF site)</li>
+<li><code>status</code>: Result of ELISA test (1: <em>M. agassizii</em> Positive, 0: Negative)</li>
+<li><code>age</code>: Equivalent to carapace length</li>
+</ul>
+<div id="visualising-01-data" class="section level3">
+<h3>Visualising 0,1 Data</h3>
+<p>The first thing to do when working with a new dataset is to carry exploratory data visualisation. Visualising binary data can be challenging, however, and many standard data visualisation tools will not result in readily interpretable figures. Here we will compare traditional scatter plots and box plots with two new approaches.</p>
+<ol style="list-style-type: decimal">
+<li><ol></li>
+</ol>
+<ul>
+<li>Import the <code>gophertortoise</code> dataset. Make sure that sex is imported as a factor.</li>
+<li>Create a scatter plot of infection status as a function of carapace length (<code>CL</code>). Add a regression line to this as a visual aid. Do you expect there to be a relationship? Do you expect it to be strong?</li>
+<li>Another option for visualising 0,1 data are conditional density plots. These display smoothed proportions of each category (0 or 1) within various levels of a continuous variable. Use the <code>cdplot()</code> function to create a conditional density plot of infection status as a function of carapace length (<code>CL</code>). If this more or less clear than the scatter plot? Note: For plotting purposes, <code>status</code> will have to be a factor here.</li>
+<li>Create a boxplot of infection status as a function of sex. Is this an informative figure? Do you expect there to be a relationship between these variables?</li>
+<li>Create a frequency table of the number of infected/non-infected individuals as a function of sex.</li>
+<li>Create a barplot with frequencies of infected vs. non infected on the Y axis and sex category on the X. Do you see any differences in the proportion infected or not in any of the three categories?</li>
+<li>Visually, do you expect to see a relationship between carapace length, sex, and infection status?
+</ol></li>
+</ul>
+</div>
+<div id="fitting-and-selecting-logistic-regression-models" class="section level3">
+<h3>Fitting and selecting Logistic Regression Models</h3>
+<p>After getting a feel for the data, the next step is to fit a logistic regression model and perform model selection to identify the best fit model for the data.</p>
+<ol style="list-style-type: decimal">
+<li><ol></li>
+</ol>
+<ul>
+<li>Fit a logistic regression model predicting <code>status</code> from <code>CL</code>, <code>Sex</code>, and the interaction between these using the <code>glm</code> function. Be sure to specify the correct distribution and link function for these data.</li>
+<li>Inspect the summary overview of the full model.</li>
+<li>Carry out AICc based model selection. What terms should you keep? which can be dropped? Refit the selected model.</li>
+<li>Plot the residuals of the selected model against the fitted values.</li>
+<li>Pseudo R<span class="math inline">\(^2\)</span> values are not very useful in a logistic regression framework and the residuals are usually difficult to interpret. Use the <code>CVbinary()</code> function from the <code>DAAG</code> package to cross-validate the model.</li>
+<li>What was the <span class="math inline">\(\Delta\)</span>AICc between the selected model and the intercept only model. Calculate the evidence ratio to quantify how much the best fit model was an improvement over an intercept only model?</li>
+<li>Briefly describe the best fit model and the cross validation results.
+</ol></li>
+</ul>
+</div>
+<div id="visualising-a-logistic-regression-model" class="section level3">
+<h3>Visualising a Logistic Regression Model</h3>
+<p>In a GLM framework we have a link function that lies between the fitted model and the response variable. As we saw last practical, if we simply plot the fitted model on a linear scale without factoring in the link function, we can not place our fitted model on the appropriate scale. We need to work around this when visualising GLMs. We also have the complication here that we have two parameters to visualise, carapace length, and sex.</p>
+<ol style="list-style-type: decimal">
+<li><ol></li>
+</ol>
+<ul>
+<li>Create a data frame called <code>New_Data</code> that is comprised of two columns. The first should be called <code>CL</code> that is made up of a sequence of numbers between the minimum and maximum values of <code>CL</code> by steps of 0.1, the second should be called <code>Sex</code>, and should be a column filled with the factor <code>"F"</code>.</li>
+<li>Use these data combined with the <code>predict()</code> function to generate predictions from the fitted GLM model. You will need to correctly specify some of the arguments of this function, so set <code>newdata = New_Data</code>, and <code>type = "response"</code>.</li>
+<li>The output of this prediction contains the model’s deterministic prediction for the infection probability of females on a logit scale.</li>
+<li>Repeat this process for males and juveniles.</li>
+<li>Use these predictions to plot the fitted GLM overlaid on the original data for each sex.</li>
+</ul>
+</br> Note: If we wanted to add confidence intervals the process would be the same as we saw in Practical 8, but with 9 lines the plot would be difficult to interpret so we will not do that here.
+</ol>
+<hr />
+</div>
+</div>
+<div id="logistic-regression-on-proportion-data" class="section level2">
+<h2>Logistic Regression on Proportion Data</h2>
+<p>As many as ~15% of papers in ecology include some kind of proportional data. Proportions scale between 0-1 (or 0 and 100 for percentages), but they can also take any value between these limits. Most of the time, ecologists model proportion data using an <span class="math inline">\(\arcsin(\sqrt{p})\)</span> transformation, but this is not an ideal solution (if you’re interested in knowing why this is the case, I encourage you to read <a href="https://esajournals.onlinelibrary.wiley.com/doi/10.1890/10-0340.1">this paper</a>)</p>
+<p>Fitting a logistic regression to proportion data is very similar to fitting a logistic regression to 0,1 data. To learn how to do this we will use data collected as part of a series of laboratory experiments on the density- and size-dependent predation rate of an African reed frog, <em>Hyperolius spinigularis</em>, and used in the following publication:</p>
+<p><a href="https://esajournals.onlinelibrary.wiley.com/doi/abs/10.1890/04-0535">Vonesh and Bolker (2005) Compensatory larval responses shift trade-offs associated with predator-induced hatching plasticity. Ecology 86:1580-1591</a></p>
+<p>These data are openly available as part of the <code>emdbook</code> package. Variables in this dataset include:</p>
+<ul>
+<li><code>density</code>: initial tadpole density (number of tadpoles in a 1.2 x 0.8 x 0.4 m tank) [experiment 1]</li>
+<li><code>pred</code>: factor: predators present or absent [experiment 1]</li>
+<li><code>size</code>: factor: big or small tadpoles [experiment 1]</li>
+<li><code>surv</code>: number surviving</li>
+<li><code>propsurv</code>: proportion surviving (=surv/density) [experiment 1]</li>
+</ul>
+<ol style="list-style-type: decimal">
+<li><ol></li>
+</ol>
+<ul>
+<li>Load in the <code>emdbook</code> package and import the <code>ReedfrogPred</code> dataset.</li>
+<li>Create two box plots, one depicting the proportion surviving as a function of body size, the second the proportion surviving as a function of predator treatment.</li>
+<li>Do you expect to see a relationship between either of these factors and the proportion surviving?</li>
+<li>Fit a logistic regression model predicting <code>propsurv</code> from <code>size</code>, <code>pred</code>, and the interaction between these using the <code>glm</code> function.</li>
+<li>Inspect the summary overview of the full model.</li>
+<li>Carry out AICc based model selection. What terms should you keep? which can be dropped? Refit the selected model.</li>
+<li>What was the <span class="math inline">\(\Delta\)</span>AICc between the selected model and the intercept only model. Calculate the evidence ratio to quantify how much the best fit model was an improvement over an intercept only model?</li>
+<li>Briefly describe the best fit model.
+</ol></li>
+</ul>
+<hr />
+</div>
+<div id="references" class="section level2">
+<h2>References</h2>
+<p>Ozgul, A., Oli, M.K., Bolker, B.M. and Perez-Heydrich, C. (2009), Upper respiratory tract disease, force of infection, and effects on survival of gopher tortoises. Ecological Applications, 19: 786-798.</p>
+<p>Vonesh and Bolker (2005) Compensatory larval responses shift trade-offs associated with predator-induced hatching plasticity. Ecology 86:1580-1591</p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
