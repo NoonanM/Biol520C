@@ -26,6 +26,8 @@ navbar:
           href: 08_GLMs_for_Count_Data.html
         - text: "Practical 09"
           href: 09_Logistic_Regression.html
+        - text: "Practical 10"
+          href: 10_Stochastic_Simulation.html
     - text: "Datasets"
       menu:
         - text: "Practicals"

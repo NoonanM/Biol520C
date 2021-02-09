@@ -58,3 +58,13 @@ This page contains the datasets needed to complete the practicals for this cours
 ### Practical 09 - Logistic Regression: Generalised Linear Models for 0,1 and Proportion Data
 
 <a href="Practical_Datasets/gophertortoise.csv" >Gopher tortoise infection status</a>
+
+</br>
+
+### Practical 10 - Stochastic Simulation, Power Analysis, and Non-Linear Models
+
+<a href="Practical_Datasets/Seedling.csv" >Seedlings</a>
+
+<a href="Practical_Datasets/jaw_bone.csv" >Deer jaw bones</a>
+
+<a href="Practical_Datasets/Wild_Boar.csv" >Wild boar Tb</a>
