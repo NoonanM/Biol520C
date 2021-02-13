@@ -35,7 +35,11 @@ navbar:
         - text: "Paper 1"
           href: Paper1_Datasets.html
         - text: "Paper 2"
-          href: Paper2_Datasets.html      
+          href: Paper2_Datasets.html   
+    - text: "R Help"
+      menu:
+        - text: "Simulation"
+          href: Simulation.html
 
 output_dir: "."
 output:
