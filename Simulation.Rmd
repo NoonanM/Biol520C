@@ -1,0 +1,386 @@
+---
+title: "Simulation"
+#author: "Michael Noonan"
+output:
+  html_document:
+    css: tutorial.css
+    fig_caption: yes
+    highlight: textmate
+    theme: flatly
+    toc: yes
+    toc_float:
+      collapsed: false
+    toc_depth: 3
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.width=6, fig.height=4, warning = FALSE, message = FALSE)
+```
+This page was last updated on `r format(Sys.time(), '%B %d, %Y')`.
+
+* * *
+
+## Background
+Simulation is an important tool for carrying out computational and statistical biology. This page provides basic guidance on how to simulate data in `R`.
+
+
+* * *
+
+## Simulating from Distributions {.tabset}
+
+R comes with built in tools that allow you to simulate from well-known probability distributions like the normal, Poisson, binomial, uniform, chi-squared, and so on (for a complete list see: `help(Distributions)` )
+
+There are 4 functions for working with distributions that have the general form:
+
+* `dxxx` for the density/mass function (PDF/PMF)
+* `pxxx` for the cumulative distribution function (CDF)
+* `qxxx` for the quantile function
+* `rxxx` for random number generation
+
+</br>
+
+### Normal
+
+The `rnorm` function is the base function for simulating random numbers drawn from a normal distribution. For more information on working with the normal distribution see `help(Normal)`
+
+```{r}
+rnorm(n = 5,                  # number of observations
+      mean = 0,               # vector of means
+      sd = 1)                 # vector of standard deviations
+```
+
+Because `rnorm` is expecting a vector for each entry, this function is very flexible. For example we can sample 5 values from normal distributions with different means and different standard deviations without having to re-write the function 5 times.
+
+```{r}
+rnorm(n = 5,                  # number of observations
+      mean = c(1,2,3,4,5),    # vector of means
+      sd = 1:5)               # vector of standard deviations
+```
+
+***
+
+### Poisson
+
+The `rpois` function is the base function for simulating random numbers drawn from a Poisson distribution. For more information on working with the Poisson distribution see `help(Poisson)`
+
+__Note:__ Will only return whole numbers
+
+```{r}
+rpois(n = 5,                  # number of observations
+      lambda = 1)             # vector of (non-negative) rate parameters
+```
+
+Because `rpois` is expecting a vector for each entry, this function is very flexible. For example we can sample 5 values from Poisson distributions with different rate parameters $\lambda$, without having to re-write the function 5 times.
+
+```{r}
+rpois(n = 5,                  # number of observations
+      lambda = c(1,2,3,4,5))  # vector of (non-negative) rate parameters
+```
+
+***
+
+### Binomial
+
+The `rbinom` function is the base function for simulating random numbers drawn from a binomial distribution. For more information on working with the binomial distribution see `help(Binomial)`
+
+```{r}
+rbinom(n = 5,                  # number of observations
+       size = 1,               # number of trials (zero or more)
+       prob = 0.5)             # probability of success on each trial.
+```
+
+If we change the number of trials we get the number of successes across the number of trials. In this example we have simulated the number of successes in 5 replicates of 20 trials.
+
+```{r}
+rbinom(n = 5,                  # number of observations
+       size = 20,              # number of trials (zero or more)
+       prob = 0.5)             # probability of success on each trial.
+```
+
+Because `rbinom` is expecting a vector for each entry, this function is very flexible. For example we can simulate the number of successes in 5 replicates of 20 trials, with a different probability of success in each trial
+
+```{r}
+rbinom(n = 5,
+       size = 20,
+       prob = c(0.2, 0.4, 0.6, 0.8, 1))
+```
+
+***
+
+### Uniform
+
+The `runif` function is the base function for simulating random numbers drawn from a uniform distribution. For more information on working with the uniform distribution see `help(Uniform)`
+
+```{r}
+runif(n = 5,                  # number of observations
+      min = 0,                # lower limit of the distribution. Must be finite.
+      max = 20)               # upper limit of the distribution. Must be finite.
+```
+
+Unlike the other distributions `runif` is not expecting vector for the `min` and `max` arguments, so this function does not have the same amount of inherent flexibility.
+
+***
+
+## Setting the Seed
+
+When simulating random numbers, setting the random number seed with `set.seed()` ensures reproducibility of the sequence of random numbers.
+
+For example, we can sample 5 random numbers from a normal distribution with `rnorm()`.
+
+```{r}
+rnorm(5)
+```
+
+If we do this a second time the sequence of numbers will always be different.
+
+```{r}
+rnorm(5)
+```
+
+But if we want to be sure we can get the same sequence of randomly generated numbers every single time, we have to set the seed prior to simulating.
+
+```{r}
+set.seed(1)
+rnorm(5)
+
+set.seed(1)
+rnorm(5)
+```
+
+***
+
+## Simulating from Linear Models {.tabset}
+
+### Linear model with Gaussian errors
+
+Simulating from a simple linear model is fairly straightforward and requires only a few lines of code. These models have both a deterministic component, and a stochastic component. The minimal requirements for simulating the deterministic part of this type of model are defining the intercept, $\beta_0$, and slope, $\beta_1$, and to set up the $x$ values you are interested in. These pieces can then be used to calculate the deterministic part of the model using the standard equation for a linear model $y = \beta_0 + \beta_1 \times x$.
+
+```{r}
+B_0 <- 2
+B_1 <- 1
+x <- 1:20
+y_det <- B_0 + B_1 * x
+y_det
+```
+
+With the deterministic part specified, the next step is to add the stochastic component to the model. Here what we want is 20 random, normally distributed values, each with a mean equal to the deterministic component. This can be achieved by combining the deterministic predictions with the `rnorm()` function
+
+```{r}
+y <- rnorm(n = 20, mean = y_det, sd = 2)
+y
+```
+
+__Note:__ This same result could be achieved by adding mean 0 error to each deterministic prediction because errors are additive for this model $y_i = \beta_0 + \beta_1 \times x_i + \varepsilon_i, \quad \varepsilon_i \sim \mathcal{N}(0, \sigma^2)$.
+
+```{r}
+y <- B_0 + B_1 * x + rnorm(n = 20, mean = 0, sd = 2)
+y 
+```
+
+The problem with building a simulation this way, however, is that errors are only additive for the normal distribution, so this does not work for stochasticity that is drawn from other distributions.
+
+If you intend on carrying out anything more than a simple simulation, it is usually more efficient to package everything together into a custom function.
+
+```{r}
+Linear <- function(x){
+  B_0 <- 2
+  B_1 <- 1
+  sigma <- 2
+  y_det <- B_0 + B_1 * x
+  y <- B_0 + B_1 * x + rnorm(n = length(x),
+                             mean = y_det,
+                             sd = sigma)
+  y 
+}
+
+Linear(1)
+Linear(1:5)
+```
+
+***
+
+### Log link and Poisson errors
+
+Simulating from a linear model with a log link and Poisson errors is fairly straightforward and requires only a few lines of code. These models have both a deterministic component, and a stochastic component. The minimal requirements for simulating the deterministic part of this type of model are defining the intercept, $\beta_0$, and slope, $\beta_1$, to set up the $x$ values you are interested in, and to specify the link function. These pieces can then be used to calculate the deterministic part of the model using the standard equation for a linear model with a log link $y = e^{\beta_0 + \beta_1 \times x}$.
+
+```{r}
+B_0 <- 0.01
+B_1 <- 0.03
+x <- 1:20
+y_det = exp(B_0 + B_1*x)
+y_det
+```
+
+With the deterministic part specified, the next step is to add the stochastic component to the model. Here what we want is 20 random values drawn from a Poisson distribution, each with a rate parameter, $\lambda$, equal to the deterministic component (remember, with the Poisson distribution the mean and variance are equal). This can be achieved by combining the deterministic predictions with the `rpois()` function.
+
+```{r}
+y <- rpois(n = length(x), lambda = y_det)
+y
+```
+
+If you intend on carrying out anything more than a simple simulation, it is usually more efficient to package everything together into a custom function.
+
+```{r}
+Poisson <- function(x) {
+  B_0 <- 0.01
+  B_1 <- 0.03
+  y_det = exp(B_0 + B_1*x)
+  y <- rpois(n = length(x), lambda = y_det)
+  y
+}
+
+Poisson(1)
+Poisson(1:5)
+```
+
+
+If you are trying to simulate an over-dispersed system, you can also consider switching from a Poisson distribution to a negative binomial distribution.
+
+```{r}
+NegBinom <- function(x) {
+  B_0 <- 0.01
+  B_1 <- 0.03
+  y_det = exp(B_0 + B_1*x)
+  y <- rnbinom(n = length(x), mu = y_det, size = 5) # Here size is the dispersion parameter
+  y
+}
+
+NegBinom(1)
+NegBinom(1:5)
+```
+
+
+***
+
+### Logit link and binomial errors
+
+Simulating from a linear model with a logit link and binomial stochasticity is no different from simulating from other, simpler models. The minimal requirements for simulating the deterministic part of this type of model are defining the intercept, $\beta_0$, and slope, $\beta_1$, to set up the $x$ values you are interested in, and to specify the link function (here a logit link). These pieces can then be used to calculate the deterministic part of the model using the standard equation for a linear model with a logit link $y = \frac{e^{\beta_0 + \beta_1 \times x}}{1 + e^{\beta_0 + \beta_1 \times x}}$.
+
+```{r}
+B_0 <- 0.01
+B_1 <- 0.03
+x <- 1:20
+y_det = exp(B_0 + B_1*x) / (1 + exp(B_0 + B_1*x))
+y_det
+```
+
+With the deterministic part specified, the next step is to add the stochastic component to the model. Here what we want is 20 random values drawn from a binomial distribution, each with a probability of success equal to the prediction of our deterministic model. This can be achieved by combining the deterministic predictions with the `rbinom()` function.
+
+```{r}
+y <- rbinom(n = length(x), size = 1, prob = y_det)
+y
+```
+
+As always, if you intend on carrying out anything more than a simple, one-off simulation, it is usually more efficient to package everything together into a custom function.
+
+```{r}
+Logit_Link <- function(x) {
+  B_0 <- 0
+  B_1 <- 0.03
+  y_det = exp(B_0 + B_1*x)/(1+exp(B_0 + B_1*x))
+  y <- rbinom(n = length(x), size = 1, prob = y_det)
+  y
+}
+
+Logit_Link(1)
+Logit_Link(1:5)
+```
+
+
+***
+
+## Simulating Nested Data {.tabset}
+
+We often work with nested data, where there can be some normally distributed differences between groups (species, treatments, study sites, etc.). To simulate nested data with random slopes or intercepts, we need to first define the population level parameters, and then draw the individual variation around the population level trends from a mean 0 normal distribution. In essence, this requires adjusting the population level parameters by some normally distributed amount for each group.
+
+### Random Intercepts
+```{r}
+library(viridis)
+#5 groups each with 4 data points
+group <- factor(rep(1:5, each = 20))                              # 5 groups sampled 20 times
+x <- rep(1:20, 5)                                                 # Define x values
+
+Mixed_Linear <- function(x, group) {
+  B_0 <- 2                                                        # Pop. level intercept
+  B_1 <- 1                                                        # Pop. level slope
+  Rand_Int <- rnorm(n = unique(group), sd = 10)                   # Random Intercepts
+  y_det = (B_0 + Rand_Int[group]) + B_1*x                         # Deterministic prediction
+  rnorm(n = length(x), mean = y_det, sd = 2)                      # Add stochasticity
+}
+
+y <- Mixed_Linear(x, group)                                       # Predict from the model
+
+plot(y ~ x, col = viridis(5)[group], pch = 16)                    # Visualise with viridis colours
+```
+
+
+### Random Slopes
+
+```{r}
+group <- factor(rep(1:5, each = 20))                              # 5 groups sampled 20 times
+x <- rep(1:20, 5)                                                 # Define x values
+
+Mixed_Linear <- function(x, group) {
+  B_0 <- 2                                                        # Pop. level intercept
+  B_1 <- 1                                                        # Pop. level slope
+  Rand_Slope <- rnorm(n = unique(group))                          # Random Slopes
+  y_det = B_0 + (B_1+ Rand_Slope[group])*x                        # Deterministic prediction
+  rnorm(n = length(x), mean = y_det, sd = 2)                      # Add stochasticity
+}
+
+y <- Mixed_Linear(x, group)                                       # Predict from the model
+
+plot(y ~ x, col = viridis(5)[group], pch = 16)                    # Visualise with viridis colours
+```
+
+
+### Random Slopes and Intercepts
+```{r}
+group <- factor(rep(1:5, each = 20))                              # 5 groups sampled 20 times
+x <- rep(1:20, 5)                                                 # Define x values
+
+Mixed_Linear <- function(x, group) {
+  B_0 <- 2                                                        # Pop. level intercept
+  B_1 <- 1                                                        # Pop. level slope
+  Rand_Int <- rnorm(n = unique(group), sd = 20)                   # Random Intercepts
+  Rand_Slope <- rnorm(n = unique(group), sd = 3)                  # Random Slopes
+  y_det = (B_0 + Rand_Int[group]) + (B_1+ Rand_Slope[group])*x    # Deterministic prediction
+  rnorm(n = length(x), mean = y_det, sd = 2)                      # Add stochasticity
+}
+
+y <- Mixed_Linear(x, group)                                       # Predict from the model
+
+plot(y ~ x, col = viridis(5)[group], pch = 16)                    # Visualise with viridis colours
+```
+
+***
+
+## Simulating Temporally Autocorrelated data
+
+Simulating temporally correlated errors requires first defining an autocorrelation structure to simulate from, building the appropriate correlation matrix, and then using that to generate autocorrelated errors.
+
+```{r}
+library(nlme)
+
+n <- 500              # Sample size
+B_0 <- 2              # Intercept
+B_1 <- 1              # Slope
+x <- runif(n, 1, 10)  # Values of the x variable
+time <- 1:n           # Values of the time covariate
+sigma <- 10           # Population level standard deviation
+rho <- 0.80           # Temporal autocorrelation
+
+# define a constructor for a first-order correlation structure
+ar1 <- corAR1(form = ~ time, value = rho)
+# initialize this against our data
+AR1 <- Initialize(ar1, data = data.frame(time))
+# generate the correlation matrix
+V <- corMatrix(AR1)
+# Cholesky factorization of V
+Cv <- chol(V)
+# simulate AR1 errors
+e <- t(Cv) %*% rnorm(n, 0, sigma)  # cov(e) = V * sig^2
+## generate response with AR1 errors
+y <- B_0 + B_1 * x + e
+```
