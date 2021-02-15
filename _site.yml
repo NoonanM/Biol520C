@@ -40,6 +40,8 @@ navbar:
       menu:
         - text: "Simulation"
           href: Simulation.html
+        - text: "for loops"
+          href: for_loops.html
 
 output_dir: "."
 output:

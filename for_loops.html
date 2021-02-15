@@ -11,7 +11,7 @@
 
 
 
-<title>Datasets for practicals</title>
+<title>For Loops</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -321,6 +321,12 @@ div.tocify {
   border-radius: 0px;
 }
 
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
 
 </style>
 
@@ -448,57 +454,192 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Datasets for practicals</h1>
+<h1 class="title toc-ignore">For Loops</h1>
 
 </div>
 
 
-<p>This page contains the datasets needed to complete the practicals for this course. To download, left click on the links and download the files as needed.</p>
-<p></br></p>
-<div id="practical-02---deterministic-models-stochastic-models-simple-linear-regression-and-maximum-likelihood" class="section level3">
-<h3>Practical 02 - Deterministic models, stochastic models, simple linear regression, and maximum likelihood</h3>
-<p><a href="Practical_Datasets/Musteloid_Data.csv" >Musteloid traits</a></p>
-<p><a href="Practical_Datasets/Wasp_Choice.csv" >Wasp choice.</a></p>
-<p></br></p>
+<p>This page was last updated on February 14, 2021.</p>
+<hr />
+<div id="background" class="section level2">
+<h2>Background</h2>
+<p>This page provides some basic guidance on repeating a blocked sequence of instructions using for loops.</p>
+<hr />
 </div>
-<div id="practical-03---multiple-linear-regression-and-model-residuals" class="section level3">
-<h3>Practical 03 - Multiple linear regression and model residuals</h3>
-<p><a href="Practical_Datasets/Seedling.csv" >Seedlings.</a></p>
-<p><a href="Practical_Datasets/Ismail.csv" >Forest degredation.</a></p>
-<p></br></p>
+<div id="for-loop-basics" class="section level2">
+<h2><code>for</code> loop basics</h2>
+<p>The <code>for</code> loop is probably the simplest way to carry out a repeated task without having to type (or copy/paste/edit) the same code over and over. In essence, a for loop is a way to repeat a blocked sequence of instructions, allowing you to automate parts of your code that are in need of repetition.</p>
+<p>An easy way to understand what is going on in the <code>for</code> loop is by reading it as follows: For each number from 1 to the last number of your index (5 in the example below), you execute the code chunk <code>{...}</code> that immediately follows (in the example below we just print the index). Once the for loop has executed the code chunk for every number (i.e., iteration) in the sequence you defined at the outset, the loop stops.</p>
+<pre class="r"><code>for(i in 1:5){
+  print(i)
+}</code></pre>
+<pre><code>## [1] 1
+## [1] 2
+## [1] 3
+## [1] 4
+## [1] 5</code></pre>
+<p>There are a few basic things to note about for loops. The first is that the index does not have to be called <code>i</code>. We can call it anything we like. We usually use <code>i</code> and <code>j</code> because these line up with the standard row and column notation from matrix algebra, but we could just as easily use the word <code>ROW</code> (or any other word we might want).</p>
+<pre class="r"><code>for(ROW in 1:5){
+  print(ROW)
+}</code></pre>
+<pre><code>## [1] 1
+## [1] 2
+## [1] 3
+## [1] 4
+## [1] 5</code></pre>
+<p>Another thing to note is that a <code>for</code> loop does not need to contain the index. It will loop a sequence of code whether it contains the index or not. The index is just a useful way to not only repeat a process, but make incremental changes in the behaviour of a loop.</p>
+<pre class="r"><code>for(i in 1:5){
+  print(&quot;hello world&quot;)
+}</code></pre>
+<pre><code>## [1] &quot;hello world&quot;
+## [1] &quot;hello world&quot;
+## [1] &quot;hello world&quot;
+## [1] &quot;hello world&quot;
+## [1] &quot;hello world&quot;</code></pre>
+<pre class="r"><code>for(i in 1:5){
+  print(paste(&quot;hello world, I&#39;m replicate&quot;, i))
+}</code></pre>
+<pre><code>## [1] &quot;hello world, I&#39;m replicate 1&quot;
+## [1] &quot;hello world, I&#39;m replicate 2&quot;
+## [1] &quot;hello world, I&#39;m replicate 3&quot;
+## [1] &quot;hello world, I&#39;m replicate 4&quot;
+## [1] &quot;hello world, I&#39;m replicate 5&quot;</code></pre>
+<p>For loops also don’t have to start at 1, and they don’t have to be perfect sequences of numbers. They can run backwards, start and end at any number you chose, and have gaps. For example, any of these for loops will run without issue.</p>
+<pre class="r"><code>for(i in 3:7){print(i)}</code></pre>
+<pre><code>## [1] 3
+## [1] 4
+## [1] 5
+## [1] 6
+## [1] 7</code></pre>
+<pre class="r"><code>for(i in 5:1){print(i)}</code></pre>
+<pre><code>## [1] 5
+## [1] 4
+## [1] 3
+## [1] 2
+## [1] 1</code></pre>
+<pre class="r"><code>for(i in c(1,3,5,7)){print(i)}</code></pre>
+<pre><code>## [1] 1
+## [1] 3
+## [1] 5
+## [1] 7</code></pre>
+<hr />
 </div>
-<div id="practical-04---visualising-nested-data-prior-to-analysis" class="section level3">
-<h3>Practical 04 - Visualising Nested Data Prior to Analysis</h3>
-<p><a href="Practical_Datasets/Owls.csv" >Owl begging behaviour</a></p>
-<p></br></p>
+<div id="saving-the-results-of-a-for-loop" class="section level2">
+<h2>Saving the results of a <code>for</code> loop</h2>
+<p>Generally, when you automate a repetitive task you will also want to save the results after the loop has completed running. For example, you might want to generate 50 random samples from a Gaussian distribution, each with <span class="math inline">\(n\)</span> = 10, and calculate the mean each time. The following loop will accomplish this</p>
+<pre class="r"><code>for(i in 1:50){
+  SAMPLE &lt;- rnorm(n = 10)
+  mean(SAMPLE)
+}</code></pre>
+<p>The problem with this setup is that after the loop has finished running, there are no results to inspect. This is because everything that happens within the blocked code of a <code>for</code> loop happens within an internal environment, and we need to take extra steps to pull the results out of the loop. Otherwise, the results of an iteration will disappear after it has completed. In this example we are expecting a single number to be returned from the loop (the estimated mean). If we have a single number to save, the best way is to place it in the appropriate ‘slot’ in a vector (i.e., the first mean should go in slot 1, the second mean in slot 2, and so on…). To save the results in a vector, we first need to create a vector before running the loop. Inside the loop all we need to do then is save the result from each iteration <code>i</code> into the <code>i</code>’th element of the vector using standard sub-setting notation <code>[]</code>.</p>
+<pre class="r"><code>MEANS &lt;- vector()
+
+for(i in 1:50){
+  SAMPLE &lt;- rnorm(n = 10)
+  MEANS[i] &lt;- mean(SAMPLE)
+}
+
+head(MEANS)</code></pre>
+<pre><code>## [1] -0.42624926  0.42534867  0.53879136  0.08967386  0.20783412 -0.13517928</code></pre>
+<p>Generally speaking it’s best practice to define the length of the vector before running the for loop. This is because ‘growing’ the length of a variable in a for loop is computationally inefficient and can slow down your code. For simple tasks the difference is trivial, but for complex tasks the slow downs can be very important. Best practice for the previous loop would look like this:</p>
+<pre class="r"><code>MEANS &lt;- vector(&quot;numeric&quot;, length = 50)
+
+for(i in 1:50){
+  SAMPLE &lt;- rnorm(n = 10)
+  MEANS[i] &lt;- mean(SAMPLE)
+}</code></pre>
+<p>Sometimes we might want more than a single piece of information from a loop. For example, let’s say we wanted to save not only the mean of each sample, but the standard deviation. One simple way to do this is to have a vector for each results.</p>
+<pre class="r"><code>MEANS &lt;- vector(&quot;numeric&quot;, length = 50)
+SDs &lt;- vector(&quot;numeric&quot;, length = 50)
+
+for(i in 1:50){
+  SAMPLE &lt;- rnorm(n = 10)
+  MEANS[i] &lt;- mean(SAMPLE)
+  SDs[i] &lt;- sd(SAMPLE)
+}
+
+head(MEANS)</code></pre>
+<pre><code>## [1]  0.13802822  0.54137821  0.42176531 -0.04195656 -0.30439767 -0.29158937</code></pre>
+<pre class="r"><code>head(SDs)</code></pre>
+<pre><code>## [1] 0.8075826 0.6114466 0.7449035 0.8164000 0.9781694 0.7464993</code></pre>
+<p>But this can quickly get unwieldy if we have a lot of information we want to save. Another option is to save our outputs in lists. Lists are extremely flexible ways of storing information.</p>
+<pre class="r"><code>RESULTS &lt;- list()
+
+for(i in 1:50){
+  SAMPLE &lt;- rnorm(n = 10)
+  MEAN &lt;- mean(SAMPLE)
+  SD &lt;- sd(SAMPLE)
+  VAR &lt;- var(SAMPLE)
+  
+  RESULTS[[i]] &lt;- c(MEAN, SD, VAR)
+}
+
+head(RESULTS)</code></pre>
+<pre><code>## [[1]]
+## [1] 0.4990745 1.0836907 1.1743854
+## 
+## [[2]]
+## [1] 0.2416969 0.8802939 0.7749173
+## 
+## [[3]]
+## [1] 0.03271818 0.98388724 0.96803411
+## 
+## [[4]]
+## [1] 0.1656198 0.7592362 0.5764395
+## 
+## [[5]]
+## [1] 0.4962176 0.7617216 0.5802199
+## 
+## [[6]]
+## [1] -0.08844452  1.20628026  1.45511207</code></pre>
+<p>Here each slot in the list contains a vector of length 3 which contains the estimated mean, standard deviation, and variance. Storing results in a list is very convenient because everything gets stored in the same object, but working with the results can be challenging. To make it easier to inspect the results of a for loop stored in a list, a bit of post-processing is required to get the data back into an easy to work with format.</p>
+<pre class="r"><code>RESULTS_CLEAN &lt;- do.call(rbind, RESULTS)
+RESULTS_CLEAN &lt;- data.frame(RESULTS_CLEAN)
+names(RESULTS_CLEAN) &lt;- c(&quot;mean&quot;, &quot;sd&quot;, &quot;var&quot;)
+head(RESULTS_CLEAN)</code></pre>
+<pre><code>##          mean        sd       var
+## 1  0.49907448 1.0836907 1.1743854
+## 2  0.24169686 0.8802939 0.7749173
+## 3  0.03271818 0.9838872 0.9680341
+## 4  0.16561980 0.7592362 0.5764395
+## 5  0.49621757 0.7617216 0.5802199
+## 6 -0.08844452 1.2062803 1.4551121</code></pre>
+<hr />
 </div>
-<div id="practical-05---mixed-effect-models-model-selection-and-model-averaging" class="section level3">
-<h3>Practical 05 - Mixed Effect Models, Model Selection, and Model Averaging</h3>
-<p><a href="Practical_Datasets/Owls.csv" >Owl begging behaviour</a></p>
-<p></br></p>
-</div>
-<div id="practical-06---heteroskedasticity-temporal-autocorrelation-and-the-iid-assumption" class="section level3">
-<h3>Practical 06 - Heteroskedasticity, Temporal Autocorrelation, and the IID Assumption</h3>
-<p><a href="Practical_Datasets/Cod_daily_depth_data.csv" >Cod depths</a></p>
-<p></br></p>
-</div>
-<div id="practical-07---spatial-and-phylogenetic-autocorrelation" class="section level3">
-<h3>Practical 07 - Spatial and Phylogenetic Autocorrelation</h3>
-<p><a href="Practical_Datasets/SDI2003.csv" >SDI and pH</a></p>
-<p><a href="Practical_Datasets/rockfish.csv" >Rockfish traits</a></p>
-<p><a href="Practical_Datasets/rockfish.phy.txt" >Rockfish phylogenetic tree</a></p>
-<p></br></p>
-</div>
-<div id="practical-09---logistic-regression-generalised-linear-models-for-01-and-proportion-data" class="section level3">
-<h3>Practical 09 - Logistic Regression: Generalised Linear Models for 0,1 and Proportion Data</h3>
-<p><a href="Practical_Datasets/gophertortoise.csv" >Gopher tortoise infection status</a></p>
-<p></br></p>
-</div>
-<div id="practical-10---stochastic-simulation-power-analysis-and-non-linear-models" class="section level3">
-<h3>Practical 10 - Stochastic Simulation, Power Analysis, and Non-Linear Models</h3>
-<p><a href="Practical_Datasets/Seedling.csv" >Seedlings</a></p>
-<p><a href="Practical_Datasets/jaw_bone.csv" >Deer jaw bones</a></p>
-<p><a href="Practical_Datasets/Wild_Boar.csv" >Wild boar Tb</a></p>
+<div id="nested-for-loops" class="section level2">
+<h2>Nested for loops</h2>
+<p>Sometimes we’re interested in repeating a repeated task. This can be done using nested for loops (i.e., a for loop inside a for loop). With nested for loops the ‘outer’ loop controls the number of repetition of the whole block, while the inner loop executes n-times every time the outer for loop. For example let’s say I want to estimate the means of datasets with sample sizes ranging between 1 and 20, but I’m not just interested in estimating each of these means a single time, but in the variance of 100 means for each sample size. We could do this using nested for loops as follows.</p>
+<pre class="r"><code>#Number of replicates
+nReps &lt;- 100
+
+#list to store high level results
+Var_Of_Means &lt;- list()
+
+#Outer loop over the different sample sizes of interest
+for(i in 1:20){
+  
+  #Vector to store internal results (note: will re-write each iteration of outer loop)
+  MEANS &lt;- vector(&quot;numeric&quot;, length = nReps)
+  
+  #Inner loop over the desired number of replicates
+  for(j in 1:nReps){
+    SAMPLE &lt;- rnorm(n = i)
+    MEANS[j] &lt;- mean(SAMPLE)
+    
+  } #Closes inner loop
+  
+  #Store the results of each iteration of the inner loop
+  Var_Of_Means[[i]] &lt;- data.frame(n = i,
+                                   variance = var(MEANS))
+  
+} #Closes outer loop
+
+#Clean up and view the results
+results &lt;- do.call(rbind, Var_Of_Means)
+
+#Plot the change in variance of sample means as a function of n
+plot(results$variance ~ results$n)</code></pre>
+<p><img src="for_loops_files/figure-html/unnamed-chunk-11-1.png" width="576" /></p>
 </div>
 
 
@@ -556,7 +697,7 @@ $(document).ready(function ()  {
       ignoreSelector: ".toc-ignore",
       scrollTo: 0
     };
-    options.showAndHide = true;
+    options.showAndHide = false;
     options.smoothScroll = true;
 
     // tocify
