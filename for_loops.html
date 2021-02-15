@@ -504,7 +504,7 @@ div.tocify {
 ## [1] &quot;hello world, I&#39;m replicate 3&quot;
 ## [1] &quot;hello world, I&#39;m replicate 4&quot;
 ## [1] &quot;hello world, I&#39;m replicate 5&quot;</code></pre>
-<p>For loops also don’t have to start at 1, and they don’t have to be perfect sequences of numbers. They can run backwards, start and end at any number you chose, and have gaps. For example, any of these for loops will run without issue.</p>
+<p>For loops also don’t have to start at 1, and they don’t have to be perfect sequences of numbers. They can run backwards, start and end at any number you chose, have gaps, or even be characters. For example, any of these for loops will run without issue.</p>
 <pre class="r"><code>for(i in 3:7){print(i)}</code></pre>
 <pre><code>## [1] 3
 ## [1] 4
@@ -522,6 +522,10 @@ div.tocify {
 ## [1] 3
 ## [1] 5
 ## [1] 7</code></pre>
+<pre class="r"><code>for(i in c(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;)){print(i)}</code></pre>
+<pre><code>## [1] &quot;A&quot;
+## [1] &quot;B&quot;
+## [1] &quot;C&quot;</code></pre>
 <hr />
 </div>
 <div id="saving-the-results-of-a-for-loop" class="section level2">
@@ -540,7 +544,7 @@ for(i in 1:50){
 }
 
 head(MEANS)</code></pre>
-<pre><code>## [1] -0.28088154  0.13025791  0.45777580 -0.04599765 -0.40872039  0.22551510</code></pre>
+<pre><code>## [1]  0.5552271 -0.0839091 -0.3508633 -0.4953009  0.2342995 -0.4336030</code></pre>
 <p>Generally speaking it’s best practice to define the length of the vector before running the for loop. This is because ‘growing’ the length of a variable in a for loop is computationally inefficient and can slow down your code. For simple tasks the difference is trivial, but for complex tasks the slow downs can be very important. Best practice for the previous loop would look like this:</p>
 <pre class="r"><code>MEANS &lt;- vector(&quot;numeric&quot;, length = 50)
 
@@ -559,10 +563,9 @@ for(i in 1:50){
 }
 
 head(MEANS)</code></pre>
-<pre><code>## [1] -0.3923428725  0.0007645963 -0.3049388448 -0.7112285257 -0.1511402200
-## [6]  0.3732955815</code></pre>
+<pre><code>## [1] -0.40320740 -0.43709966 -0.03940612  0.47479210 -0.35480142  0.38320766</code></pre>
 <pre class="r"><code>head(SDs)</code></pre>
-<pre><code>## [1] 0.8579350 0.9087522 1.0520949 1.1298490 1.1325520 1.5364505</code></pre>
+<pre><code>## [1] 0.8373449 0.8978173 0.8082663 0.7844453 1.3066458 1.1584180</code></pre>
 <p>But this can quickly get unwieldy if we have a lot of information we want to save. Another option is to save our outputs in lists. Lists are extremely flexible ways of storing information.</p>
 <pre class="r"><code>RESULTS &lt;- list()
 
@@ -577,34 +580,34 @@ for(i in 1:50){
 
 head(RESULTS)</code></pre>
 <pre><code>## [[1]]
-## [1] -0.2834074  1.3602863  1.8503788
+## [1] -0.4150794  1.1289473  1.2745219
 ## 
 ## [[2]]
-## [1] -0.08129214  1.35447434  1.83460074
+## [1] -0.3929079  0.9273915  0.8600550
 ## 
 ## [[3]]
-## [1] -0.1017015  0.7290523  0.5315173
+## [1] -0.04379119  0.78731950  0.61987199
 ## 
 ## [[4]]
-## [1] 0.1466963 1.1492297 1.3207288
+## [1] 0.06179216 1.04770814 1.09769236
 ## 
 ## [[5]]
-## [1] 0.3252891 1.1315786 1.2804702
+## [1] 0.07961452 0.69754297 0.48656619
 ## 
 ## [[6]]
-## [1] -0.3477964  1.0137605  1.0277104</code></pre>
+## [1] 0.5648456 0.8831922 0.7800285</code></pre>
 <p>Here each slot in the list contains a vector of length 3 which contains the estimated mean, standard deviation, and variance. Storing results in a list is very convenient because everything gets stored in the same object, but working with the results can be challenging. To make it easier to inspect the results of a for loop stored in a list, a bit of post-processing is required to get the data back into an easy to work with format.</p>
 <pre class="r"><code>RESULTS_CLEAN &lt;- do.call(rbind, RESULTS)
 RESULTS_CLEAN &lt;- data.frame(RESULTS_CLEAN)
 names(RESULTS_CLEAN) &lt;- c(&quot;mean&quot;, &quot;sd&quot;, &quot;var&quot;)
 head(RESULTS_CLEAN)</code></pre>
 <pre><code>##          mean        sd       var
-## 1 -0.28340741 1.3602863 1.8503788
-## 2 -0.08129214 1.3544743 1.8346007
-## 3 -0.10170154 0.7290523 0.5315173
-## 4  0.14669634 1.1492297 1.3207288
-## 5  0.32528906 1.1315786 1.2804702
-## 6 -0.34779638 1.0137605 1.0277104</code></pre>
+## 1 -0.41507944 1.1289473 1.2745219
+## 2 -0.39290792 0.9273915 0.8600550
+## 3 -0.04379119 0.7873195 0.6198720
+## 4  0.06179216 1.0477081 1.0976924
+## 5  0.07961452 0.6975430 0.4865662
+## 6  0.56484563 0.8831922 0.7800285</code></pre>
 <hr />
 </div>
 <div id="nested-for-loops" class="section level2">
