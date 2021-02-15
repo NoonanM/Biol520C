@@ -37,11 +37,12 @@ navbar:
         - text: "Paper 2"
           href: Paper2_Datasets.html   
     - text: "R Help"
-      menu:
-        - text: "Simulation"
-          href: Simulation.html
+      menu:        
         - text: "for loops"
           href: for_loops.html
+        - text: "Simulation"
+          href: Simulation.html
+
 
 output_dir: "."
 output:
