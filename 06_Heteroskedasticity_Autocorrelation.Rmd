@@ -17,7 +17,6 @@ knitr::opts_chunk$set(echo = TRUE, fig.width=6, fig.height=4)
 ```
 
 ```{r, echo = FALSE}
-setwd("~/Dropbox (Personal)/Teaching_Material/Biol_520C/Practicals/06_Heteroskedasticity_Autocorrelation")
 ```
 This page was last updated on `r format(Sys.time(), '%B %d, %Y')`.
 
