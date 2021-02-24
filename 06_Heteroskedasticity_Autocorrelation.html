@@ -487,13 +487,13 @@ data.math = data.math.replace(/^% <!\[CDATA\[/, '').replace(/%\]\]>$/, '');
 <p>To this end, standard linear regression models are of the form</p>
 </br>
 <center>
-<span class="math inline">\(y_i = \beta_0 + \beta_1 \times x_{i} + \varepsilon_i \quad\quad \varepsilon_i \sim \mathcal{N}(0,\, V) \quad\quad V = \sigma^2 {\begin{bmatrix}1&amp; 0 &amp;\cdots &amp; 0 \\ 0 &amp; 1 &amp; \cdots &amp; 0 \\ \vdots &amp;\vdots &amp;\ddots &amp;\vdots \\ 0 &amp; 0 &amp; \cdots &amp;1 \end{bmatrix}}\)</span>
+<span class="math display">\[y_i = \beta_0 + \beta_1 \times x_{i} + \varepsilon_i \quad\quad \varepsilon_i \sim \mathcal{N}(0,\, V) \quad\quad V = \sigma^2 {\begin{bmatrix}1&amp; 0 &amp;\cdots &amp; 0 \\ 0 &amp; 1 &amp; \cdots &amp; 0 \\ \vdots &amp;\vdots &amp;\ddots &amp;\vdots \\ 0 &amp; 0 &amp; \cdots &amp;1 \end{bmatrix}}\]</span>
 </center>
 <p></br></p>
 <p>The diagonal in the variance-covariance matrix defines the variances. All 1s indicates homogeneity of variances. The off-diagonals define the co-variances and the 0s indicate independence. This standard format does not permit any covariance between the residuals, and violation of this assumption can bias parameter estimates and negatively impact our capacity to learn from our models. Correcting for autocorrelation `simply’ involves identifying the autocorrelation structure of the residuals and modifying the variance-covariance matrix such that the off-diagonals <span class="math inline">\(\neq\)</span> 0.</p>
 </br>
 <center>
-<span class="math inline">\(V = \sigma^2 \underbrace{{\begin{bmatrix}1&amp; \rho &amp;\cdots &amp; \rho \\ \rho &amp; 1 &amp; \cdots &amp; \rho \\ \vdots &amp;\vdots &amp;\ddots &amp;\vdots \\ \rho &amp; \rho &amp; \cdots &amp;1 \end{bmatrix}}}_{\mathrm{correlation \, matrix}}\)</span>
+<span class="math display">\[V = \sigma^2 \underbrace{{\begin{bmatrix}1&amp; \rho &amp;\cdots &amp; \rho \\ \rho &amp; 1 &amp; \cdots &amp; \rho \\ \vdots &amp;\vdots &amp;\ddots &amp;\vdots \\ \rho &amp; \rho &amp; \cdots &amp;1 \end{bmatrix}}}_{\mathrm{correlation \, matrix}}\]</span>
 </center>
 <p></br></p>
 <div id="identifying-temporal-autocorrelation" class="section level3">
@@ -529,7 +529,7 @@ data.math = data.math.replace(/^% <!\[CDATA\[/, '').replace(/%\]\]>$/, '');
 <p>The simplest case is when all the co-variances are constant, non-zero value (referred to as `compound symmetry’). With compound symmetric error structures the degree of correlation between residuals (<span class="math inline">\(\rho\)</span>) is equal to <span class="math inline">\(\rho=\frac{\theta}{\theta + \sigma^2}\)</span>.</p>
 </br>
 <center>
-<span class="math inline">\(V = \underbrace{{\begin{bmatrix}\theta + \sigma^2&amp; \theta &amp;\cdots &amp; \theta \\ \theta &amp; \theta + \sigma^2 &amp; \cdots &amp; \theta \\ \vdots &amp;\vdots &amp;\ddots &amp;\vdots \\ \theta &amp; \theta &amp; \cdots &amp;\theta + \sigma^2 \end{bmatrix}}}_{\mathrm{variance-covariance \, matrix}}\)</span>
+<span class="math display">\[V = \underbrace{{\begin{bmatrix}\theta + \sigma^2&amp; \theta &amp;\cdots &amp; \theta \\ \theta &amp; \theta + \sigma^2 &amp; \cdots &amp; \theta \\ \vdots &amp;\vdots &amp;\ddots &amp;\vdots \\ \theta &amp; \theta &amp; \cdots &amp;\theta + \sigma^2 \end{bmatrix}}}_{\mathrm{variance-covariance \, matrix}}\]</span>
 </center>
 <p></br></p>
 <p>Compound symmetric errors can be applied via the <code>corCompSymm()</code> function from the <code>nlme</code> package.</p>
@@ -549,7 +549,7 @@ data.math = data.math.replace(/^% <!\[CDATA\[/, '').replace(/%\]\]>$/, '');
 <p>The first order auto-regressive (AR1) structure defines a correlation structure in which the degree of correlation between two observations is proportional to the relative amount of elapsed time. With AR-1 error structures the degree of correlation between a pair of residuals is defined as <span class="math inline">\(\rho^{\vert t-s\vert}\)</span>, where <span class="math inline">\(\vert t-s\vert\)</span> is the absolute difference between the current time (<span class="math inline">\(t\)</span>) and the previous time (<span class="math inline">\(s\)</span>).</p>
 </br>
 <center>
-<span class="math inline">\(V = \sigma^2 \underbrace{{\begin{bmatrix}1&amp; \rho &amp; \rho^2 &amp;\cdots &amp; \rho^i \\ \rho &amp; 1 &amp; \rho &amp; \ddots &amp; \vdots \\ \rho^2 &amp; \rho &amp; 1 &amp; \ddots &amp; \rho^2 \\ \vdots &amp;\ddots &amp;\ddots &amp;\ddots &amp; \rho \\ \rho^1 &amp; \cdots &amp; \rho^2 &amp; \rho &amp;1 \end{bmatrix}}}_{\mathrm{correlation \, matrix}}\)</span>
+<span class="math display">\[V = \sigma^2 \underbrace{{\begin{bmatrix}1&amp; \rho &amp; \rho^2 &amp;\cdots &amp; \rho^i \\ \rho &amp; 1 &amp; \rho &amp; \ddots &amp; \vdots \\ \rho^2 &amp; \rho &amp; 1 &amp; \ddots &amp; \rho^2 \\ \vdots &amp;\ddots &amp;\ddots &amp;\ddots &amp; \rho \\ \rho^1 &amp; \cdots &amp; \rho^2 &amp; \rho &amp;1 \end{bmatrix}}}_{\mathrm{correlation \, matrix}}\]</span>
 </center>
 <p></br></p>
 <p>AR-1 errors can be applied via the <code>corAR1()</code> function from the <code>nlme</code> package.</p>
