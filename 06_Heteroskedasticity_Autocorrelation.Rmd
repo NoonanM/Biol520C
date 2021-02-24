@@ -21,6 +21,14 @@ setwd("~/Dropbox (Personal)/Teaching_Material/Biol_520C/Practicals/06_Heterosked
 ```
 This page was last updated on `r format(Sys.time(), '%B %d, %Y')`.
 
+<script type="text/x-mathjax-config">
+MathJax.Hub.Register.StartupHook('TeX Jax Ready', function () {
+MathJax.InputJax.TeX.prefilterHooks.Add(function (data) {
+data.math = data.math.replace(/^% <!\[CDATA\[/, '').replace(/%\]\]>$/, '');
+});
+});
+</script>
+
 * * *
 ## Background
 
