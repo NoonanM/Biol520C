@@ -64,7 +64,7 @@ The diagonal in the variance-covariance matrix defines the variances. All 1s ind
 
 </br>
 <center>
-$$V = \sigma^2 \underbrace{{\begin{matrix}1& \rho &\cdots & \rho \\ \rho & 1 & \cdots & \rho \\ \vdots &\vdots &\ddots &\vdots \\ \rho & \rho & \cdots &1 \end{matrix}}}_{\mathrm{correlation \, matrix}}$$
+$$V = \sigma^2 \underbrace{{\begin{bmatrix}1& \rho &\cdots & \rho \\ \rho & 1 & \cdots & \rho \\ \vdots &\vdots &\ddots &\vdots \\ \rho & \rho & \cdots &1 \end{bmatrix}}}_{\mathrm{correlation \, matrix}}$$
 </center>
 </br>
 
@@ -104,7 +104,7 @@ The simplest case is when all the co-variances are constant, non-zero value (ref
 
 </br>
 <center>
-$$V = \underbrace{{\begin{matrix}\theta + \sigma^2& \theta &\cdots & \theta \\ \theta & \theta + \sigma^2 & \cdots & \theta \\ \vdots &\vdots &\ddots &\vdots \\ \theta & \theta & \cdots &\theta + \sigma^2 \end{matrix}}}_{\mathrm{variance-covariance \, matrix}}$$
+$$V = \underbrace{{\begin{bmatrix}\theta + \sigma^2& \theta &\cdots & \theta \\ \theta & \theta + \sigma^2 & \cdots & \theta \\ \vdots &\vdots &\ddots &\vdots \\ \theta & \theta & \cdots &\theta + \sigma^2 \end{bmatrix}}}_{\mathrm{variance-covariance \, matrix}}$$
 </center>
 </br>
 
@@ -126,7 +126,7 @@ The first order auto-regressive (AR1) structure defines a correlation structure 
 
 </br>
 <center>
-$$V = \sigma^2 \underbrace{{\begin{matrix}1& \rho & \rho^2 &\cdots & \rho^i \\ \rho & 1 & \rho & \ddots & \vdots \\ \rho^2 & \rho & 1 & \ddots & \rho^2 \\ \vdots &\ddots &\ddots &\ddots & \rho \\ \rho^1 & \cdots & \rho^2 & \rho &1 \end{matrix}}}_{\mathrm{correlation \, matrix}}$$
+$$V = \sigma^2 \underbrace{{\begin{bmatrix}1& \rho & \rho^2 &\cdots & \rho^i \\ \rho & 1 & \rho & \ddots & \vdots \\ \rho^2 & \rho & 1 & \ddots & \rho^2 \\ \vdots &\ddots &\ddots &\ddots & \rho \\ \rho^1 & \cdots & \rho^2 & \rho &1 \end{bmatrix}}}_{\mathrm{correlation \, matrix}}$$
 </center>
 </br>
 
