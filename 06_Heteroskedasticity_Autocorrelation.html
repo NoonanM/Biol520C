@@ -481,38 +481,6 @@ MathJax.Hub.Register.StartupHook('TeX Jax Ready', function () {
 </ul>
 <hr />
 </div>
-<div id="impact-of-heteroskedasticity" class="section level2">
-<h2>Impact of heteroskedasticity</h2>
-<p>This week we learned that when the IID assumption is violated by <em>unmodelled</em> heteroskedasticity, variances, and hence standard errors, can be poorly estimated resulting in misleading p-values. When this is the case, the deterministic part of the model may be correctly specified, but any inference is likely to be unreliable. Not the emphasis on unmodelled. This is because, unless there are extreme issues with the data, it is by ignoring key features that we run into issues (not just the presence of heteroskedasticity). Let’s explore that concept using a simulation experiment.</p>
-<div id="unmodelled-heteroskedasticity" class="section level3">
-<h3>Unmodelled heteroskedasticity</h3>
-<ol style="list-style-type: decimal">
-<li><ol></li>
-</ol>
-<ul>
-<li>Create a function for simulating from a linear model which has the following parameters: an intercept, <span class="math inline">\(\beta_0\)</span>, of 0, <span class="math inline">\(\beta_1 = 2\)</span> and <span class="math inline">\(\beta_2 = 0.5\)</span>. Have the errors for these data be drawn from a power variance error structure <span class="math inline">\(\varepsilon_{ij} \sim \mathcal{N}(0,\,\sigma^{2} \times \vert x_{1,i} \vert ^{2\delta_j})\)</span> that is a function of <span class="math inline">\(x_1\)</span> and with <span class="math inline">\(\sigma^2\)</span> = 4.</li>
-<li>Create a sequence of <span class="math inline">\(\delta\)</span> values ranging from 0 to 1 by an interval of 0.05.</li>
-<li>For each of the <span class="math inline">\(\delta\)</span> values: i) simulate 50 uniformly sampled <span class="math inline">\(x_1\)</span> and 50 uniformly sampled <span class="math inline">\(x_2\)</span> values each ranging from 0 to 20; ii) use these data and your function to generate the y values; iii) fit a linear model to the data; iv) extract and store the p-values for the intercept,<span class="math inline">\(\beta_1\)</span> and <span class="math inline">\(\beta_2\)</span>.</li>
-<li>Repeat this 100 times per <span class="math inline">\(\delta\)</span> value.</li>
-<li>Plot the mean <span class="math inline">\(p\)</span>-value for each parameter at each <span class="math inline">\(\delta\)</span> value.</li>
-<li>Describe the impact of unmodelled heteroskedasticity.</li>
-</ul>
-Hint: Using for loops that store values in a list is a straightforward approach to this exercise. The following <code>R</code> functions can help make this exercise easier: <code>aggregate()</code>, <code>do.call()</code>
-</ol>
-</div>
-<div id="modelled-heteroskedasticity" class="section level3">
-<h3>Modelled heteroskedasticity</h3>
-<ol style="list-style-type: decimal">
-<li><ol></li>
-</ol>
-<ul>
-<li>Repeat the above simulation experiment but this time, instead of ignoring the heteroskedasticity, fit a model with a power variance structure.</li>
-<li>Describe the impact that modelling heteroskedasticity has on the capacity to identify significant parameters.
-</ol></li>
-</ul>
-<hr />
-</div>
-</div>
 <div id="temporal-autocorrelation" class="section level2">
 <h2>Temporal autocorrelation</h2>
 <p>Anything that causes some data points in a dataset to be more similar to each other than others can result in statistically detectable autocorrelation. Temporal autocorrelation is a phenomenon that occurs because events that occur close to each other in time tend to be more similar than events that occur further apart in time. This pattern can be found in many different situations, not only in biology but in any field where data are measured over time. As biologists we often find ourselves working in systems where the best (or at least the most pragmatic) way to understand what is going on is to collect data over time.</p>
@@ -595,7 +563,40 @@ Hint: Using for loops that store values in a list is a straightforward approach 
 <li>Describe the effect
 </ol></li>
 </ul>
+<hr />
 </div>
+</div>
+</div>
+<div id="impact-of-heteroskedasticity" class="section level2">
+<h2>Impact of heteroskedasticity</h2>
+<p><strong>Note: The following 2 exercises are bonus problems worth a total of 0.5% on your final grade. They involve the use of nested for loops which are detailed on the R help page.</strong></p>
+<p>This week we learned that when the IID assumption is violated by <em>unmodelled</em> heteroskedasticity, variances, and hence standard errors, can be poorly estimated resulting in misleading p-values. When this is the case, the deterministic part of the model may be correctly specified, but any inference is likely to be unreliable. Not the emphasis on unmodelled. This is because, unless there are extreme issues with the data, it is by ignoring key features that we run into issues (not just the presence of heteroskedasticity). Let’s explore that concept using a simulation experiment.</p>
+<div id="unmodelled-heteroskedasticity" class="section level3">
+<h3>Unmodelled heteroskedasticity</h3>
+<ol style="list-style-type: decimal">
+<li><ol></li>
+</ol>
+<ul>
+<li>Create a function for simulating from a linear model which has the following parameters: an intercept, <span class="math inline">\(\beta_0\)</span>, of 0, <span class="math inline">\(\beta_1 = 2\)</span> and <span class="math inline">\(\beta_2 = 0.5\)</span>. Have the errors for these data be drawn from a power variance error structure <span class="math inline">\(\varepsilon_{ij} \sim \mathcal{N}(0,\,\sigma^{2} \times \vert x_{1,i} \vert ^{2\delta_j})\)</span> that is a function of <span class="math inline">\(x_1\)</span> and with <span class="math inline">\(\sigma^2\)</span> = 4.</li>
+<li>Create a sequence of <span class="math inline">\(\delta\)</span> values ranging from 0 to 1 by an interval of 0.05.</li>
+<li>For each of the <span class="math inline">\(\delta\)</span> values: i) simulate 50 uniformly sampled <span class="math inline">\(x_1\)</span> and 50 uniformly sampled <span class="math inline">\(x_2\)</span> values each ranging from 0 to 20; ii) use these data and your function to generate the y values; iii) fit a linear model to the data; iv) extract and store the p-values for the intercept,<span class="math inline">\(\beta_1\)</span> and <span class="math inline">\(\beta_2\)</span>.</li>
+<li>Repeat this 100 times per <span class="math inline">\(\delta\)</span> value.</li>
+<li>Plot the mean <span class="math inline">\(p\)</span>-value for each parameter at each <span class="math inline">\(\delta\)</span> value.</li>
+<li>Describe the impact of unmodelled heteroskedasticity.</li>
+</ul>
+Hint: Using for loops that store values in a list is a straightforward approach to this exercise. The following <code>R</code> functions can help make this exercise easier: <code>aggregate()</code>, <code>do.call()</code>
+</ol>
+</div>
+<div id="modelled-heteroskedasticity" class="section level3">
+<h3>Modelled heteroskedasticity</h3>
+<ol style="list-style-type: decimal">
+<li><ol></li>
+</ol>
+<ul>
+<li>Repeat the above simulation experiment but this time, instead of ignoring the heteroskedasticity, fit a model with a power variance structure.</li>
+<li>Describe the impact that modelling heteroskedasticity has on the capacity to identify significant parameters.
+</ol></li>
+</ul>
 </div>
 </div>
 

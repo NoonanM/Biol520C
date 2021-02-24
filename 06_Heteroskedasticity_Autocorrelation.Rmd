@@ -41,35 +41,6 @@ In this Practical we will:
 * Build mixed effects models that correct for temporal autocorrelation.
 * Identify the best autocorrelation structure via AIC based model selection.
 
-* * *
-## Impact of heteroskedasticity
-
-This week we learned that when the IID assumption is violated by _unmodelled_ heteroskedasticity, variances, and hence standard errors, can be poorly estimated resulting in misleading p-values. When this is the case, the deterministic part of the model may be correctly specified, but any inference is likely to be unreliable. Not the emphasis on unmodelled. This is because, unless there are extreme issues with the data, it is by ignoring key features that we run into issues (not just the presence of heteroskedasticity). Let's explore that concept using a simulation experiment.
-
-### Unmodelled heteroskedasticity
-1. <ol>
-* Create a function for simulating from a linear model which has the following parameters: an intercept, $\beta_0$, of 0, $\beta_1 = 2$ and $\beta_2 = 0.5$. Have the errors for these data be drawn from a power variance error structure $\varepsilon_{ij} \sim \mathcal{N}(0,\,\sigma^{2} \times \vert x_{1,i} \vert ^{2\delta_j})$ that is a function of $x_1$ and with $\sigma^2$ = 4.
-* Create a sequence of $\delta$ values ranging from 0 to 1 by an interval of 0.05.
-* For each of the $\delta$ values: i) simulate 50 uniformly sampled $x_1$ and 50 uniformly sampled $x_2$ values each ranging from 0 to 20; ii) use these data and your function to generate the y values; iii) fit a linear model to the data; iv) extract and store the p-values for the intercept,$\beta_1$ and $\beta_2$.
-* Repeat this 100 times per $\delta$ value.
-* Plot the mean $p$-value for each parameter at each $\delta$ value.
-* Describe the impact of unmodelled heteroskedasticity.
-
-Hint: Using for loops that store values in a list is a straightforward approach to this exercise. The following `R` functions can help make this exercise easier: `aggregate()`, `do.call()`
-</ol>
-
-```{R}
-```
-
-### Modelled heteroskedasticity
-1. <ol>
-* Repeat the above simulation experiment but this time, instead of ignoring the heteroskedasticity, fit a model with a power variance structure.
-* Describe the impact that modelling heteroskedasticity has on the capacity to identify significant parameters.
-</ol>
-
-
-```{R}
-```
 
 * * *
 ## Temporal autocorrelation
@@ -164,4 +135,37 @@ AR-1 errors can be applied via the `corAR1()` function from the `nlme` package.
 </ol>
 
 ```{r}
+```
+
+
+* * *
+## Impact of heteroskedasticity
+
+__Note: The following 2 exercises are bonus problems worth a total of 0.5% on your final grade. They involve the use of nested for loops which are detailed on the R help page.__
+
+This week we learned that when the IID assumption is violated by _unmodelled_ heteroskedasticity, variances, and hence standard errors, can be poorly estimated resulting in misleading p-values. When this is the case, the deterministic part of the model may be correctly specified, but any inference is likely to be unreliable. Not the emphasis on unmodelled. This is because, unless there are extreme issues with the data, it is by ignoring key features that we run into issues (not just the presence of heteroskedasticity). Let's explore that concept using a simulation experiment.
+
+### Unmodelled heteroskedasticity
+1. <ol>
+* Create a function for simulating from a linear model which has the following parameters: an intercept, $\beta_0$, of 0, $\beta_1 = 2$ and $\beta_2 = 0.5$. Have the errors for these data be drawn from a power variance error structure $\varepsilon_{ij} \sim \mathcal{N}(0,\,\sigma^{2} \times \vert x_{1,i} \vert ^{2\delta_j})$ that is a function of $x_1$ and with $\sigma^2$ = 4.
+* Create a sequence of $\delta$ values ranging from 0 to 1 by an interval of 0.05.
+* For each of the $\delta$ values: i) simulate 50 uniformly sampled $x_1$ and 50 uniformly sampled $x_2$ values each ranging from 0 to 20; ii) use these data and your function to generate the y values; iii) fit a linear model to the data; iv) extract and store the p-values for the intercept,$\beta_1$ and $\beta_2$.
+* Repeat this 100 times per $\delta$ value.
+* Plot the mean $p$-value for each parameter at each $\delta$ value.
+* Describe the impact of unmodelled heteroskedasticity.
+
+Hint: Using for loops that store values in a list is a straightforward approach to this exercise. The following `R` functions can help make this exercise easier: `aggregate()`, `do.call()`
+</ol>
+
+```{R}
+```
+
+### Modelled heteroskedasticity
+1. <ol>
+* Repeat the above simulation experiment but this time, instead of ignoring the heteroskedasticity, fit a model with a power variance structure.
+* Describe the impact that modelling heteroskedasticity has on the capacity to identify significant parameters.
+</ol>
+
+
+```{R}
 ```

@@ -483,12 +483,12 @@ div.tocify {
 <pre class="r"><code>rnorm(n = 5,                  # number of observations
       mean = 0,               # vector of means
       sd = 1)                 # vector of standard deviations</code></pre>
-<pre><code>## [1] -0.887199593 -0.077259784  0.369860302 -0.006872954 -0.476239343</code></pre>
+<pre><code>## [1] -2.1519707  0.3772244  0.6086875  1.5294149 -1.7437459</code></pre>
 <p>Because <code>rnorm</code> is expecting a vector for each entry, this function is very flexible. For example we can sample 5 values from normal distributions with different means and different standard deviations without having to re-write the function 5 times.</p>
 <pre class="r"><code>rnorm(n = 5,                  # number of observations
       mean = c(1,2,3,4,5),    # vector of means
       sd = 1:5)               # vector of standard deviations</code></pre>
-<pre><code>## [1]  1.947333  2.898582  1.361864 -3.828817  2.760254</code></pre>
+<pre><code>## [1]  1.5007206  0.5827601 -1.5802201  1.5666199  5.6025112</code></pre>
 <hr />
 </div>
 <div id="poisson" class="section level3">
@@ -497,11 +497,11 @@ div.tocify {
 <p><strong>Note:</strong> Will only return whole numbers</p>
 <pre class="r"><code>rpois(n = 5,                  # number of observations
       lambda = 1)             # vector of (non-negative) rate parameters</code></pre>
-<pre><code>## [1] 2 1 0 2 1</code></pre>
+<pre><code>## [1] 2 1 0 1 1</code></pre>
 <p>Because <code>rpois</code> is expecting a vector for each entry, this function is very flexible. For example we can sample 5 values from Poisson distributions with different rate parameters <span class="math inline">\(\lambda\)</span>, without having to re-write the function 5 times.</p>
 <pre class="r"><code>rpois(n = 5,                  # number of observations
       lambda = c(1,2,3,4,5))  # vector of (non-negative) rate parameters</code></pre>
-<pre><code>## [1] 0 2 3 4 5</code></pre>
+<pre><code>## [1] 0 8 4 5 3</code></pre>
 <hr />
 </div>
 <div id="binomial" class="section level3">
@@ -510,17 +510,17 @@ div.tocify {
 <pre class="r"><code>rbinom(n = 5,                  # number of observations
        size = 1,               # number of trials (zero or more)
        prob = 0.5)             # probability of success on each trial.</code></pre>
-<pre><code>## [1] 0 0 0 1 1</code></pre>
+<pre><code>## [1] 0 0 1 0 1</code></pre>
 <p>If we change the number of trials we get the number of successes across the number of trials. In this example we have simulated the number of successes in 5 replicates of 20 trials.</p>
 <pre class="r"><code>rbinom(n = 5,                  # number of observations
        size = 20,              # number of trials (zero or more)
        prob = 0.5)             # probability of success on each trial.</code></pre>
-<pre><code>## [1] 12 12 12 12 10</code></pre>
+<pre><code>## [1] 15 11  9 13 10</code></pre>
 <p>Because <code>rbinom</code> is expecting a vector for each entry, this function is very flexible. For example we can simulate the number of successes in 5 replicates of 20 trials, with a different probability of success in each trial</p>
 <pre class="r"><code>rbinom(n = 5,
        size = 20,
        prob = c(0.2, 0.4, 0.6, 0.8, 1))</code></pre>
-<pre><code>## [1]  3  4 11 17 20</code></pre>
+<pre><code>## [1]  4  6 11 17 20</code></pre>
 <hr />
 </div>
 <div id="uniform" class="section level3">
@@ -529,7 +529,7 @@ div.tocify {
 <pre class="r"><code>runif(n = 5,                  # number of observations
       min = 0,                # lower limit of the distribution. Must be finite.
       max = 20)               # upper limit of the distribution. Must be finite.</code></pre>
-<pre><code>## [1]  3.6456855 19.6693519  0.5181181  9.1016286  4.4924950</code></pre>
+<pre><code>## [1] 18.072999 18.260301 16.305606  6.800693 17.213046</code></pre>
 <p>Unlike the other distributions <code>runif</code> is not expecting vector for the <code>min</code> and <code>max</code> arguments, so this function does not have the same amount of inherent flexibility.</p>
 <hr />
 </div>
@@ -539,10 +539,10 @@ div.tocify {
 <p>When simulating random numbers, setting the random number seed with <code>set.seed()</code> ensures reproducibility of the sequence of random numbers.</p>
 <p>For example, we can sample 5 random numbers from a normal distribution with <code>rnorm()</code>.</p>
 <pre class="r"><code>rnorm(5)</code></pre>
-<pre><code>## [1]  0.5840097 -0.5137530 -0.1322737 -0.3142992  1.2787378</code></pre>
+<pre><code>## [1]  1.0851243  1.0892467 -0.6967636 -0.4691893  0.6231413</code></pre>
 <p>If we do this a second time the sequence of numbers will always be different.</p>
 <pre class="r"><code>rnorm(5)</code></pre>
-<pre><code>## [1] -0.19923767 -0.05201963  0.54122460 -2.20387221  0.23320981</code></pre>
+<pre><code>## [1]  1.1188353 -0.2834651 -1.7881672  0.1514572  0.9336790</code></pre>
 <p>But if we want to be sure we can get the same sequence of randomly generated numbers every single time, we have to set the seed prior to simulating.</p>
 <pre class="r"><code>set.seed(1)
 rnorm(5)</code></pre>
