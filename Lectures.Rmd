@@ -26,3 +26,5 @@ knitr::opts_chunk$set(echo = TRUE)
 <a href="Lectures/09_Model_Averaging.pdf" target="_blank">Lecture 09 Model Selection and Model Averaging </a>
 
 <a href="Lectures/10_Heteroscedasticity.pdf" target="_blank">Lecture 10 Dealing with Heteroskedasticity </a>
+
+<a href="Lectures/11_Autocorrelation_1.pdf" target="_blank">Lecture 11 Autocorrelation 1: Temporal Autocorrelation </a>
