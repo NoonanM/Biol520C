@@ -459,7 +459,7 @@ div.tocify {
 </div>
 
 
-<p>This page was last updated on March 07, 2021.</p>
+<p>This page was last updated on March 08, 2021.</p>
 <hr />
 <div id="background" class="section level2">
 <h2>Background</h2>
@@ -544,7 +544,7 @@ for(i in 1:50){
 }
 
 head(MEANS)</code></pre>
-<pre><code>## [1]  0.07163560 -0.29836578  0.02126590  0.01888478 -0.46435016  0.31216755</code></pre>
+<pre><code>## [1] -0.11088892 -0.12234765  0.28521546 -0.05568966 -0.18238141  0.32216386</code></pre>
 <p>Generally speaking it’s best practice to define the length of the vector before running the for loop. This is because ‘growing’ the length of a variable in a for loop is computationally inefficient and can slow down your code. For simple tasks the difference is trivial, but for complex tasks the slow downs can be very important. Best practice for the previous loop would look like this:</p>
 <pre class="r"><code>MEANS &lt;- vector(&quot;numeric&quot;, length = 50)
 
@@ -563,10 +563,9 @@ for(i in 1:50){
 }
 
 head(MEANS)</code></pre>
-<pre><code>## [1]  0.312733622  0.001181527  0.310242577 -0.433114134 -0.732884879
-## [6] -0.095924743</code></pre>
+<pre><code>## [1] 0.2078088 0.5091513 0.4382502 0.2441958 0.2450021 0.2840426</code></pre>
 <pre class="r"><code>head(SDs)</code></pre>
-<pre><code>## [1] 0.9566701 1.3230627 1.0226065 0.5824222 1.3357909 1.2819774</code></pre>
+<pre><code>## [1] 1.496557 1.229829 1.122559 1.071512 1.462963 1.120984</code></pre>
 <p>But this can quickly get unwieldy if we have a lot of information we want to save. Another option is to save our outputs in lists. Lists are extremely flexible ways of storing information.</p>
 <pre class="r"><code>RESULTS &lt;- list()
 
@@ -581,34 +580,34 @@ for(i in 1:50){
 
 head(RESULTS)</code></pre>
 <pre><code>## [[1]]
-## [1] 0.2027588 0.8227463 0.6769115
+## [1] -0.2908287  1.3698406  1.8764632
 ## 
 ## [[2]]
-## [1] 0.3430976 1.2915311 1.6680525
+## [1] 0.2540845 1.0057159 1.0114645
 ## 
 ## [[3]]
-## [1] -0.1306452  0.9566941  0.9152637
+## [1] -0.4401421  1.0144056  1.0290187
 ## 
 ## [[4]]
-## [1] -0.01452481  0.83071999  0.69009570
+## [1] 0.4441024 1.0706069 1.1461992
 ## 
 ## [[5]]
-## [1] -0.1258935  0.9568740  0.9156078
+## [1] -0.2454614  1.2073552  1.4577067
 ## 
 ## [[6]]
-## [1] -0.03777592  0.92083286  0.84793316</code></pre>
+## [1] 0.03641892 0.77059199 0.59381202</code></pre>
 <p>Here each slot in the list contains a vector of length 3 which contains the estimated mean, standard deviation, and variance. Storing results in a list is very convenient because everything gets stored in the same object, but working with the results can be challenging. To make it easier to inspect the results of a for loop stored in a list, a bit of post-processing is required to get the data back into an easy to work with format.</p>
 <pre class="r"><code>RESULTS_CLEAN &lt;- do.call(rbind, RESULTS)
 RESULTS_CLEAN &lt;- data.frame(RESULTS_CLEAN)
 names(RESULTS_CLEAN) &lt;- c(&quot;mean&quot;, &quot;sd&quot;, &quot;var&quot;)
 head(RESULTS_CLEAN)</code></pre>
-<pre><code>##          mean        sd       var
-## 1  0.20275881 0.8227463 0.6769115
-## 2  0.34309760 1.2915311 1.6680525
-## 3 -0.13064520 0.9566941 0.9152637
-## 4 -0.01452481 0.8307200 0.6900957
-## 5 -0.12589350 0.9568740 0.9156078
-## 6 -0.03777592 0.9208329 0.8479332</code></pre>
+<pre><code>##          mean       sd      var
+## 1 -0.29082871 1.369841 1.876463
+## 2  0.25408446 1.005716 1.011464
+## 3 -0.44014210 1.014406 1.029019
+## 4  0.44410241 1.070607 1.146199
+## 5 -0.24546137 1.207355 1.457707
+## 6  0.03641892 0.770592 0.593812</code></pre>
 <hr />
 </div>
 <div id="nested-for-loops" class="section level2">

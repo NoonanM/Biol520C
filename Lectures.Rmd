@@ -31,3 +31,5 @@ knitr::opts_chunk$set(echo = TRUE)
 
 <a href="Lectures/12_Autocorrelation_2.pdf" target="_blank">Lecture 12 Autocorrelation 2: Spatial Autocorrelation </a>
 
+<a href="Lectures/13_Autocorrelation_3.pdf" target="_blank">Lecture 13 Autocorrelation 3: Phylogenetic Autocorrelation </a>
+
