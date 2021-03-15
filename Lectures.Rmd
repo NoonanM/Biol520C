@@ -35,4 +35,5 @@ knitr::opts_chunk$set(echo = TRUE)
 
 <a href="Lectures/14_GLMs_1.pdf" target="_blank">Lecture 14 Generalised Linear Models 1: Intro to GLMs and Modelling Count Data </a>
 
+<a href="Lectures/15_GLMs_2.pdf" target="_blank">Lecture 15 Generalised Linear Models 2: Modelling Binary and Proportional Data </a>
 
