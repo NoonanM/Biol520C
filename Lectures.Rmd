@@ -33,3 +33,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 <a href="Lectures/13_Autocorrelation_3.pdf" target="_blank">Lecture 13 Autocorrelation 3: Phylogenetic Autocorrelation </a>
 
+<a href="Lectures/14_GLMs_1.pdf" target="_blank">Lecture 14 Generalised Linear Models 1: Intro to GLMs and Modelling Count Data </a>
+
+
