@@ -13,12 +13,22 @@
 
 <title>Simulation</title>
 
+<script src="site_libs/header-attrs-2.7/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
 <script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
@@ -36,11 +46,6 @@
     </style>
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
-  pre:not([class]) {
-    background-color: white;
-  }
-</style>
 <script type="text/javascript">
 if (window.hljs) {
   hljs.configure({languages: []});
@@ -53,32 +58,6 @@ if (window.hljs) {
 
 
 
-<style type="text/css">
-h1 {
-  font-size: 34px;
-}
-h1.title {
-  font-size: 38px;
-}
-h2 {
-  font-size: 30px;
-}
-h3 {
-  font-size: 24px;
-}
-h4 {
-  font-size: 18px;
-}
-h5 {
-  font-size: 16px;
-}
-h6 {
-  font-size: 12px;
-}
-.table th:not([align]) {
-  text-align: left;
-}
-</style>
 
 
 <link rel="stylesheet" href="tutorial.css" type="text/css" />
@@ -90,10 +69,6 @@ h6 {
   max-width: 940px;
   margin-left: auto;
   margin-right: auto;
-}
-code {
-  color: inherit;
-  background-color: rgba(0, 0, 0, 0.04);
 }
 img {
   max-width:100%;
@@ -110,40 +85,13 @@ button.code-folding-btn:focus {
 summary {
   display: list-item;
 }
+pre code {
+  padding: 0;
+}
 </style>
 
 
 <style type="text/css">
-/* padding for bootstrap navbar */
-body {
-  padding-top: 60px;
-  padding-bottom: 40px;
-}
-/* offset scroll position for anchor links (for fixed navbar)  */
-.section h1 {
-  padding-top: 65px;
-  margin-top: -65px;
-}
-.section h2 {
-  padding-top: 65px;
-  margin-top: -65px;
-}
-.section h3 {
-  padding-top: 65px;
-  margin-top: -65px;
-}
-.section h4 {
-  padding-top: 65px;
-  margin-top: -65px;
-}
-.section h5 {
-  padding-top: 65px;
-  margin-top: -65px;
-}
-.section h6 {
-  padding-top: 65px;
-  margin-top: -65px;
-}
 .dropdown-submenu {
   position: relative;
 }
@@ -171,7 +119,7 @@ body {
   margin-right: -10px;
 }
 .dropdown-submenu:hover>a:after {
-  border-left-color: #ffffff;
+  border-left-color: #adb5bd;
 }
 .dropdown-submenu.pull-left {
   float: none;
@@ -183,7 +131,7 @@ body {
 }
 </style>
 
-<script>
+<script type="text/javascript">
 // manage active state of menu based on current page
 $(document).ready(function () {
   // active menu anchor
@@ -194,10 +142,23 @@ $(document).ready(function () {
   var menuAnchor = $('a[href="' + href + '"]');
 
   // mark it active
-  menuAnchor.parent().addClass('active');
+  menuAnchor.tab('show');
 
   // if it's got a parent navbar menu mark it active as well
   menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
 });
 </script>
 
@@ -209,7 +170,6 @@ $(document).ready(function () {
   max-height: 500px;
   min-height: 44px;
   overflow-y: auto;
-  background: white;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
@@ -341,13 +301,13 @@ div.tocify {
 
 
 <!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row-fluid">
-<div class="col-xs-12 col-sm-4 col-md-3">
+<div class="row">
+<div class="col-sm-12 col-md-4 col-lg-3">
 <div id="TOC" class="tocify">
 </div>
 </div>
 
-<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+<div class="toc-content col-sm-12 col-md-8 col-lg-9">
 
 
 
@@ -450,7 +410,7 @@ div.tocify {
   </div><!--/.container -->
 </div><!--/.navbar -->
 
-<div class="fluid-row" id="header">
+<div id="header">
 
 
 
@@ -459,7 +419,7 @@ div.tocify {
 </div>
 
 
-<p>This page was last updated on March 15, 2021.</p>
+<p>This page was last updated on March 21, 2021.</p>
 <hr />
 <div id="background" class="section level2">
 <h2>Background</h2>
@@ -467,7 +427,7 @@ div.tocify {
 <hr />
 </div>
 <div id="simulating-from-distributions" class="section level2 tabset">
-<h2>Simulating from Distributions</h2>
+<h2 class="tabset">Simulating from Distributions</h2>
 <p>R comes with built in tools that allow you to simulate from well-known probability distributions like the normal, Poisson, binomial, uniform, chi-squared, and so on (for a complete list see: <code>help(Distributions)</code> )</p>
 <p>There are 4 functions for working with distributions that have the general form:</p>
 <ul>
@@ -483,12 +443,12 @@ div.tocify {
 <pre class="r"><code>rnorm(n = 5,                  # number of observations
       mean = 0,               # vector of means
       sd = 1)                 # vector of standard deviations</code></pre>
-<pre><code>## [1] -1.90240616  0.01067433 -0.94853646  0.17794135  0.89612889</code></pre>
+<pre><code>## [1]  0.2426563  0.3642256 -1.0134556 -1.0922217  1.8894724</code></pre>
 <p>Because <code>rnorm</code> is expecting a vector for each entry, this function is very flexible. For example we can sample 5 values from normal distributions with different means and different standard deviations without having to re-write the function 5 times.</p>
 <pre class="r"><code>rnorm(n = 5,                  # number of observations
       mean = c(1,2,3,4,5),    # vector of means
       sd = 1:5)               # vector of standard deviations</code></pre>
-<pre><code>## [1] 0.7601332 4.8290906 6.3343570 8.8711846 0.7287978</code></pre>
+<pre><code>## [1]  0.7474541  1.6616655 -2.0105037  3.8818914 16.0280673</code></pre>
 <hr />
 </div>
 <div id="poisson" class="section level3">
@@ -497,11 +457,11 @@ div.tocify {
 <p><strong>Note:</strong> Will only return whole numbers</p>
 <pre class="r"><code>rpois(n = 5,                  # number of observations
       lambda = 1)             # vector of (non-negative) rate parameters</code></pre>
-<pre><code>## [1] 0 0 0 2 0</code></pre>
+<pre><code>## [1] 2 0 1 0 0</code></pre>
 <p>Because <code>rpois</code> is expecting a vector for each entry, this function is very flexible. For example we can sample 5 values from Poisson distributions with different rate parameters <span class="math inline">\(\lambda\)</span>, without having to re-write the function 5 times.</p>
 <pre class="r"><code>rpois(n = 5,                  # number of observations
       lambda = c(1,2,3,4,5))  # vector of (non-negative) rate parameters</code></pre>
-<pre><code>## [1] 0 5 0 8 6</code></pre>
+<pre><code>## [1] 0 3 4 2 3</code></pre>
 <hr />
 </div>
 <div id="binomial" class="section level3">
@@ -510,17 +470,17 @@ div.tocify {
 <pre class="r"><code>rbinom(n = 5,                  # number of observations
        size = 1,               # number of trials (zero or more)
        prob = 0.5)             # probability of success on each trial.</code></pre>
-<pre><code>## [1] 1 1 0 0 1</code></pre>
+<pre><code>## [1] 0 0 0 1 0</code></pre>
 <p>If we change the number of trials we get the number of successes across the number of trials. In this example we have simulated the number of successes in 5 replicates of 20 trials.</p>
 <pre class="r"><code>rbinom(n = 5,                  # number of observations
        size = 20,              # number of trials (zero or more)
        prob = 0.5)             # probability of success on each trial.</code></pre>
-<pre><code>## [1] 10 10 10 10  9</code></pre>
+<pre><code>## [1]  7  6 11  9  8</code></pre>
 <p>Because <code>rbinom</code> is expecting a vector for each entry, this function is very flexible. For example we can simulate the number of successes in 5 replicates of 20 trials, with a different probability of success in each trial</p>
 <pre class="r"><code>rbinom(n = 5,
        size = 20,
        prob = c(0.2, 0.4, 0.6, 0.8, 1))</code></pre>
-<pre><code>## [1]  5  6 12 15 20</code></pre>
+<pre><code>## [1]  2  7  8 17 20</code></pre>
 <hr />
 </div>
 <div id="uniform" class="section level3">
@@ -529,7 +489,7 @@ div.tocify {
 <pre class="r"><code>runif(n = 5,                  # number of observations
       min = 0,                # lower limit of the distribution. Must be finite.
       max = 20)               # upper limit of the distribution. Must be finite.</code></pre>
-<pre><code>## [1]  5.680444  1.515248 13.887960  9.947511  4.531269</code></pre>
+<pre><code>## [1] 13.221798  1.486752 14.857720  9.691188 12.040000</code></pre>
 <p>Unlike the other distributions <code>runif</code> is not expecting vector for the <code>min</code> and <code>max</code> arguments, so this function does not have the same amount of inherent flexibility.</p>
 <hr />
 </div>
@@ -539,10 +499,10 @@ div.tocify {
 <p>When simulating random numbers, setting the random number seed with <code>set.seed()</code> ensures reproducibility of the sequence of random numbers.</p>
 <p>For example, we can sample 5 random numbers from a normal distribution with <code>rnorm()</code>.</p>
 <pre class="r"><code>rnorm(5)</code></pre>
-<pre><code>## [1]  0.7928979 -0.4233505  0.2484370 -2.1542653  0.5666021</code></pre>
+<pre><code>## [1] -0.5879915  1.0879871 -0.4630774 -0.3992593  1.7545464</code></pre>
 <p>If we do this a second time the sequence of numbers will always be different.</p>
 <pre class="r"><code>rnorm(5)</code></pre>
-<pre><code>## [1]  0.29051895 -0.09135486  0.41739551 -2.74519716 -0.71763678</code></pre>
+<pre><code>## [1]  0.4289941  1.2484818  2.7867286 -0.1694758 -0.4804573</code></pre>
 <p>But if we want to be sure we can get the same sequence of randomly generated numbers every single time, we have to set the seed prior to simulating.</p>
 <pre class="r"><code>set.seed(1)
 rnorm(5)</code></pre>
@@ -553,7 +513,7 @@ rnorm(5)</code></pre>
 <hr />
 </div>
 <div id="simulating-from-linear-models" class="section level2 tabset">
-<h2>Simulating from Linear Models</h2>
+<h2 class="tabset">Simulating from Linear Models</h2>
 <div id="linear-model-with-gaussian-errors" class="section level3">
 <h3>Linear model with Gaussian errors</h3>
 <p>Simulating from a simple linear model is fairly straightforward and requires only a few lines of code. These models have both a deterministic component, and a stochastic component. The minimal requirements for simulating the deterministic part of this type of model are defining the intercept, <span class="math inline">\(\beta_0\)</span>, and slope, <span class="math inline">\(\beta_1\)</span>, and to set up the <span class="math inline">\(x\)</span> values you are interested in. These pieces can then be used to calculate the deterministic part of the model using the standard equation for a linear model <span class="math inline">\(y = \beta_0 + \beta_1 \times x\)</span>.</p>
@@ -669,7 +629,7 @@ Logit_Link(1)</code></pre>
 </div>
 </div>
 <div id="simulating-nested-data" class="section level2 tabset">
-<h2>Simulating Nested Data</h2>
+<h2 class="tabset">Simulating Nested Data</h2>
 <p>We often work with nested data, where there can be some normally distributed differences between groups (species, treatments, study sites, etc.). To simulate nested data with random slopes or intercepts, we need to first define the population level parameters, and then draw the individual variation around the population level trends from a mean 0 normal distribution. In essence, this requires adjusting the population level parameters by some normally distributed amount for each group.</p>
 <div id="random-intercepts" class="section level3">
 <h3>Random Intercepts</h3>
@@ -786,7 +746,7 @@ $(document).ready(function () {
 
 $(document).ready(function () {
   $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
+    $(this).parent().toggleClass('nav-tabs-open');
   });
 });
 </script>
