@@ -38,3 +38,6 @@ knitr::opts_chunk$set(echo = TRUE)
 <a href="Lectures/15_GLMs_2.pdf" target="_blank">Lecture 15 Generalised Linear Models 2: Modelling Binary and Proportional Data </a>
 
 <a href="Lectures/16_Stochastic_Simulation.pdf" target="_blank">Lecture 16 Stochastic Simulation and Power Analysis </a>
+
+<a href="Lectures/17_NonLinearity.pdf" target="_blank">Lecture 17 Deterministic functions for Modelling Biological Data </a>
+
