@@ -1,0 +1,62 @@
+---
+title: "Datasets for Term Papers"
+output: html_document
+---
+  
+  ```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This page contains links for downloading the datasets needed to prepare term papers. Each link leads to a folder containing a dataset and a brief description file.
+
+</br>
+
+
+<a href="Paper_Datasets/Arabidopsis.zip" >Arabidopsis</a>
+
+<a href="Paper_Datasets/Badger_Testosterone.zip" >Badger Testosterone</a>
+
+<a href="Paper_Datasets/Bees.zip" >Bees</a>
+
+<a href="Paper_Datasets/Biodiversity.zip" >Biodiversity</a>
+
+<a href="Paper_Datasets/Bird_Abundance.zip" >Bird Abundance</a>
+
+<a href="Paper_Datasets/Carnivore_SSD.zip" >Carnivore SSD</a>
+
+<a href="Paper_Datasets/Cetaceans.zip" >Cetaceans</a>
+
+<a href="Paper_Datasets/Mammal_Movement.zip" >Mammal Movement</a>
+
+<a href="Paper_Datasets/Methane_Flux.zip" >Methane Flux</a>
+
+<a href="Paper_Datasets/Sparrows.zip" >Sparrows</a>
+
+<a href="Paper_Datasets/Sparrows_2.zip" >Sparrows 2</a>
+
+<a href="Paper_Datasets/Squid.zip" >Squid</a>
+
+<a href="Paper_Datasets/Vegetation.zip" >Vegetation Richness</a>
+
+<a href="Paper_Datasets/Antarctic_Birds.zip" >Antarctic Birds</a>
+
+<a href="Paper_Datasets/Anteaters.zip" >Anteaters</a>
+
+<a href="Paper_Datasets/Bird_Abundance.zip" >Bird Abundance</a>
+
+<a href="Paper_Datasets/California_Birds.zip" >California Birds</a>
+
+<a href="Paper_Datasets/Carnivore_Traits.zip" >Carnivore Traits</a>
+
+<a href="Paper_Datasets/Cod_Parasites.zip" >Cod Parasites</a>
+
+<a href="Paper_Datasets/Deer_Tb.zip" >Deer Tb</a>
+
+<a href="Paper_Datasets/Frogs.zip" >Frogs</a>
+
+<a href="Paper_Datasets/Newt_Detections.zip" >Newt Detections</a>
+
+<a href="Paper_Datasets/RoadKills.zip" >RoadKills</a>
+
+<a href="Paper_Datasets/Seals.zip" >Seals</a>
+

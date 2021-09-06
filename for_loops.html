@@ -13,7 +13,7 @@
 
 <title>For Loops</title>
 
-<script src="site_libs/header-attrs-2.7/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.10/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -302,12 +302,12 @@ div.tocify {
 
 <!-- setup 3col/9col grid for toc_float and main content  -->
 <div class="row">
-<div class="col-sm-12 col-md-4 col-lg-3">
+<div class="col-xs-12 col-sm-4 col-md-3">
 <div id="TOC" class="tocify">
 </div>
 </div>
 
-<div class="toc-content col-sm-12 col-md-8 col-lg-9">
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -383,10 +383,7 @@ div.tocify {
       <a href="Practical_Datasets.html">Practicals</a>
     </li>
     <li>
-      <a href="Paper1_Datasets.html">Paper 1</a>
-    </li>
-    <li>
-      <a href="Paper2_Datasets.html">Paper 2</a>
+      <a href="Paper_Datasets.html">Papers</a>
     </li>
   </ul>
 </li>
@@ -419,7 +416,7 @@ div.tocify {
 </div>
 
 
-<p>This page was last updated on March 22, 2021.</p>
+<p>This page was last updated on September 06, 2021.</p>
 <hr />
 <div id="background" class="section level2">
 <h2>Background</h2>
@@ -504,7 +501,8 @@ for(i in 1:50){
 }
 
 head(MEANS)</code></pre>
-<pre><code>## [1] -0.02281752  0.18738630 -0.62559855 -0.27459338 -0.35620786 -0.12035793</code></pre>
+<pre><code>## [1]  0.2103078168  0.0254483561 -0.3370609499  0.3740756984  0.2393571555
+## [6] -0.0008248002</code></pre>
 <p>Generally speaking it’s best practice to define the length of the vector before running the for loop. This is because ‘growing’ the length of a variable in a for loop is computationally inefficient and can slow down your code. For simple tasks the difference is trivial, but for complex tasks the slow downs can be very important. Best practice for the previous loop would look like this:</p>
 <pre class="r"><code>MEANS &lt;- vector(&quot;numeric&quot;, length = 50)
 
@@ -523,9 +521,9 @@ for(i in 1:50){
 }
 
 head(MEANS)</code></pre>
-<pre><code>## [1] -0.14689425 -0.03255158  0.12466742  0.02463470  0.30129152 -0.40870206</code></pre>
+<pre><code>## [1] -0.05563914 -0.38438096  0.03235698 -0.64134851  0.30993190 -0.15823975</code></pre>
 <pre class="r"><code>head(SDs)</code></pre>
-<pre><code>## [1] 0.5291676 0.9028376 1.0321592 1.0000161 0.7832224 0.9742679</code></pre>
+<pre><code>## [1] 1.6960725 0.6661669 0.6109733 0.8102222 1.1309234 0.7919696</code></pre>
 <p>But this can quickly get unwieldy if we have a lot of information we want to save. Another option is to save our outputs in lists. Lists are extremely flexible ways of storing information.</p>
 <pre class="r"><code>RESULTS &lt;- list()
 
@@ -540,34 +538,34 @@ for(i in 1:50){
 
 head(RESULTS)</code></pre>
 <pre><code>## [[1]]
-## [1] 0.2078730 0.7330220 0.5373212
+## [1] 0.4370187 0.5771326 0.3330821
 ## 
 ## [[2]]
-## [1] -0.0231057  0.9112973  0.8304627
+## [1] 0.006647927 1.140175510 1.300000193
 ## 
 ## [[3]]
-## [1] 0.7850384 0.7301847 0.5331697
+## [1] -0.08689609  0.86111299  0.74151558
 ## 
 ## [[4]]
-## [1] 0.5273300 0.8994546 0.8090185
+## [1] -0.3006143  0.9104560  0.8289302
 ## 
 ## [[5]]
-## [1] -0.3810520  0.9941845  0.9884029
+## [1] 0.1982071 1.1724433 1.3746232
 ## 
 ## [[6]]
-## [1] -0.2214712  1.2676298  1.6068852</code></pre>
+## [1] -0.5064368  0.8250316  0.6806771</code></pre>
 <p>Here each slot in the list contains a vector of length 3 which contains the estimated mean, standard deviation, and variance. Storing results in a list is very convenient because everything gets stored in the same object, but working with the results can be challenging. To make it easier to inspect the results of a for loop stored in a list, a bit of post-processing is required to get the data back into an easy to work with format.</p>
 <pre class="r"><code>RESULTS_CLEAN &lt;- do.call(rbind, RESULTS)
 RESULTS_CLEAN &lt;- data.frame(RESULTS_CLEAN)
 names(RESULTS_CLEAN) &lt;- c(&quot;mean&quot;, &quot;sd&quot;, &quot;var&quot;)
 head(RESULTS_CLEAN)</code></pre>
-<pre><code>##         mean        sd       var
-## 1  0.2078730 0.7330220 0.5373212
-## 2 -0.0231057 0.9112973 0.8304627
-## 3  0.7850384 0.7301847 0.5331697
-## 4  0.5273300 0.8994546 0.8090185
-## 5 -0.3810520 0.9941845 0.9884029
-## 6 -0.2214712 1.2676298 1.6068852</code></pre>
+<pre><code>##           mean        sd       var
+## 1  0.437018749 0.5771326 0.3330821
+## 2  0.006647927 1.1401755 1.3000002
+## 3 -0.086896090 0.8611130 0.7415156
+## 4 -0.300614285 0.9104560 0.8289302
+## 5  0.198207142 1.1724433 1.3746232
+## 6 -0.506436810 0.8250316 0.6806771</code></pre>
 <hr />
 </div>
 <div id="nested-for-loops" class="section level2">
@@ -644,6 +642,9 @@ $(document).ready(function () {
 
 <script>
 $(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
 
     // move toc-ignore selectors from section div to header
     $('div.section.toc-ignore')

@@ -13,7 +13,7 @@
 
 <title>Simulation</title>
 
-<script src="site_libs/header-attrs-2.7/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.10/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -302,12 +302,12 @@ div.tocify {
 
 <!-- setup 3col/9col grid for toc_float and main content  -->
 <div class="row">
-<div class="col-sm-12 col-md-4 col-lg-3">
+<div class="col-xs-12 col-sm-4 col-md-3">
 <div id="TOC" class="tocify">
 </div>
 </div>
 
-<div class="toc-content col-sm-12 col-md-8 col-lg-9">
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -383,10 +383,7 @@ div.tocify {
       <a href="Practical_Datasets.html">Practicals</a>
     </li>
     <li>
-      <a href="Paper1_Datasets.html">Paper 1</a>
-    </li>
-    <li>
-      <a href="Paper2_Datasets.html">Paper 2</a>
+      <a href="Paper_Datasets.html">Papers</a>
     </li>
   </ul>
 </li>
@@ -419,7 +416,7 @@ div.tocify {
 </div>
 
 
-<p>This page was last updated on March 22, 2021.</p>
+<p>This page was last updated on September 06, 2021.</p>
 <hr />
 <div id="background" class="section level2">
 <h2>Background</h2>
@@ -443,12 +440,12 @@ div.tocify {
 <pre class="r"><code>rnorm(n = 5,                  # number of observations
       mean = 0,               # vector of means
       sd = 1)                 # vector of standard deviations</code></pre>
-<pre><code>## [1] -0.8940404  0.7608600  0.5099571 -1.3875754  0.4050178</code></pre>
+<pre><code>## [1] -0.1315177  1.4244358 -0.3734320  0.3531252 -0.8199809</code></pre>
 <p>Because <code>rnorm</code> is expecting a vector for each entry, this function is very flexible. For example we can sample 5 values from normal distributions with different means and different standard deviations without having to re-write the function 5 times.</p>
 <pre class="r"><code>rnorm(n = 5,                  # number of observations
       mean = c(1,2,3,4,5),    # vector of means
       sd = 1:5)               # vector of standard deviations</code></pre>
-<pre><code>## [1] -0.7908164  4.9313066  5.6472526  1.7692544 -2.5460307</code></pre>
+<pre><code>## [1]  0.8393356  2.1667859 -2.5513070  3.0557355 13.6701708</code></pre>
 <hr />
 </div>
 <div id="poisson" class="section level3">
@@ -457,11 +454,11 @@ div.tocify {
 <p><strong>Note:</strong> Will only return whole numbers</p>
 <pre class="r"><code>rpois(n = 5,                  # number of observations
       lambda = 1)             # vector of (non-negative) rate parameters</code></pre>
-<pre><code>## [1] 1 2 3 1 0</code></pre>
+<pre><code>## [1] 1 0 0 0 2</code></pre>
 <p>Because <code>rpois</code> is expecting a vector for each entry, this function is very flexible. For example we can sample 5 values from Poisson distributions with different rate parameters <span class="math inline">\(\lambda\)</span>, without having to re-write the function 5 times.</p>
 <pre class="r"><code>rpois(n = 5,                  # number of observations
       lambda = c(1,2,3,4,5))  # vector of (non-negative) rate parameters</code></pre>
-<pre><code>## [1] 0 1 2 3 4</code></pre>
+<pre><code>## [1] 1 0 2 6 7</code></pre>
 <hr />
 </div>
 <div id="binomial" class="section level3">
@@ -470,17 +467,17 @@ div.tocify {
 <pre class="r"><code>rbinom(n = 5,                  # number of observations
        size = 1,               # number of trials (zero or more)
        prob = 0.5)             # probability of success on each trial.</code></pre>
-<pre><code>## [1] 0 1 0 1 0</code></pre>
+<pre><code>## [1] 1 0 1 1 0</code></pre>
 <p>If we change the number of trials we get the number of successes across the number of trials. In this example we have simulated the number of successes in 5 replicates of 20 trials.</p>
 <pre class="r"><code>rbinom(n = 5,                  # number of observations
        size = 20,              # number of trials (zero or more)
        prob = 0.5)             # probability of success on each trial.</code></pre>
-<pre><code>## [1]  8  7 11 10 10</code></pre>
+<pre><code>## [1] 10  8  7  8  8</code></pre>
 <p>Because <code>rbinom</code> is expecting a vector for each entry, this function is very flexible. For example we can simulate the number of successes in 5 replicates of 20 trials, with a different probability of success in each trial</p>
 <pre class="r"><code>rbinom(n = 5,
        size = 20,
        prob = c(0.2, 0.4, 0.6, 0.8, 1))</code></pre>
-<pre><code>## [1]  3  6 14 17 20</code></pre>
+<pre><code>## [1]  5  7 16 17 20</code></pre>
 <hr />
 </div>
 <div id="uniform" class="section level3">
@@ -489,7 +486,7 @@ div.tocify {
 <pre class="r"><code>runif(n = 5,                  # number of observations
       min = 0,                # lower limit of the distribution. Must be finite.
       max = 20)               # upper limit of the distribution. Must be finite.</code></pre>
-<pre><code>## [1] 17.145979  8.538988  1.547174 14.548663  6.709938</code></pre>
+<pre><code>## [1] 19.411445  1.230961  1.201406  6.304100 16.428971</code></pre>
 <p>Unlike the other distributions <code>runif</code> is not expecting vector for the <code>min</code> and <code>max</code> arguments, so this function does not have the same amount of inherent flexibility.</p>
 <hr />
 </div>
@@ -499,10 +496,10 @@ div.tocify {
 <p>When simulating random numbers, setting the random number seed with <code>set.seed()</code> ensures reproducibility of the sequence of random numbers.</p>
 <p>For example, we can sample 5 random numbers from a normal distribution with <code>rnorm()</code>.</p>
 <pre class="r"><code>rnorm(5)</code></pre>
-<pre><code>## [1] -0.1650757 -0.8383355  0.1277181 -1.4699647  1.8835831</code></pre>
+<pre><code>## [1] -0.52927511  0.24556197  0.02800959 -1.95878309 -0.47015353</code></pre>
 <p>If we do this a second time the sequence of numbers will always be different.</p>
 <pre class="r"><code>rnorm(5)</code></pre>
-<pre><code>## [1] -1.6143124  1.8566861 -0.7855632 -0.3746807 -0.8852382</code></pre>
+<pre><code>## [1]  1.32528332  1.00944756  1.41473357 -0.03630446  0.62168680</code></pre>
 <p>But if we want to be sure we can get the same sequence of randomly generated numbers every single time, we have to set the seed prior to simulating.</p>
 <pre class="r"><code>set.seed(1)
 rnorm(5)</code></pre>
@@ -755,6 +752,9 @@ $(document).ready(function () {
 
 <script>
 $(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
 
     // move toc-ignore selectors from section div to header
     $('div.section.toc-ignore')

@@ -32,10 +32,8 @@ navbar:
       menu:
         - text: "Practicals"
           href: Practical_Datasets.html
-        - text: "Paper 1"
-          href: Paper1_Datasets.html
-        - text: "Paper 2"
-          href: Paper2_Datasets.html   
+        - text: "Papers"
+          href: Paper_Datasets.html
     - text: "R Help"
       menu:        
         - text: "for loops"
