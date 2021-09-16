@@ -410,7 +410,7 @@ div.tocify {
 </div>
 
 
-<p>This page was last updated on September 06, 2021.</p>
+<p>This page was last updated on September 15, 2021.</p>
 <hr />
 <div id="background" class="section level2">
 <h2>Background</h2>
@@ -428,7 +428,7 @@ div.tocify {
 <div id="deterministic-models" class="section level2">
 <h2>Deterministic models</h2>
 <p>Statistical models are typically comprised of a deterministic component, that describes the basic trend in a system, and a stochastic component that describes the system’s randomness.</p>
-<p>Let us supose that we are interested in the relationship between body mass and age for some species, and our hypothesis is that mass is proportional to age. This verbal description of our hypothesis does not give us any clear way of actually testing our hypothesis. We are instead going to formalise this hypothesis acroding to a simple linear deterministic model:</p>
+<p>Let us suppose that we are interested in the relationship between body mass and age for some species, and our hypothesis is that mass is proportional to age. This verbal description of our hypothesis does not give us any clear way of actually testing our hypothesis. We are instead going to formalise this hypothesis according to a simple linear deterministic model:</p>
 <center>
 <span class="math inline">\(mass_i = \beta_0 + age_i \beta_1\)</span>
 </center>
@@ -443,18 +443,19 @@ div.tocify {
 </ol>
 <ul>
 <li>Write an <code>R</code> function that expresses this relationship.</li>
-<li>Generate a vector of ages from 0 to 20 years, seperated by 1 year</li>
-<li>Use the deterministic model to predict the mass of animals of these ages</li>
-<li>Plot the data to inspect the results</li>
-<li>Generate predictions for 20 animals all of age 5 and inspect the results
-</ol></li>
+<li>Generate a vector of ages from 0 to 20 years, separated by 1 year.</li>
+<li>Use the deterministic model to predict the mass of animals of these ages.</li>
+<li>Plot the simulated data to inspect the results.</li>
+<li>Generate predictions for 20 animals all of age 5 and inspect the results.</li>
 </ul>
-<p>This model is entirely deterministic. That means that all animals at age <span class="math inline">\(i\)</span> in our population will have the same mass. This is informative (we can say that at age 5, individuals are expected to have a mass of 11kg), but a mass of exactly 11kg, and not an atom more is also very unlikely in the real world. That’s where the stochastic component of a model comes in.</p>
+Note: The R Tips page on the course website contains information on simulation from models.
+</ol>
+<p>This model is entirely deterministic. That means that all animals at age <span class="math inline">\(i\)</span> in our population will have the exact same mass. This is informative (we can say that at age 5, individuals are expected to have a mass of 11kg), but a mass of exactly 11kg, and not an atom more is also very unlikely in the real world. That’s where the stochastic component of a model comes in handy.</p>
 <hr />
 </div>
 <div id="stochastic-models" class="section level2">
 <h2>Stochastic models</h2>
-<p>Stochastic models describe the randomness of the process. Simple linear regression accounts for stochasticity by assuming that each observation <span class="math inline">\(age_i\)</span> is drawn from a normal distribution.</p>
+<p>Stochastic models describe the randomness of a process. Simple linear regression describes stochasticity by assuming that observations <span class="math inline">\(age_i\)</span> are not purely deterministic, but rather that they are drawn from a normal distribution with a mean <span class="math inline">\(\mu_i\)</span> given by the deterministic model and some fixed variance <span class="math inline">\(\sigma^{2}\)</span>.</p>
 <center>
 <span class="math inline">\(mass_i = \beta_0 + age_i \beta_1 + \varepsilon_i, \quad \quad\)</span> where <span class="math inline">\(\quad \varepsilon_i \sim \mathcal{N}(0,\,\sigma^{2})\)</span>
 </center>
@@ -466,16 +467,17 @@ div.tocify {
 <ul>
 <li>Write a new function for our previous model that also includes a Gaussian distributed stochastic component with standard deviation of 2. Note: You will need to make use of the <code>rnorm()</code> function.</li>
 <li>Generate 60 uniformly distributed ages between 0 and 20. Note: You will need to make use of the <code>runif()</code> function.</li>
-<li>Use the stochastic model to predict the mass of these 60 animals</li>
-<li>Plot the data to inspect the results
-</ol></li>
+<li>Use the stochastic model to predict the mass of these 60 animals.</li>
+<li>Plot the simulated data to inspect the results.</li>
 </ul>
-<p>Notice how there is now noise around the main trend. The data now look more like what you would expect from real data.</p>
+Note: The R Tips page on the course website contains information on simulation from distributions.
+</ol>
+<p>Notice how there is now noise around the main trend. These simulated data now look more like what you would expect from real data if you went out and measured ages and masses.</p>
 <hr />
 </div>
 <div id="independent-and-identically-distributed-iid-errors" class="section level2">
 <h2>Independent and identically distributed (IID) errors</h2>
-<p>Beyond making an assumption of normality on the errors, simple linear regression also assumes that the errors are independent and identically distributed</p>
+<p>Beyond making an assumption of normality on the errors, simple linear regression also assumes that the errors are Independent and Identically Distributed (IID)</p>
 <center>
 <span class="math inline">\(\varepsilon_i \sim \mathcal{N}(0,\,\sigma^{2})\)</span>
 </center>
@@ -487,11 +489,11 @@ div.tocify {
 <li><ol></li>
 </ol>
 <ul>
-<li>Generate predictions for 1000 animals all of age 5</li>
-<li>Use a histogram to inspect the results</li>
-<li>Calculate the errors for these predictions</li>
-<li>Calculate the mean of the errors</li>
-<li>Use a histogram to inspect the distribution of errors
+<li>Generate predictions for 1000 animals all of age 5.</li>
+<li>Use a histogram to inspect the results.</li>
+<li>Calculate the errors for these predictions.</li>
+<li>Calculate the mean of the errors.</li>
+<li>Use a histogram to inspect the distribution of errors.
 </ol></li>
 </ul>
 <p>The second thing our model is saying, is that for any age <span class="math inline">\(i\)</span>, we can expect the distribution of errors to be identical.</p>
@@ -499,11 +501,11 @@ div.tocify {
 <li><ol></li>
 </ol>
 <ul>
-<li>Quantify the errors on predictions for 1000 animals all of age 5</li>
-<li>Quantify the errors on predictions for 1000 animals all of age 30</li>
-<li>Calculate the means of these error distributions</li>
+<li>Quantify the errors on predictions for 1000 animals all of age 5.</li>
+<li>Quantify the errors on predictions for 1000 animals all of age 30.</li>
+<li>Calculate the means of these error distributions.</li>
 <li>Use histograms to inspect the results. Note: Use different colours for the two distributions. You can also use <code>add = TRUE</code> to overlay to plots.</li>
-<li>Describe the results
+<li>Describe the results.
 </ol></li>
 </ul>
 <hr />
@@ -516,10 +518,10 @@ div.tocify {
 </ol>
 <ul>
 <li>Generate 60 uniformly distributed ages between 0 and 20.</li>
-<li>Use the stochastic model to predict the mass of these 60 animals</li>
-<li>Fit a linear regression using the <code>lm()</code> function</li>
-<li>Use the <code>summary()</code> to inspect the results</li>
-<li>Plot the data and the fitted regression line. Note: you can use the <code>abline()</code> function to plot the fitted model</li>
+<li>Use the stochastic model to predict the mass of these 60 animals.</li>
+<li>Fit a linear regression using the <code>lm()</code> function.</li>
+<li>Use the <code>summary()</code> to inspect the results.</li>
+<li>Plot the data and the fitted regression line. Note: you can use the <code>abline()</code> function to easily plot the fitted model.</li>
 <li>use a histogram to plot the residuals for visual inspection. Note: use the <code>residuals()</code> function.
 </ol></li>
 </ul>
@@ -529,30 +531,31 @@ div.tocify {
 Ecologists are often interested in understanding sexual size dimorphism (differences between male and female mass). Using a dataset of musteloid traits taken from a study by <a href="https://doi.org/10.1002/ece3.2480">Noonan et al. (2016)</a>, check for a linear relationship between male and female body mass. You will need to complete the following steps:</li>
 </ol>
 <ul>
-<li>Import the dataset and check that the import proceeded as expected</li>
-<li>Visually inspect the relationship between male and female body mass</li>
-<li>Calculate the regression parameters by matrix multiplication</li>
-<li>Fit a linear regression to the data using the <code>lm()</code> function</li>
-<li>Use the <code>summary()</code> to inspect the results</li>
-<li>Plot the data and the fitted regression line</li>
-<li>Use a histogram to plot the residuals for visual inspection
-</ol></li>
+<li>Import the dataset and check that the import proceeded as expected.</li>
+<li>Visually inspect the relationship between male and female body mass.</li>
+<li>Calculate the regression parameters by matrix multiplication.</li>
+<li>Fit a linear regression to the data using the <code>lm()</code> function.</li>
+<li>Use the <code>summary()</code> to inspect the results.</li>
+<li>Plot the data and the fitted regression line.</li>
+<li>Use a histogram to plot the residuals for visual inspection.</li>
 </ul>
+Note: These data contain missing entries. This is very common in practice. You will have to factor this into your workflow.
+</ol>
 <hr />
 </div>
 <div id="maximum-likelihood" class="section level2">
 <h2>Maximum likelihood</h2>
 <ol style="list-style-type: decimal">
 <li><ol>
-A tiny species of parasitic wasp, Trichogramma brassicae, rides on female cabbage white butterflies, Pieris brassicae. When a butterfly lays her eggs, the wasp climbs off of the female and parasitizes the freshly laid eggs. <a href="https://www.nature.com/articles/433704a">Fatouros et al. (2005)</a> carried out trials to determine whether the wasps can distinguish mated female butterflies from unmated females (recently mated females are more likely to lay eggs than unmated females and would make a better choice ride/follow around). In each trial a single wasp was presented with two female cabbage white butterflies, one an unmated female, the other recently mated, and the choice of which butterly to ride was recorded. The question is, are the wasps making an informed decision, or are the randomly selecting butterflies.</li>
+A tiny species of parasitic wasp, <em>Trichogramma brassicae</em>, rides on female cabbage white butterflies, <em>Pieris brassicae</em>. When a butterfly lays her eggs, the wasp climbs off of the female and parasitizes the freshly laid eggs. <a href="https://www.nature.com/articles/433704a">Fatouros et al. (2005)</a> carried out trials to determine whether the wasps can distinguish mated female butterflies from unmated females (recently mated females are more likely to lay eggs than unmated females and would make a better choice ride/follow around). In each trial a single wasp was presented with two female cabbage white butterflies, one an unmated female, the other recently mated, and the choice of which butterly to ride was recorded. The question is, are the wasps making an informed decision, or are the randomly selecting butterflies.</li>
 </ol>
 <p></br> Answer this by applying maximum likelihood estimation of the proportion of parasitic wasp individuals that choose the mated butterflies. You will need to cary out the following steps:</p>
 <ul>
-<li>Import and inspect the mate choice data. Note: use the <code>table()</code> function to create a frequency table</li>
+<li>Import and inspect the mate choice data. Note: use the <code>table()</code> function to create a frequency table.</li>
 <li>Calculate the likelihood and log-likelihood of random host choice. Note these are yes/no data, what distribution should you use? What parameter values would result in a random, 50/50 split?</li>
 <li>Calculate the log-likelihood of a range of parameter values.</li>
-<li>Find the maximum loglikelihood estimate</li>
-<li>Plot the log-likelihood curve</li>
+<li>Find the maximum log-likelihood estimate.</li>
+<li>Plot the log-likelihood curve.</li>
 <li>Calculate the likelihood-based 95% confidence interval. Note: We learned in the lecture that an approximate 95% confidence interval is within 1.92 of the maximum log-likelihood.</li>
 <li>What do the ML estimate and 95% confidence interval tell you about host choice? Is it random, or non-random?
 </ol></li>
