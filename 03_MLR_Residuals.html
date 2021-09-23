@@ -410,7 +410,7 @@ div.tocify {
 </div>
 
 
-<p>This page was last updated on September 15, 2021.</p>
+<p>This page was last updated on September 23, 2021.</p>
 <hr />
 <div id="background" class="section level2">
 <h2>Background</h2>
@@ -430,7 +430,7 @@ div.tocify {
 <span class="math inline">\(y_i = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + ... \beta_m x_m + \varepsilon_i\)</span>
 </center>
 <p></br></p>
-<p>We will explore multiple linear regression using data were collected by <a href="https://doi.org/10.1371/journal.pone.0089437.g003">Ismail et al.</a> to explore the influence of forest degradation on the recruitment of Dysoxylum malabaricum. D. malabaricum is a large canopy tree species found in highly fragmented forest patches within a complex agro-forest landscape of the Western Ghats biodiversity hot spot, South India. Ismail et al. collected data on the densities of seedlings along with indicators of degradation in 17 forest patches, to investigate whether measures of degradation correlated with seedling density. The measures of degradation include i) the percentage of closed canopy; ii) the density of Clerodendrum viscosum, an early successional light demanding shrub that establishes itself well in degraded forests; and iii) the number of arboreal termite nests attached to branches and trees, which has been shown to be an effective indicator of forest disturbance, because termites are sensitive to forest disturbance and to canopy loss.</p>
+<p>We will explore multiple linear regression using data that were collected by <a href="https://doi.org/10.1371/journal.pone.0089437.g003">Ismail et al.</a> to explore the influence of forest degradation on the recruitment of Dysoxylum malabaricum. D. malabaricum is a large canopy tree species found in highly fragmented forest patches within a complex agro-forest landscape of the Western Ghats biodiversity hot spot, South India. Ismail et al. collected data on the densities of seedlings along with indicators of degradation in 17 forest patches, to investigate whether measures of degradation correlated with seedling density. The measures of degradation include i) the percentage of closed canopy; ii) the density of Clerodendrum viscosum, an early successional light demanding shrub that establishes itself well in degraded forests; and iii) the number of arboreal termite nests attached to branches and trees, which has been shown to be an effective indicator of forest disturbance, because termites are sensitive to forest disturbance and to canopy loss.</p>
 <ol style="list-style-type: decimal">
 <li><ol></li>
 </ol>
@@ -465,7 +465,7 @@ div.tocify {
 </ol>
 <ul>
 <li>Generate a dataset of 40 normally distributed y values</li>
-<li>Use a for loop to sequentially add 30 predictor variables, made up of Gaussian noise, to a model predicting y.</li>
+<li>Use a for loop to sequentially add 30 predictor variables, made up of Gaussian noise (i.e., noise variables simulated from a Gaussian distribution), to a model predicting y (i.e., model<span class="math inline">\(_1: y_i = \beta_0 + \beta_1x_1\)</span>; model<span class="math inline">\(_2: y_i = \beta_0 + \beta_1x_1 + \beta_2x_2\)</span>, etc…).</li>
 <li>Extract the R-squared values from these models, and plot them against the number of parameters. Describe the effect.
 </ol></li>
 </ul>
@@ -478,7 +478,7 @@ div.tocify {
 </ol>
 <ul>
 <li>Generate a dataset of 40 normally distributed y values</li>
-<li>Again, use a for loop to sequentially add 30 predictor variables, made up of Gaussian noise, to a model predicting y.</li>
+<li>Again, use a for loop to sequentially add 30 predictor variables, made up of Gaussian noise (i.e., noise variables simulated from a Gaussian distribution), to a model predicting y (i.e., model<span class="math inline">\(_1: y_i = \beta_0 + \beta_1x_1\)</span>; model<span class="math inline">\(_2: y_i = \beta_0 + \beta_1x_1 + \beta_2x_2\)</span>, etc…).</li>
 <li>This time, extract the Adjusted R-squared values from these models, and plot them against the number of parameters. Describe what you see now.
 </ol></li>
 </ul>
@@ -527,7 +527,8 @@ div.tocify {
 <li><ol></li>
 </ol>
 <ul>
-<li>Attempt to fix the heteroscedasticity in these data by square root transforming the y values. *Plot the transformed data and fitted regression line</li>
+<li>Attempt to fix the heteroscedasticity in these data by square root transforming the y values.</li>
+<li>Plot the transformed data and fitted regression line</li>
 <li>Plot the residuals against the fitted values and describe the effect of the transformation.
 </ol></li>
 </ul>
@@ -541,7 +542,7 @@ div.tocify {
 <li><ol></li>
 </ol>
 <ul>
-<li>Using the seedling dataset, generate 20 data points with values of 0 for Dm_seedling_density, but evenly distributed across the range of all other predictors variables</li>
+<li>Using the seedling dataset, generate 30 data points with values of 0 for Dm_seedling_density, but uniformly distributed across the range of all other predictors variables</li>
 <li>Combine these data with the original dataset, fit a model to the new data, and describe the fit.</li>
 <li>Plot the residuals against the fitted values and describe what you see.
 </ol></li>

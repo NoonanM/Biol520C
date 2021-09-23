@@ -1,6 +1,14 @@
 ---
 title: "Practical 03 - Multiple linear regression and model residuals"
 #author: "Michael Noonan"
+output:
+  html_document:
+    css: tutorial.css
+    fig_caption: yes
+    highlight: textmate
+    theme: flatly
+    toc: yes
+    toc_float: yes
 ---
 
 ```{r setup, include=FALSE}
@@ -8,6 +16,7 @@ knitr::opts_chunk$set(echo = TRUE, fig.width=6, fig.height=4)
 ```
 
 ```{r, echo = FALSE}
+setwd("~/Dropbox (Personal)/Teaching_Material/Biol_520C/Practicals/03_MLR_and_Residuals")
 ```
 This page was last updated on `r format(Sys.time(), '%B %d, %Y')`.
 
@@ -30,7 +39,7 @@ $y_i = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + ... \beta_m x_m + \varepsilon_i$
 </center>
 </br>
 
-We will explore multiple linear regression using data were collected by [Ismail et al.](https://doi.org/10.1371/journal.pone.0089437.g003) to explore the influence of forest degradation on the recruitment of Dysoxylum malabaricum. D. malabaricum is a large canopy tree species found in highly fragmented forest patches within a complex agro-forest landscape of the Western Ghats biodiversity hot spot, South India. Ismail et al. collected data on the densities of seedlings along with indicators of degradation in 17 forest patches, to investigate whether measures of degradation correlated with seedling density. The measures of degradation include i) the percentage of closed canopy; ii) the density of Clerodendrum viscosum, an early successional light demanding shrub that establishes itself well in degraded forests; and iii) the number of arboreal termite nests attached to branches and trees, which has been shown to be an effective indicator of forest disturbance, because termites are sensitive to forest disturbance and to canopy loss.
+We will explore multiple linear regression using data that were collected by [Ismail et al.](https://doi.org/10.1371/journal.pone.0089437.g003) to explore the influence of forest degradation on the recruitment of Dysoxylum malabaricum. D. malabaricum is a large canopy tree species found in highly fragmented forest patches within a complex agro-forest landscape of the Western Ghats biodiversity hot spot, South India. Ismail et al. collected data on the densities of seedlings along with indicators of degradation in 17 forest patches, to investigate whether measures of degradation correlated with seedling density. The measures of degradation include i) the percentage of closed canopy; ii) the density of Clerodendrum viscosum, an early successional light demanding shrub that establishes itself well in degraded forests; and iii) the number of arboreal termite nests attached to branches and trees, which has been shown to be an effective indicator of forest disturbance, because termites are sensitive to forest disturbance and to canopy loss.
 
 
 1. <ol>
@@ -66,20 +75,19 @@ The problem with R-squared values is that they don't take into account the numbe
 
 1. <ol>
 * Generate a dataset of 40 normally distributed y values
-* Use a for loop to sequentially add 30 predictor variables, made up of Gaussian noise, to a model predicting y.
+* Use a for loop to sequentially add 30 predictor variables, made up of Gaussian noise (i.e., noise variables simulated from a Gaussian distribution), to a model predicting y (i.e., model$_1: y_i = \beta_0 + \beta_1x_1$; model$_2: y_i = \beta_0 + \beta_1x_1 + \beta_2x_2$, etc...). 
 * Extract the R-squared values from these models, and plot them against the number of parameters. Describe the effect.
 </ol>
 
 ```{r}
 ```
 
-
 ### Adjusted R-squared
 When you add more parameters to the model, the r-squared converges to 1. This suggests that we have an increasingly better model, but we know for a fact that most of the parameters are just noise. The reason for this is that the R-squared value doesn't factor in the number of parameters in the model. As a correction, the adjusted R-square is 'adjusted' based on the number of parameters in the model.
 
 1. <ol>
 * Generate a dataset of 40 normally distributed y values
-* Again, use a for loop to sequentially add 30 predictor variables, made up of Gaussian noise, to a model predicting y.
+* Again, use a for loop to sequentially add 30 predictor variables, made up of Gaussian noise (i.e., noise variables simulated from a Gaussian distribution), to a model predicting y (i.e., model$_1: y_i = \beta_0 + \beta_1x_1$; model$_2: y_i = \beta_0 + \beta_1x_1 + \beta_2x_2$, etc...).
 * This time, extract the Adjusted R-squared values from these models, and plot them against the number of parameters. Describe what you see now.
 </ol>
 
@@ -88,14 +96,11 @@ When you add more parameters to the model, the r-squared converges to 1. This su
 
 Now when you add more parameters to the model, the adjusted r-squared does not converge to 1. The reason for this is that the adjusted R-squared accounts for the number of parameters in the model. When reporting R-squared values for models with multiple parameters, it's safer to report the adjusted R-squared.
 
-
-
 ***
 ## Heteroskedasticity
 
 #### Problem
 Sometime data will exhibit "heteroscedasticity", meaning that the residuals (i.e., variance in the data that is not explained by the model) get larger as the prediction moves from small to large values of x (or from large to small).
-
 
 1. <ol>
 * Describe how the following function works to generate heteroskedastic data:
@@ -130,7 +135,7 @@ Heteroskedasticity on its own does not inherently create a problem (notice the p
 
 1. <ol>
 * Attempt to fix the heteroscedasticity in these data by square root transforming the y values.
-*Plot the transformed data and fitted regression line
+* Plot the transformed data and fitted regression line
 * Plot the residuals against the fitted values and describe the effect of the transformation.
 </ol>
 ```{r}
@@ -146,7 +151,7 @@ Heteroskedasticity on its own does not inherently create a problem (notice the p
 It's very common in biology to have datasets with a lot of 0s. This can happen for any number of reasons, such as measurement error, detection issues, random stochasticty, and all of these combined. Such datasets contain more zeros than what one would expect to observe using the traditional model’s probability distribution, often termed zero-inflated data. This issue has a very clear effect on model residuals, and one we will explore here.
 
 1. <ol>
-* Using the seedling dataset, generate 20 data points with values of 0 for Dm_seedling_density, but evenly distributed across the range of all other predictors variables
+* Using the seedling dataset, generate 30 data points with values of 0 for Dm_seedling_density, but uniformly distributed across the range of all other predictors variables
 * Combine these data with the original dataset, fit a model to the new data, and describe the fit.
 * Plot the residuals against the fitted values and describe what you see.
 </ol>
