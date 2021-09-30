@@ -35,7 +35,9 @@ navbar:
         - text: "Papers"
           href: Paper_Datasets.html
     - text: "R Help"
-      menu:        
+      menu:
+        - text: "Plotting"
+          href: Plotting.html
         - text: "for loops"
           href: for_loops.html
         - text: "Simulation"
