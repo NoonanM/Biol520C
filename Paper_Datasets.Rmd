@@ -34,8 +34,6 @@ This page contains links for downloading the datasets needed to prepare term pap
 
 <a href="Paper_Datasets/Sparrows_2.zip" >Sparrows 2</a>
 
-<a href="Paper_Datasets/Squid.zip" >Squid</a>
-
 <a href="Paper_Datasets/Vegetation.zip" >Vegetation Richness</a>
 
 <a href="Paper_Datasets/Antarctic_Birds.zip" >Antarctic Birds</a>

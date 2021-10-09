@@ -1,6 +1,14 @@
 ---
 title: "Practical 05 - Mixed Effect Models, Model Selection, and Model Averaging"
 #author: "Michael Noonan"
+output:
+  html_document:
+    css: tutorial.css
+    fig_caption: yes
+    highlight: textmate
+    theme: flatly
+    toc: yes
+    toc_float: yes
 ---
 
 ```{r setup, include=FALSE}
@@ -9,6 +17,7 @@ knitr::opts_chunk$set(echo = TRUE, fig.width=6, fig.height=4)
 ```
 
 ```{r, echo = FALSE}
+setwd("~/Dropbox (Personal)/Teaching_Material/Biol_520C/Practicals/05_MEM_Model_Selection")
 ```
 This page was last updated on `r format(Sys.time(), '%B %d, %Y')`.
 
@@ -106,7 +115,7 @@ These models are then compared using likelihood ratio tests and AIC values.
 * Use the `anova()` function to compare the models. Describe the results and decide which random effect structure you should use for these data. In particular what are the results of the likelihood ratio tests, and what model does AIC model selection favour?
 
 </br>
-__Note:__ Make sure that all of the models are fit using REML. Models fit by a mix of ML and REML can not be compared using likelihood ratio tests or AIC values.
+__Note:__ Make sure that all of the models are fit using ML. Models fit by a mix of ML and REML can not be compared using likelihood ratio tests, and models fit using REML can not usually be compared by AIC (there are certain cases where this is possible, but they are few).
 </ol>
 
 
@@ -180,9 +189,15 @@ Because a number of the top models are all within $\Delta$AICc of 2 of the top m
 1. <ol>
 * Subset all models within $\Delta$AICc of 2 of the top model (see `help(subset.model.selection)`).
 * Perform model averaging on these models using the `model.avg()` function.
+* Describe how the average fit compares to the previously selected model.
+
+</br>
+
+__Bonus Questions:__
+
 * Plot the parameter estimates $\pm$ the 95% confidence intervals of the averaged model (see `help(coef)` and `help(confint)`).
 * Use the `prettify()` function from the `papeR` package to plot the parameter estimates $\pm$ the 95% confidence intervals of the previously selected model.
-* Describe how the average fit compares to the previously selected model.
+
 </ol>
 
 ```{r}
@@ -193,7 +208,7 @@ Because a number of the top models are all within $\Delta$AICc of 2 of the top m
 The whole point of fitting this model was to identify the factors influencing begging behaviour of nestling owls.
 
 1. <ol>
-* Provide a breif biological description the selected model (you can read how [Roulin and Bersier (2007)](https://doi.org/10.1016/j.anbehav.2007.01.027) described their results from these same data).
+* Provide a brief biological description the selected model (you can read how [Roulin and Bersier (2007)](https://doi.org/10.1016/j.anbehav.2007.01.027) described their results from these same data).
 * Use $\Delta$AICc values and effect sizes to compare the selected model to a random effects model with only a fixed intercept (i.e., the information gained by including the fixed parameters).
 </ol>
 

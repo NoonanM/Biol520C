@@ -413,7 +413,7 @@ div.tocify {
 </div>
 
 
-<p>This page was last updated on September 30, 2021.</p>
+<p>This page was last updated on October 08, 2021.</p>
 <hr />
 <div id="background" class="section level2">
 <h2>Background</h2>
@@ -496,7 +496,7 @@ div.tocify {
 <li>Fit a third model with a random intercept and slope. Here assume the relationship between sibling negotiation and arrival time changes between nests.</li>
 <li>Use the <code>anova()</code> function to compare the models. Describe the results and decide which random effect structure you should use for these data. In particular what are the results of the likelihood ratio tests, and what model does AIC model selection favour?</li>
 </ul>
-</br> <strong>Note:</strong> Make sure that all of the models are fit using REML. Models fit by a mix of ML and REML can not be compared using likelihood ratio tests or AIC values.
+</br> <strong>Note:</strong> Make sure that all of the models are fit using ML. Models fit by a mix of ML and REML can not be compared using likelihood ratio tests, and models fit using REML can not usually be compared by AIC (there are certain cases where this is possible, but they are few).
 </ol>
 </div>
 <div id="inspect-the-model-for-any-new-issues" class="section level3">
@@ -566,11 +566,15 @@ div.tocify {
 <ul>
 <li>Subset all models within <span class="math inline">\(\Delta\)</span>AICc of 2 of the top model (see <code>help(subset.model.selection)</code>).</li>
 <li>Perform model averaging on these models using the <code>model.avg()</code> function.</li>
+<li>Describe how the average fit compares to the previously selected model.</li>
+</ul>
+<p></br></p>
+<p><strong>Bonus Questions:</strong></p>
+<ul>
 <li>Plot the parameter estimates <span class="math inline">\(\pm\)</span> the 95% confidence intervals of the averaged model (see <code>help(coef)</code> and <code>help(confint)</code>).</li>
 <li>Use the <code>prettify()</code> function from the <code>papeR</code> package to plot the parameter estimates <span class="math inline">\(\pm\)</span> the 95% confidence intervals of the previously selected model.</li>
-<li>Describe how the average fit compares to the previously selected model.
-</ol></li>
 </ul>
+</ol>
 </div>
 <div id="describe-the-importance-of-the-model" class="section level3">
 <h3>Describe the importance of the model</h3>
@@ -579,7 +583,7 @@ div.tocify {
 <li><ol></li>
 </ol>
 <ul>
-<li>Provide a breif biological description the selected model (you can read how <a href="https://doi.org/10.1016/j.anbehav.2007.01.027">Roulin and Bersier (2007)</a> described their results from these same data).</li>
+<li>Provide a brief biological description the selected model (you can read how <a href="https://doi.org/10.1016/j.anbehav.2007.01.027">Roulin and Bersier (2007)</a> described their results from these same data).</li>
 <li>Use <span class="math inline">\(\Delta\)</span>AICc values and effect sizes to compare the selected model to a random effects model with only a fixed intercept (i.e., the information gained by including the fixed parameters).
 </ol></li>
 </ul>
