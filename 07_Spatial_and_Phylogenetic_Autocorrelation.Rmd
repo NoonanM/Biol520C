@@ -174,7 +174,7 @@ Hyde, J. R., & Vetter, R. D. (2007). The origin, evolution, and diversification 
 We will use these data to explore the correlation between lifespan, body size, and depth, and we'll begin with a naive analysis that ignores phylogenetic relationships, so that we have a baseline for comparison.
 
 1. <ol>
-* Import the rockfish dataset and log-transform the variables.
+* Import the rockfish dataset.
 * Fit a model predicting maximum age from either depth or body size (your choice). As before, fit the model using `gls()` via ML not REML.
 * Inspect the summary overview of the model.
 * Plot the normalized residuals against the fitted values.
