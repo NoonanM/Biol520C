@@ -13,8 +13,8 @@
 
 <title>For Loops</title>
 
-<script src="site_libs/header-attrs-2.10/header-attrs.js"></script>
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
@@ -419,7 +419,7 @@ div.tocify {
 </div>
 
 
-<p>This page was last updated on October 28, 2021.</p>
+<p>This page was last updated on November 03, 2021.</p>
 <hr />
 <div id="background" class="section level2">
 <h2>Background</h2>
@@ -504,7 +504,7 @@ for(i in 1:50){
 }
 
 head(MEANS)</code></pre>
-<pre><code>## [1] -0.44771978 -0.22279369  0.09101055 -0.06537840 -0.17661807  0.41755944</code></pre>
+<pre><code>## [1]  0.1362611  0.1832126 -0.1497073  0.3822945 -0.4012500 -0.4698536</code></pre>
 <p>Generally speaking it’s best practice to define the length of the vector before running the for loop. This is because ‘growing’ the length of a variable in a for loop is computationally inefficient and can slow down your code. For simple tasks the difference is trivial, but for complex tasks the slow downs can be very important. Best practice for the previous loop would look like this:</p>
 <pre class="r"><code>MEANS &lt;- vector(&quot;numeric&quot;, length = 50)
 
@@ -523,10 +523,9 @@ for(i in 1:50){
 }
 
 head(MEANS)</code></pre>
-<pre><code>## [1]  0.077335203 -0.051753962  0.055482920 -0.215398767  0.583880153
-## [6] -0.001603941</code></pre>
+<pre><code>## [1] -0.01896359  0.45216170 -0.44298265 -0.15449636 -0.16452333 -0.31124921</code></pre>
 <pre class="r"><code>head(SDs)</code></pre>
-<pre><code>## [1] 1.1941495 1.1418214 0.8913829 0.9963922 1.0580373 0.8599464</code></pre>
+<pre><code>## [1] 1.1696440 1.0199771 0.8698273 0.6577031 1.1782455 0.8665337</code></pre>
 <p>But this can quickly get unwieldy if we have a lot of information we want to save. Another option is to save our outputs in lists. Lists are extremely flexible ways of storing information.</p>
 <pre class="r"><code>RESULTS &lt;- list()
 
@@ -541,34 +540,34 @@ for(i in 1:50){
 
 head(RESULTS)</code></pre>
 <pre><code>## [[1]]
-## [1] 0.04661911 0.76828699 0.59026490
+## [1] -0.02930003  0.82708174  0.68406421
 ## 
 ## [[2]]
-## [1] -0.01186198  0.88564940  0.78437487
+## [1] -0.4789223  1.3509678  1.8251140
 ## 
 ## [[3]]
-## [1] -0.1375436  1.1072691  1.2260448
+## [1] 0.4284872 0.8045823 0.6473528
 ## 
 ## [[4]]
-## [1] 0.255791 1.083048 1.172993
+## [1] 0.5381244 0.8125610 0.6602554
 ## 
 ## [[5]]
-## [1] 0.308269 1.116091 1.245658
+## [1] 0.2643556 1.3643883 1.8615555
 ## 
 ## [[6]]
-## [1] 0.2318432 1.2050540 1.4521552</code></pre>
+## [1] -0.3503663  0.8826134  0.7790065</code></pre>
 <p>Here each slot in the list contains a vector of length 3 which contains the estimated mean, standard deviation, and variance. Storing results in a list is very convenient because everything gets stored in the same object, but working with the results can be challenging. To make it easier to inspect the results of a for loop stored in a list, a bit of post-processing is required to get the data back into an easy to work with format.</p>
 <pre class="r"><code>RESULTS_CLEAN &lt;- do.call(rbind, RESULTS)
 RESULTS_CLEAN &lt;- data.frame(RESULTS_CLEAN)
 names(RESULTS_CLEAN) &lt;- c(&quot;mean&quot;, &quot;sd&quot;, &quot;var&quot;)
 head(RESULTS_CLEAN)</code></pre>
 <pre><code>##          mean        sd       var
-## 1  0.04661911 0.7682870 0.5902649
-## 2 -0.01186198 0.8856494 0.7843749
-## 3 -0.13754355 1.1072691 1.2260448
-## 4  0.25579103 1.0830478 1.1729925
-## 5  0.30826904 1.1160906 1.2456583
-## 6  0.23184315 1.2050540 1.4521552</code></pre>
+## 1 -0.02930003 0.8270817 0.6840642
+## 2 -0.47892229 1.3509678 1.8251140
+## 3  0.42848718 0.8045823 0.6473528
+## 4  0.53812435 0.8125610 0.6602554
+## 5  0.26435562 1.3643883 1.8615555
+## 6 -0.35036629 0.8826134 0.7790065</code></pre>
 <hr />
 </div>
 <div id="nested-for-loops" class="section level2">
