@@ -7,7 +7,22 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-<a href="Lectures/Course_Intro.pdf" target="_blank">Lecture 01 Course Intro.</a>
+Lecture slides and recordings for Biol 520C: Statistical modelling for biological data, 2023.
+
+<br />
+
+***
+# Background and Simple Linear Regression
+***
+<br />
+
+#### Lecture 01 - Course Intro
+
+<a href="Lectures/Course_Intro.pdf" target="_blank">Slides.</a>
+
+<a href="https://ubc.zoom.us/rec/share/LhYPK9kO0J2msQ_o4AOuCYj5Uqlmj58nvCn0BiRGaRI1ZD1SOcEG3Dyu3aBNuJA6.Ub0iqzTk___JOq76" target="_blank">Recording - 2023.</a>
+
+#### Lecture 02 - Simple Linear Regression
 
 <a href="Lectures/02_Regression.pdf" target="_blank">Lecture 02 Simple Linear Regression.</a>
 

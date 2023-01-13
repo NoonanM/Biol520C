@@ -13,7 +13,7 @@
 
 <title>Course lectures for Biol 520C: Statistical modelling for biological data</title>
 
-<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.19/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -60,6 +60,7 @@ if (window.hljs) {
 
 
 
+
 <link rel="stylesheet" href="tutorial.css" type="text/css" />
 
 
@@ -84,6 +85,9 @@ button.code-folding-btn:focus {
 }
 summary {
   display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
 }
 pre code {
   padding: 0;
@@ -141,11 +145,15 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.tab('show');
-
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
   // Navbar adjustments
   var navHeight = $(".navbar").first().height() + 15;
@@ -174,8 +182,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -183,16 +191,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -309,7 +310,7 @@ div.tocify {
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -328,7 +329,7 @@ div.tocify {
   <a href="Lectures.html">Lectures</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Practicals
      
     <span class="caret"></span>
@@ -367,7 +368,7 @@ div.tocify {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Datasets
      
     <span class="caret"></span>
@@ -382,7 +383,7 @@ div.tocify {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     R Help
      
     <span class="caret"></span>
@@ -408,28 +409,65 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Course lectures for Biol 520C: Statistical modelling for biological data</h1>
+<h1 class="title toc-ignore">Course lectures for Biol 520C: Statistical
+modelling for biological data</h1>
 
 </div>
 
 
-<p><a href="Lectures/Course_Intro.pdf" target="_blank">Lecture 01 Course Intro.</a></p>
-<p><a href="Lectures/02_Regression.pdf" target="_blank">Lecture 02 Simple Linear Regression.</a></p>
-<p><a href="Lectures/03_Probability.pdf" target="_blank">Lecture 03 Probability.</a></p>
-<p><a href="Lectures/04_Likelihood.pdf" target="_blank">Lecture 04 Likelihood. </a></p>
-<p><a href="Lectures/05_Multiple_Linear_Regression.pdf" target="_blank">Lecture 05 Multiple Linear Regression </a></p>
-<p><a href="Lectures/06_Residuals.pdf" target="_blank">Lecture 06 Interpreting Residuals </a></p>
-<p><a href="Lectures/07_Mixed_Models.pdf" target="_blank">Lecture 07 Mixed Effects Models </a></p>
-<p><a href="Lectures/08_Model_Selection.pdf" target="_blank">Lecture 08 Model Selection </a></p>
-<p><a href="Lectures/09_Model_Averaging.pdf" target="_blank">Lecture 09 Model Selection and Model Averaging </a></p>
-<p><a href="Lectures/10_Heteroscedasticity.pdf" target="_blank">Lecture 10 Dealing with Heteroskedasticity </a></p>
-<p><a href="Lectures/11_Autocorrelation_1.pdf" target="_blank">Lecture 11 Autocorrelation 1: Temporal Autocorrelation </a></p>
-<p><a href="Lectures/12_Autocorrelation_2.pdf" target="_blank">Lecture 12 Autocorrelation 2: Spatial Autocorrelation </a></p>
-<p><a href="Lectures/13_Autocorrelation_3.pdf" target="_blank">Lecture 13 Autocorrelation 3: Phylogenetic Autocorrelation </a></p>
-<p><a href="Lectures/14_GLMs_1.pdf" target="_blank">Lecture 14 Generalised Linear Models 1: Intro to GLMs and Modelling Count Data </a></p>
-<p><a href="Lectures/15_GLMs_2.pdf" target="_blank">Lecture 15 Generalised Linear Models 2: Modelling Binary and Proportional Data </a></p>
-<p><a href="Lectures/16_Stochastic_Simulation.pdf" target="_blank">Lecture 16 Stochastic Simulation and Power Analysis </a></p>
-<p><a href="Lectures/17_NonLinearity.pdf" target="_blank">Lecture 17 Deterministic functions for Modelling Biological Data </a></p>
+<p>Lecture slides and recordings for Biol 520C: Statistical modelling
+for biological data, 2023.</p>
+<p><br /></p>
+<hr />
+<div id="background-and-simple-linear-regression"
+class="section level1">
+<h1>Background and Simple Linear Regression</h1>
+<hr />
+<p><br /></p>
+<div id="lecture-01---course-intro" class="section level4">
+<h4>Lecture 01 - Course Intro</h4>
+<p><a href="Lectures/Course_Intro.pdf" target="_blank">Slides.</a></p>
+<p><a href="https://ubc.zoom.us/rec/share/LhYPK9kO0J2msQ_o4AOuCYj5Uqlmj58nvCn0BiRGaRI1ZD1SOcEG3Dyu3aBNuJA6.Ub0iqzTk___JOq76" target="_blank">Recording
+- 2023.</a></p>
+</div>
+<div id="lecture-02---simple-linear-regression" class="section level4">
+<h4>Lecture 02 - Simple Linear Regression</h4>
+<p><a href="Lectures/02_Regression.pdf" target="_blank">Lecture 02
+Simple Linear Regression.</a></p>
+<p><a href="Lectures/03_Probability.pdf" target="_blank">Lecture 03
+Probability.</a></p>
+<p><a href="Lectures/04_Likelihood.pdf" target="_blank">Lecture 04
+Likelihood. </a></p>
+<p><a href="Lectures/05_Multiple_Linear_Regression.pdf" target="_blank">Lecture
+05 Multiple Linear Regression </a></p>
+<p><a href="Lectures/06_Residuals.pdf" target="_blank">Lecture 06
+Interpreting Residuals </a></p>
+<p><a href="Lectures/07_Mixed_Models.pdf" target="_blank">Lecture 07
+Mixed Effects Models </a></p>
+<p><a href="Lectures/08_Model_Selection.pdf" target="_blank">Lecture 08
+Model Selection </a></p>
+<p><a href="Lectures/09_Model_Averaging.pdf" target="_blank">Lecture 09
+Model Selection and Model Averaging </a></p>
+<p><a href="Lectures/10_Heteroscedasticity.pdf" target="_blank">Lecture
+10 Dealing with Heteroskedasticity </a></p>
+<p><a href="Lectures/11_Autocorrelation_1.pdf" target="_blank">Lecture
+11 Autocorrelation 1: Temporal Autocorrelation </a></p>
+<p><a href="Lectures/12_Autocorrelation_2.pdf" target="_blank">Lecture
+12 Autocorrelation 2: Spatial Autocorrelation </a></p>
+<p><a href="Lectures/13_Autocorrelation_3.pdf" target="_blank">Lecture
+13 Autocorrelation 3: Phylogenetic Autocorrelation </a></p>
+<p><a href="Lectures/14_GLMs_1.pdf" target="_blank">Lecture 14
+Generalised Linear Models 1: Intro to GLMs and Modelling Count Data
+</a></p>
+<p><a href="Lectures/15_GLMs_2.pdf" target="_blank">Lecture 15
+Generalised Linear Models 2: Modelling Binary and Proportional Data
+</a></p>
+<p><a href="Lectures/16_Stochastic_Simulation.pdf" target="_blank">Lecture
+16 Stochastic Simulation and Power Analysis </a></p>
+<p><a href="Lectures/17_NonLinearity.pdf" target="_blank">Lecture 17
+Deterministic functions for Modelling Biological Data </a></p>
+</div>
+</div>
 
 
 
