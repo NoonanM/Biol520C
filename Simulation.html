@@ -13,7 +13,7 @@
 
 <title>Simulation</title>
 
-<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.19/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -60,6 +60,7 @@ if (window.hljs) {
 
 
 
+
 <link rel="stylesheet" href="tutorial.css" type="text/css" />
 
 
@@ -84,6 +85,9 @@ button.code-folding-btn:focus {
 }
 summary {
   display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
 }
 pre code {
   padding: 0;
@@ -141,11 +145,15 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.tab('show');
-
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
   // Navbar adjustments
   var navHeight = $(".navbar").first().height() + 15;
@@ -174,8 +182,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -183,16 +191,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -315,7 +316,7 @@ div.tocify {
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -334,7 +335,7 @@ div.tocify {
   <a href="Lectures.html">Lectures</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Practicals
      
     <span class="caret"></span>
@@ -373,7 +374,7 @@ div.tocify {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Datasets
      
     <span class="caret"></span>
@@ -388,7 +389,7 @@ div.tocify {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     R Help
      
     <span class="caret"></span>
@@ -419,91 +420,129 @@ div.tocify {
 </div>
 
 
-<p>This page was last updated on November 03, 2021.</p>
+<p>This page was last updated on January 16, 2023.</p>
 <hr />
 <div id="background" class="section level2">
 <h2>Background</h2>
-<p>Simulation is an important tool for carrying out computational and statistical biology. This page provides basic guidance on how to simulate data in <code>R</code>.</p>
+<p>Simulation is an important tool for carrying out computational and
+statistical biology. This page provides basic guidance on how to
+simulate data in <code>R</code>.</p>
 <hr />
 </div>
 <div id="simulating-from-distributions" class="section level2 tabset">
 <h2 class="tabset">Simulating from Distributions</h2>
-<p>R comes with built in tools that allow you to simulate from well-known probability distributions like the normal, Poisson, binomial, uniform, chi-squared, and so on (for a complete list see: <code>help(Distributions)</code> )</p>
-<p>There are 4 functions for working with distributions that have the general form:</p>
+<p>R comes with built in tools that allow you to simulate from
+well-known probability distributions like the normal, Poisson, binomial,
+uniform, chi-squared, and so on (for a complete list see:
+<code>help(Distributions)</code> )</p>
+<p>There are 4 functions for working with distributions that have the
+general form:</p>
 <ul>
 <li><code>dxxx</code> for the density/mass function (PDF/PMF)</li>
-<li><code>pxxx</code> for the cumulative distribution function (CDF)</li>
+<li><code>pxxx</code> for the cumulative distribution function
+(CDF)</li>
 <li><code>qxxx</code> for the quantile function</li>
 <li><code>rxxx</code> for random number generation</li>
 </ul>
 <p></br></p>
 <div id="normal" class="section level3">
 <h3>Normal</h3>
-<p>The <code>rnorm</code> function is the base function for simulating random numbers drawn from a normal distribution. For more information on working with the normal distribution see <code>help(Normal)</code></p>
+<p>The <code>rnorm</code> function is the base function for simulating
+random numbers drawn from a normal distribution. For more information on
+working with the normal distribution see <code>help(Normal)</code></p>
 <pre class="r"><code>rnorm(n = 5,                  # number of observations
       mean = 0,               # vector of means
       sd = 1)                 # vector of standard deviations</code></pre>
-<pre><code>## [1] -0.03554558  0.15184955 -0.28873192 -1.40215498  1.80242099</code></pre>
-<p>Because <code>rnorm</code> is expecting a vector for each entry, this function is very flexible. For example we can sample 5 values from normal distributions with different means and different standard deviations without having to re-write the function 5 times.</p>
+<pre><code>## [1] -1.1629439 -0.3822248 -0.5902186 -0.2731487  1.8271305</code></pre>
+<p>Because <code>rnorm</code> is expecting a vector for each entry, this
+function is very flexible. For example we can sample 5 values from
+normal distributions with different means and different standard
+deviations without having to re-write the function 5 times.</p>
 <pre class="r"><code>rnorm(n = 5,                  # number of observations
       mean = c(1,2,3,4,5),    # vector of means
       sd = 1:5)               # vector of standard deviations</code></pre>
-<pre><code>## [1]  1.624862  1.592871  4.827513  7.177409 12.001894</code></pre>
+<pre><code>## [1] 1.35482588 0.07216827 1.43718683 5.66150973 3.49616380</code></pre>
 <hr />
 </div>
 <div id="poisson" class="section level3">
 <h3>Poisson</h3>
-<p>The <code>rpois</code> function is the base function for simulating random numbers drawn from a Poisson distribution. For more information on working with the Poisson distribution see <code>help(Poisson)</code></p>
+<p>The <code>rpois</code> function is the base function for simulating
+random numbers drawn from a Poisson distribution. For more information
+on working with the Poisson distribution see
+<code>help(Poisson)</code></p>
 <p><strong>Note:</strong> Will only return whole numbers</p>
 <pre class="r"><code>rpois(n = 5,                  # number of observations
       lambda = 1)             # vector of (non-negative) rate parameters</code></pre>
-<pre><code>## [1] 1 0 1 3 1</code></pre>
-<p>Because <code>rpois</code> is expecting a vector for each entry, this function is very flexible. For example we can sample 5 values from Poisson distributions with different rate parameters <span class="math inline">\(\lambda\)</span>, without having to re-write the function 5 times.</p>
+<pre><code>## [1] 0 0 3 2 0</code></pre>
+<p>Because <code>rpois</code> is expecting a vector for each entry, this
+function is very flexible. For example we can sample 5 values from
+Poisson distributions with different rate parameters <span
+class="math inline">\(\lambda\)</span>, without having to re-write the
+function 5 times.</p>
 <pre class="r"><code>rpois(n = 5,                  # number of observations
       lambda = c(1,2,3,4,5))  # vector of (non-negative) rate parameters</code></pre>
-<pre><code>## [1] 0 0 3 3 7</code></pre>
+<pre><code>## [1] 0 2 7 3 4</code></pre>
 <hr />
 </div>
 <div id="binomial" class="section level3">
 <h3>Binomial</h3>
-<p>The <code>rbinom</code> function is the base function for simulating random numbers drawn from a binomial distribution. For more information on working with the binomial distribution see <code>help(Binomial)</code></p>
+<p>The <code>rbinom</code> function is the base function for simulating
+random numbers drawn from a binomial distribution. For more information
+on working with the binomial distribution see
+<code>help(Binomial)</code></p>
 <pre class="r"><code>rbinom(n = 5,                  # number of observations
        size = 1,               # number of trials (zero or more)
        prob = 0.5)             # probability of success on each trial.</code></pre>
-<pre><code>## [1] 1 0 0 1 0</code></pre>
-<p>If we change the number of trials we get the number of successes across the number of trials. In this example we have simulated the number of successes in 5 replicates of 20 trials.</p>
+<pre><code>## [1] 0 1 1 1 1</code></pre>
+<p>If we change the number of trials we get the number of successes
+across the number of trials. In this example we have simulated the
+number of successes in 5 replicates of 20 trials.</p>
 <pre class="r"><code>rbinom(n = 5,                  # number of observations
        size = 20,              # number of trials (zero or more)
        prob = 0.5)             # probability of success on each trial.</code></pre>
-<pre><code>## [1] 12 12 11  8 12</code></pre>
-<p>Because <code>rbinom</code> is expecting a vector for each entry, this function is very flexible. For example we can simulate the number of successes in 5 replicates of 20 trials, with a different probability of success in each trial</p>
+<pre><code>## [1] 10 13  7  9  8</code></pre>
+<p>Because <code>rbinom</code> is expecting a vector for each entry,
+this function is very flexible. For example we can simulate the number
+of successes in 5 replicates of 20 trials, with a different probability
+of success in each trial</p>
 <pre class="r"><code>rbinom(n = 5,
        size = 20,
        prob = c(0.2, 0.4, 0.6, 0.8, 1))</code></pre>
-<pre><code>## [1]  4 13 12 15 20</code></pre>
+<pre><code>## [1]  2  6 14 14 20</code></pre>
 <hr />
 </div>
 <div id="uniform" class="section level3">
 <h3>Uniform</h3>
-<p>The <code>runif</code> function is the base function for simulating random numbers drawn from a uniform distribution. For more information on working with the uniform distribution see <code>help(Uniform)</code></p>
+<p>The <code>runif</code> function is the base function for simulating
+random numbers drawn from a uniform distribution. For more information
+on working with the uniform distribution see
+<code>help(Uniform)</code></p>
 <pre class="r"><code>runif(n = 5,                  # number of observations
       min = 0,                # lower limit of the distribution. Must be finite.
       max = 20)               # upper limit of the distribution. Must be finite.</code></pre>
-<pre><code>## [1]  9.275905 10.931615  4.475166  9.317441  1.617879</code></pre>
-<p>Unlike the other distributions <code>runif</code> is not expecting vector for the <code>min</code> and <code>max</code> arguments, so this function does not have the same amount of inherent flexibility.</p>
+<pre><code>## [1] 9.996830 3.114675 9.646209 5.962850 5.825004</code></pre>
+<p>Unlike the other distributions <code>runif</code> is not expecting
+vector for the <code>min</code> and <code>max</code> arguments, so this
+function does not have the same amount of inherent flexibility.</p>
 <hr />
 </div>
 </div>
 <div id="setting-the-seed" class="section level2">
 <h2>Setting the Seed</h2>
-<p>When simulating random numbers, setting the random number seed with <code>set.seed()</code> ensures reproducibility of the sequence of random numbers.</p>
-<p>For example, we can sample 5 random numbers from a normal distribution with <code>rnorm()</code>.</p>
+<p>When simulating random numbers, setting the random number seed with
+<code>set.seed()</code> ensures reproducibility of the sequence of
+random numbers.</p>
+<p>For example, we can sample 5 random numbers from a normal
+distribution with <code>rnorm()</code>.</p>
 <pre class="r"><code>rnorm(5)</code></pre>
-<pre><code>## [1]  0.07241576 -0.71596924 -0.20647531  1.87121226 -0.07021765</code></pre>
-<p>If we do this a second time the sequence of numbers will always be different.</p>
+<pre><code>## [1] 0.3373725 0.9486400 0.4434671 1.2843769 0.3096426</code></pre>
+<p>If we do this a second time the sequence of numbers will always be
+different.</p>
 <pre class="r"><code>rnorm(5)</code></pre>
-<pre><code>## [1]  0.7670190 -0.7345575 -0.3051186 -0.1184677  1.5484835</code></pre>
-<p>But if we want to be sure we can get the same sequence of randomly generated numbers every single time, we have to set the seed prior to simulating.</p>
+<pre><code>## [1] -1.3452447 -0.5447413  0.4130687 -0.4291897  1.7877737</code></pre>
+<p>But if we want to be sure we can get the same sequence of randomly
+generated numbers every single time, we have to set the seed prior to
+simulating.</p>
 <pre class="r"><code>set.seed(1)
 rnorm(5)</code></pre>
 <pre><code>## [1] -0.6264538  0.1836433 -0.8356286  1.5952808  0.3295078</code></pre>
@@ -516,27 +555,49 @@ rnorm(5)</code></pre>
 <h2 class="tabset">Simulating from Linear Models</h2>
 <div id="linear-model-with-gaussian-errors" class="section level3">
 <h3>Linear model with Gaussian errors</h3>
-<p>Simulating from a simple linear model is fairly straightforward and requires only a few lines of code. These models have both a deterministic component, and a stochastic component. The minimal requirements for simulating the deterministic part of this type of model are defining the intercept, <span class="math inline">\(\beta_0\)</span>, and slope, <span class="math inline">\(\beta_1\)</span>, and to set up the <span class="math inline">\(x\)</span> values you are interested in. These pieces can then be used to calculate the deterministic part of the model using the standard equation for a linear model <span class="math inline">\(y = \beta_0 + \beta_1 \times x\)</span>.</p>
+<p>Simulating from a simple linear model is fairly straightforward and
+requires only a few lines of code. These models have both a
+deterministic component, and a stochastic component. The minimal
+requirements for simulating the deterministic part of this type of model
+are defining the intercept, <span
+class="math inline">\(\beta_0\)</span>, and slope, <span
+class="math inline">\(\beta_1\)</span>, and to set up the <span
+class="math inline">\(x\)</span> values you are interested in. These
+pieces can then be used to calculate the deterministic part of the model
+using the standard equation for a linear model <span
+class="math inline">\(y = \beta_0 + \beta_1 \times x\)</span>.</p>
 <pre class="r"><code>B_0 &lt;- 2
 B_1 &lt;- 1
 x &lt;- 1:20
 y_det &lt;- B_0 + B_1 * x
 y_det</code></pre>
 <pre><code>##  [1]  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22</code></pre>
-<p>With the deterministic part specified, the next step is to add the stochastic component to the model. Here what we want is 20 random, normally distributed values, each with a mean equal to the deterministic component. This can be achieved by combining the deterministic predictions with the <code>rnorm()</code> function</p>
+<p>With the deterministic part specified, the next step is to add the
+stochastic component to the model. Here what we want is 20 random,
+normally distributed values, each with a mean equal to the deterministic
+component. This can be achieved by combining the deterministic
+predictions with the <code>rnorm()</code> function</p>
 <pre class="r"><code>y &lt;- rnorm(n = 20, mean = y_det, sd = 2)
 y</code></pre>
 <pre><code>##  [1]  1.359063  4.974858  6.476649  7.151563  6.389223 11.023562  9.779686
 ##  [8]  8.757519  6.570600 14.249862 12.910133 13.967619 16.887672 17.642442
 ## [15] 18.187803 19.837955 20.564273 20.149130 17.021297 23.239651</code></pre>
-<p><strong>Note:</strong> This same result could be achieved by adding mean 0 error to each deterministic prediction because errors are additive for this model <span class="math inline">\(y_i = \beta_0 + \beta_1 \times x_i + \varepsilon_i, \quad \varepsilon_i \sim \mathcal{N}(0, \sigma^2)\)</span>.</p>
+<p><strong>Note:</strong> This same result could be achieved by adding
+mean 0 error to each deterministic prediction because errors are
+additive for this model <span class="math inline">\(y_i = \beta_0 +
+\beta_1 \times x_i + \varepsilon_i, \quad \varepsilon_i \sim
+\mathcal{N}(0, \sigma^2)\)</span>.</p>
 <pre class="r"><code>y &lt;- B_0 + B_1 * x + rnorm(n = 20, mean = 0, sd = 2)
 y </code></pre>
 <pre><code>##  [1]  2.887743  3.688409  2.058495  5.043700  7.835883 10.717359  8.794425
 ##  [8] 10.775343 10.892390  9.245881 12.170011 13.211420 14.881373 18.200051
 ## [15] 18.526351 17.670953 18.493277 21.393927 22.113326 20.622489</code></pre>
-<p>The problem with building a simulation this way, however, is that errors are only additive for the normal distribution, so this does not work for stochasticity that is drawn from other distributions.</p>
-<p>If you intend on carrying out anything more than a simple simulation, it is usually more efficient to package everything together into a custom function.</p>
+<p>The problem with building a simulation this way, however, is that
+errors are only additive for the normal distribution, so this does not
+work for stochasticity that is drawn from other distributions.</p>
+<p>If you intend on carrying out anything more than a simple simulation,
+it is usually more efficient to package everything together into a
+custom function.</p>
 <pre class="r"><code>Linear &lt;- function(x){
   B_0 &lt;- 2
   B_1 &lt;- 1
@@ -556,7 +617,18 @@ Linear(1)</code></pre>
 </div>
 <div id="log-link-and-poisson-errors" class="section level3">
 <h3>Log link and Poisson errors</h3>
-<p>Simulating from a linear model with a log link and Poisson errors is fairly straightforward and requires only a few lines of code. These models have both a deterministic component, and a stochastic component. The minimal requirements for simulating the deterministic part of this type of model are defining the intercept, <span class="math inline">\(\beta_0\)</span>, and slope, <span class="math inline">\(\beta_1\)</span>, to set up the <span class="math inline">\(x\)</span> values you are interested in, and to specify the link function. These pieces can then be used to calculate the deterministic part of the model using the standard equation for a linear model with a log link <span class="math inline">\(y = e^{\beta_0 + \beta_1 \times x}\)</span>.</p>
+<p>Simulating from a linear model with a log link and Poisson errors is
+fairly straightforward and requires only a few lines of code. These
+models have both a deterministic component, and a stochastic component.
+The minimal requirements for simulating the deterministic part of this
+type of model are defining the intercept, <span
+class="math inline">\(\beta_0\)</span>, and slope, <span
+class="math inline">\(\beta_1\)</span>, to set up the <span
+class="math inline">\(x\)</span> values you are interested in, and to
+specify the link function. These pieces can then be used to calculate
+the deterministic part of the model using the standard equation for a
+linear model with a log link <span class="math inline">\(y = e^{\beta_0
++ \beta_1 \times x}\)</span>.</p>
 <pre class="r"><code>B_0 &lt;- 0.01
 B_1 &lt;- 0.03
 x &lt;- 1:20
@@ -565,11 +637,19 @@ y_det</code></pre>
 <pre><code>##  [1] 1.040811 1.072508 1.105171 1.138828 1.173511 1.209250 1.246077 1.284025
 ##  [9] 1.323130 1.363425 1.404948 1.447735 1.491825 1.537258 1.584074 1.632316
 ## [17] 1.682028 1.733253 1.786038 1.840431</code></pre>
-<p>With the deterministic part specified, the next step is to add the stochastic component to the model. Here what we want is 20 random values drawn from a Poisson distribution, each with a rate parameter, <span class="math inline">\(\lambda\)</span>, equal to the deterministic component (remember, with the Poisson distribution the mean and variance are equal). This can be achieved by combining the deterministic predictions with the <code>rpois()</code> function.</p>
+<p>With the deterministic part specified, the next step is to add the
+stochastic component to the model. Here what we want is 20 random values
+drawn from a Poisson distribution, each with a rate parameter, <span
+class="math inline">\(\lambda\)</span>, equal to the deterministic
+component (remember, with the Poisson distribution the mean and variance
+are equal). This can be achieved by combining the deterministic
+predictions with the <code>rpois()</code> function.</p>
 <pre class="r"><code>y &lt;- rpois(n = length(x), lambda = y_det)
 y</code></pre>
 <pre><code>##  [1] 0 4 1 0 0 1 3 1 4 2 1 1 0 0 2 0 1 2 6 2</code></pre>
-<p>If you intend on carrying out anything more than a simple simulation, it is usually more efficient to package everything together into a custom function.</p>
+<p>If you intend on carrying out anything more than a simple simulation,
+it is usually more efficient to package everything together into a
+custom function.</p>
 <pre class="r"><code>Poisson &lt;- function(x) {
   B_0 &lt;- 0.01
   B_1 &lt;- 0.03
@@ -582,7 +662,9 @@ Poisson(1)</code></pre>
 <pre><code>## [1] 1</code></pre>
 <pre class="r"><code>Poisson(1:5)</code></pre>
 <pre><code>## [1] 0 2 1 1 0</code></pre>
-<p>If you are trying to simulate an over-dispersed system, you can also consider switching from a Poisson distribution to a negative binomial distribution.</p>
+<p>If you are trying to simulate an over-dispersed system, you can also
+consider switching from a Poisson distribution to a negative binomial
+distribution.</p>
 <pre class="r"><code>NegBinom &lt;- function(x) {
   B_0 &lt;- 0.01
   B_1 &lt;- 0.03
@@ -599,7 +681,18 @@ NegBinom(1)</code></pre>
 </div>
 <div id="logit-link-and-binomial-errors" class="section level3">
 <h3>Logit link and binomial errors</h3>
-<p>Simulating from a linear model with a logit link and binomial stochasticity is no different from simulating from other, simpler models. The minimal requirements for simulating the deterministic part of this type of model are defining the intercept, <span class="math inline">\(\beta_0\)</span>, and slope, <span class="math inline">\(\beta_1\)</span>, to set up the <span class="math inline">\(x\)</span> values you are interested in, and to specify the link function (here a logit link). These pieces can then be used to calculate the deterministic part of the model using the standard equation for a linear model with a logit link <span class="math inline">\(y = \frac{e^{\beta_0 + \beta_1 \times x}}{1 + e^{\beta_0 + \beta_1 \times x}}\)</span>.</p>
+<p>Simulating from a linear model with a logit link and binomial
+stochasticity is no different from simulating from other, simpler
+models. The minimal requirements for simulating the deterministic part
+of this type of model are defining the intercept, <span
+class="math inline">\(\beta_0\)</span>, and slope, <span
+class="math inline">\(\beta_1\)</span>, to set up the <span
+class="math inline">\(x\)</span> values you are interested in, and to
+specify the link function (here a logit link). These pieces can then be
+used to calculate the deterministic part of the model using the standard
+equation for a linear model with a logit link <span
+class="math inline">\(y = \frac{e^{\beta_0 + \beta_1 \times x}}{1 +
+e^{\beta_0 + \beta_1 \times x}}\)</span>.</p>
 <pre class="r"><code>B_0 &lt;- 0.01
 B_1 &lt;- 0.03
 x &lt;- 1:20
@@ -608,11 +701,18 @@ y_det</code></pre>
 <pre><code>##  [1] 0.5099987 0.5174929 0.5249792 0.5324543 0.5399149 0.5473576 0.5547792
 ##  [8] 0.5621765 0.5695462 0.5768853 0.5841905 0.5914590 0.5986877 0.6058737
 ## [15] 0.6130142 0.6201064 0.6271478 0.6341356 0.6410674 0.6479408</code></pre>
-<p>With the deterministic part specified, the next step is to add the stochastic component to the model. Here what we want is 20 random values drawn from a binomial distribution, each with a probability of success equal to the prediction of our deterministic model. This can be achieved by combining the deterministic predictions with the <code>rbinom()</code> function.</p>
+<p>With the deterministic part specified, the next step is to add the
+stochastic component to the model. Here what we want is 20 random values
+drawn from a binomial distribution, each with a probability of success
+equal to the prediction of our deterministic model. This can be achieved
+by combining the deterministic predictions with the
+<code>rbinom()</code> function.</p>
 <pre class="r"><code>y &lt;- rbinom(n = length(x), size = 1, prob = y_det)
 y</code></pre>
 <pre><code>##  [1] 0 0 1 1 1 1 1 1 1 1 1 0 1 0 0 1 1 1 0 1</code></pre>
-<p>As always, if you intend on carrying out anything more than a simple, one-off simulation, it is usually more efficient to package everything together into a custom function.</p>
+<p>As always, if you intend on carrying out anything more than a simple,
+one-off simulation, it is usually more efficient to package everything
+together into a custom function.</p>
 <pre class="r"><code>Logit_Link &lt;- function(x) {
   B_0 &lt;- 0
   B_1 &lt;- 0.03
@@ -630,7 +730,14 @@ Logit_Link(1)</code></pre>
 </div>
 <div id="simulating-nested-data" class="section level2 tabset">
 <h2 class="tabset">Simulating Nested Data</h2>
-<p>We often work with nested data, where there can be some normally distributed differences between groups (species, treatments, study sites, etc.). To simulate nested data with random slopes or intercepts, we need to first define the population level parameters, and then draw the individual variation around the population level trends from a mean 0 normal distribution. In essence, this requires adjusting the population level parameters by some normally distributed amount for each group.</p>
+<p>We often work with nested data, where there can be some normally
+distributed differences between groups (species, treatments, study
+sites, etc.). To simulate nested data with random slopes or intercepts,
+we need to first define the population level parameters, and then draw
+the individual variation around the population level trends from a mean
+0 normal distribution. In essence, this requires adjusting the
+population level parameters by some normally distributed amount for each
+group.</p>
 <div id="random-intercepts" class="section level3">
 <h3>Random Intercepts</h3>
 <pre class="r"><code>library(viridis)
@@ -690,9 +797,13 @@ plot(y ~ x, col = viridis(5)[group], pch = 16)                    # Visualise wi
 <hr />
 </div>
 </div>
-<div id="simulating-temporally-autocorrelated-data" class="section level2">
+<div id="simulating-temporally-autocorrelated-data"
+class="section level2">
 <h2>Simulating Temporally Autocorrelated data</h2>
-<p>Simulating temporally correlated errors requires first defining an autocorrelation structure to simulate from, building the appropriate correlation matrix, and then using that to generate autocorrelated errors.</p>
+<p>Simulating temporally correlated errors requires first defining an
+autocorrelation structure to simulate from, building the appropriate
+correlation matrix, and then using that to generate autocorrelated
+errors.</p>
 <pre class="r"><code>library(nlme)
 
 n &lt;- 500              # Sample size

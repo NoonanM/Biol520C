@@ -13,7 +13,7 @@
 
 <title>Practical 04 - Visualising Nested Data Prior to Analysis</title>
 
-<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.19/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -60,6 +60,7 @@ if (window.hljs) {
 
 
 
+
 <link rel="stylesheet" href="tutorial.css" type="text/css" />
 
 
@@ -84,6 +85,9 @@ button.code-folding-btn:focus {
 }
 summary {
   display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
 }
 pre code {
   padding: 0;
@@ -141,11 +145,15 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.tab('show');
-
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
   // Navbar adjustments
   var navHeight = $(".navbar").first().height() + 15;
@@ -174,8 +182,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -183,16 +191,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -309,7 +310,7 @@ div.tocify {
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -328,7 +329,7 @@ div.tocify {
   <a href="Lectures.html">Lectures</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Practicals
      
     <span class="caret"></span>
@@ -367,7 +368,7 @@ div.tocify {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Datasets
      
     <span class="caret"></span>
@@ -382,7 +383,7 @@ div.tocify {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     R Help
      
     <span class="caret"></span>
@@ -408,90 +409,171 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Practical 04 - Visualising Nested Data Prior to Analysis</h1>
+<h1 class="title toc-ignore">Practical 04 - Visualising Nested Data
+Prior to Analysis</h1>
 
 </div>
 
 
-<p>This page was last updated on November 03, 2021.</p>
+<p>This page was last updated on January 16, 2023.</p>
 <hr />
 <div id="background" class="section level2">
 <h2>Background</h2>
-<p>Ecological datasets are often filled with structure that needs to be handled during the modelling process. This can include sampling that’s different between groups, different means, variances and effects across groups, etc. Before deciding what type of model to fit, and how to structure the parameters, it is important to visually explore the data to get a feel for what the structure is. This can help guide the modelling process.</p>
-<p>With this in mind, we will explore data that were collected by <a href="https://doi.org/10.1016/j.anbehav.2007.01.027">Roulin and Bersier (2007)</a> to explore whether the sex of the parent influenced how much nestling barn owls begged for food. To collect these data they set up cameras in 27 barn owl (<em>Tyto alba</em>) nests and studied the begging behaviour of nestlings in response to the presence of the father and of the mother. The main response variable we will be looking at is ‘NegPerChick’, which is the number of counted calls coming from a nest in the 30-s interval before the arrival of the parent, divided by the number of nestlings in that nest. The explanatory variables we will be working with in these data are:</p>
+<p>Ecological datasets are often filled with structure that needs to be
+handled during the modelling process. This can include sampling that’s
+different between groups, different means, variances and effects across
+groups, etc. Before deciding what type of model to fit, and how to
+structure the parameters, it is important to visually explore the data
+to get a feel for what the structure is. This can help guide the
+modelling process.</p>
+<p>With this in mind, we will explore data that were collected by <a
+href="https://doi.org/10.1016/j.anbehav.2007.01.027">Roulin and Bersier
+(2007)</a> to explore whether the sex of the parent influenced how much
+nestling barn owls begged for food. To collect these data they set up
+cameras in 27 barn owl (<em>Tyto alba</em>) nests and studied the
+begging behaviour of nestlings in response to the presence of the father
+and of the mother. The main response variable we will be looking at is
+‘NegPerChick’, which is the number of counted calls coming from a nest
+in the 30-s interval before the arrival of the parent, divided by the
+number of nestlings in that nest. The explanatory variables we will be
+working with in these data are:</p>
 <ul>
 <li>Sex of the parent (Male/Female)</li>
 <li>Food treatment (Deprived/Satiated)</li>
-<li>Arrival time of the parent at the nest with a prey item (scaled such that 21h30 is time ‘0’ and 05h30 is time ‘8’)</li>
+<li>Arrival time of the parent at the nest with a prey item (scaled such
+that 21h30 is time ‘0’ and 05h30 is time ‘8’)</li>
 <li>Nest ID</li>
 </ul>
 <p>In this Practical you will:</p>
 <ul>
-<li>Use plots to explore the relationships between your predictors and response variables.</li>
-<li>Use visual diagnostics to check for any structure in these data that might need to be accounted for in a model.</li>
+<li>Use plots to explore the relationships between your predictors and
+response variables.</li>
+<li>Use visual diagnostics to check for any structure in these data that
+might need to be accounted for in a model.</li>
 <li>Check the balance of the sampling.</li>
-<li>Check for any correlations between the potential predictors variables.</li>
-<li>Lay out a plan for how you expect to approach the modelling process.</li>
+<li>Check for any correlations between the potential predictors
+variables.</li>
+<li>Lay out a plan for how you expect to approach the modelling
+process.</li>
 </ul>
-<p>These data will be used again in Practical 05 when we explore model fitting, selection, and model averaging. Our goal right now is dive into these data to get a feel for their structure so we know how to approach the modelling process.</p>
-<div id="plot-the-predictors-against-the-response" class="section level3">
+<p>These data will be used again in Practical 05 when we explore model
+fitting, selection, and model averaging. Our goal right now is dive into
+these data to get a feel for their structure so we know how to approach
+the modelling process.</p>
+<div id="plot-the-predictors-against-the-response"
+class="section level3">
 <h3>Plot the predictors against the response</h3>
-<p>One of the first things to do when you start working with a new dataset is plot all of the potential predictors against the response(s) in order to get a feel for what the relationship is going to be. This can also be a useful process for identifying whether the relationship is non-linear and should be modeled as e.g. a polynomial (but we will not explore that here). Let’s look at negs per chick versus arrival time, food treatment, the sex of the parent, and Nest ID.</p>
+<p>One of the first things to do when you start working with a new
+dataset is plot all of the potential predictors against the response(s)
+in order to get a feel for what the relationship is going to be. This
+can also be a useful process for identifying whether the relationship is
+non-linear and should be modeled as e.g. a polynomial (but we will not
+explore that here). Let’s look at negs per chick versus arrival time,
+food treatment, the sex of the parent, and Nest ID.</p>
 <ol style="list-style-type: decimal">
 <li><ol></li>
 </ol>
 <ul>
-<li>Import the owl dataset (ensure your factors are actually factors).</li>
-<li>Use boxplots to inspect whether the number of negs per chick differs by food treatment, the sex of the parent, and/or Nest ID.</li>
-<li>Plot a scatterplot of the number of negs per chick as a function of arrival time.</li>
+<li>Import the owl dataset (ensure your factors are actually
+factors).</li>
+<li>Use boxplots to inspect whether the number of negs per chick differs
+by food treatment, the sex of the parent, and/or Nest ID.</li>
+<li>Plot a scatterplot of the number of negs per chick as a function of
+arrival time.</li>
 <li>Briefly describe what you see.
 </ol></li>
 </ul>
 </div>
 <div id="visualise-the-sampling" class="section level3">
 <h3>Visualise the sampling</h3>
-<p>The next thing to do when you get your hands on some data is to understand how balanced/unbalanced the sampling was. This is especially true for nested data (no pun intended). If certain groups are over represented, there is a chance that they can outweigh others and vice versa for underrepresented groups. Mixed effects models can, to some extent, handle unbalanced designs, but it is good to know about this a priori. For example, if 95% of the data were to have come from 1 nest, then this can result in a number of problems.</p>
+<p>The next thing to do when you get your hands on some data is to
+understand how balanced/unbalanced the sampling was. This is especially
+true for nested data (no pun intended). If certain groups are over
+represented, there is a chance that they can outweigh others and vice
+versa for underrepresented groups. Mixed effects models can, to some
+extent, handle unbalanced designs, but it is good to know about this a
+priori. For example, if 95% of the data were to have come from 1 nest,
+then this can result in a number of problems.</p>
 <ol style="list-style-type: decimal">
 <li><ol></li>
 </ol>
 <ul>
-<li>Use barplots to plot the amount of data in the different groups for each of the variables</li>
+<li>Use barplots to plot the amount of data in the different groups for
+each of the variables</li>
 <li>Describe patterns in sampling you see in these plots</li>
-<li>Generate and inspect a table of the number of samples in each nest for each level of i) food treatments and ii) the parent’s sex. Is there any cause for concern?</li>
+<li>Generate and inspect a table of the number of samples in each nest
+for each level of i) food treatments and ii) the parent’s sex. Is there
+any cause for concern?</li>
 </ul>
-<strong>Note:</strong> This will be easier if you make use of the <code>table()</code> function.
+<strong>Note:</strong> This will be easier if you make use of the
+<code>table()</code> function.
 </ol>
 </div>
-<div id="inspect-the-response-variable-in-relation-to-the-sampling" class="section level3">
+<div id="inspect-the-response-variable-in-relation-to-the-sampling"
+class="section level3">
 <h3>Inspect the response variable in relation to the sampling</h3>
-<p>These data are nested, or hierarchical in nature and there are some balancing issues. At this stage it is useful to check and see if the response variable differs across the sampling groups to get a feel for how balancing might influence the modelling process. This can help tell us whether or not we will need to worry about fitting mixed-effect models to our data, and how partial shrinkage might come into play. For example if a heavily over sampled nest also has a higher number of negs per chick than any other nest, it can pull the regression towards itself. In our initial inspection above, there were some potential imbalances related to the various treatments/sampling groups. Let’s explore this further.</p>
+<p>These data are nested, or hierarchical in nature and there are some
+balancing issues. At this stage it is useful to check and see if the
+response variable differs across the sampling groups to get a feel for
+how balancing might influence the modelling process. This can help tell
+us whether or not we will need to worry about fitting mixed-effect
+models to our data, and how partial shrinkage might come into play. For
+example if a heavily over sampled nest also has a higher number of negs
+per chick than any other nest, it can pull the regression towards
+itself. In our initial inspection above, there were some potential
+imbalances related to the various treatments/sampling groups. Let’s
+explore this further.</p>
 <ol style="list-style-type: decimal">
 <li><ol></li>
 </ol>
 <ul>
-<li>Create a boxplot depicting the number of negs per chick in each nest. Describe what you see in relation to the sampling you just explored.</li>
-<li>Plot the mean number of negs per chick in each nest versus the amount of data for each nest (hint: the <code>aggregate()</code> function is useful here). Visually, do you see a cause for concern? Fit a simple linear model to confirm.</li>
-<li>Create a boxplot of the number of negs per chick grouped by both nest and food treatment. Is this cause for concern?</li>
-<li>Create a boxplot of the number of negs per chick grouped by both nest and sex of the parent. Is this cause for concern?</li>
-<li>Plot The number of negs per chick as a function of arrival time. Colour the data by nest ID. Do you see any patterns that might skew conventional regressional analyses?</li>
-<li>Make this same plot again, but now add a regression line for the number of negs per chick as a function of arrival time for each nest (hint: a for loop can do this straightforwardly). Do you think there will be a need for a variable slope model? What about a variable intercept model?
+<li>Create a boxplot depicting the number of negs per chick in each
+nest. Describe what you see in relation to the sampling you just
+explored.</li>
+<li>Plot the mean number of negs per chick in each nest versus the
+amount of data for each nest (hint: the <code>aggregate()</code>
+function is useful here). Visually, do you see a cause for concern? Fit
+a simple linear model to confirm.</li>
+<li>Create a boxplot of the number of negs per chick grouped by both
+nest and food treatment. Is this cause for concern?</li>
+<li>Create a boxplot of the number of negs per chick grouped by both
+nest and sex of the parent. Is this cause for concern?</li>
+<li>Plot The number of negs per chick as a function of arrival time.
+Colour the data by nest ID. Do you see any patterns that might skew
+conventional regressional analyses?</li>
+<li>Make this same plot again, but now add a regression line for the
+number of negs per chick as a function of arrival time for each nest
+(hint: a for loop can do this straightforwardly). Do you think there
+will be a need for a variable slope model? What about a variable
+intercept model?
 </ol></li>
 </ul>
 </div>
-<div id="inspect-the-predictor-variables-for-correlations" class="section level3">
+<div id="inspect-the-predictor-variables-for-correlations"
+class="section level3">
 <h3>Inspect the predictor variables for correlations</h3>
-<p>Remember that when fitting multiple regression models, correlations between predictor variables can bias results. Before analysing a dataset it’s important to check for any potential correlations and/or relationships between the predictor variables. Here we have i) arrival time, a continuous variable; ii) the sex of the parent, a factor with two levels; and iii) the food treatment, a factor with two levels.</p>
+<p>Remember that when fitting multiple regression models, correlations
+between predictor variables can bias results. Before analysing a dataset
+it’s important to check for any potential correlations and/or
+relationships between the predictor variables. Here we have i) arrival
+time, a continuous variable; ii) the sex of the parent, a factor with
+two levels; and iii) the food treatment, a factor with two levels.</p>
 <ol style="list-style-type: decimal">
 <li><ol></li>
 </ol>
 <ul>
-<li>Use a combination of boxplots and simple linear models to check whether arrival time differs between the sexes of the parents and the food treatment. Do you see any issues with including these predictor variables in a model?</li>
+<li>Use a combination of boxplots and simple linear models to check
+whether arrival time differs between the sexes of the parents and the
+food treatment. Do you see any issues with including these predictor
+variables in a model?</li>
 </ul>
 </ol>
 </div>
 <div id="describe-how-you-would-model-the-data" class="section level3">
 <h3>Describe how you would model the data</h3>
-<p>The whole point of generating all of these visual diagnostic plots was to figure out how we would build a model identifying the factors influencing begging behaviour of nestling owls.</p>
+<p>The whole point of generating all of these visual diagnostic plots
+was to figure out how we would build a model identifying the factors
+influencing begging behaviour of nestling owls.</p>
 <ol style="list-style-type: decimal">
 <li><ol></li>
 </ol>

@@ -13,7 +13,7 @@
 
 <title>Practical 02 - Deterministic models, stochastic models, simple linear regression, and maximum likelihood</title>
 
-<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.19/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -60,6 +60,7 @@ if (window.hljs) {
 
 
 
+
 <link rel="stylesheet" href="tutorial.css" type="text/css" />
 
 
@@ -84,6 +85,9 @@ button.code-folding-btn:focus {
 }
 summary {
   display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
 }
 pre code {
   padding: 0;
@@ -141,11 +145,15 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.tab('show');
-
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
   // Navbar adjustments
   var navHeight = $(".navbar").first().height() + 15;
@@ -174,8 +182,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -183,16 +191,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -309,7 +310,7 @@ div.tocify {
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -328,7 +329,7 @@ div.tocify {
   <a href="Lectures.html">Lectures</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Practicals
      
     <span class="caret"></span>
@@ -367,7 +368,7 @@ div.tocify {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Datasets
      
     <span class="caret"></span>
@@ -382,7 +383,7 @@ div.tocify {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     R Help
      
     <span class="caret"></span>
@@ -408,21 +409,25 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Practical 02 - Deterministic models, stochastic models, simple linear regression, and maximum likelihood</h1>
+<h1 class="title toc-ignore">Practical 02 - Deterministic models,
+stochastic models, simple linear regression, and maximum likelihood</h1>
 
 </div>
 
 
-<p>This page was last updated on November 03, 2021.</p>
+<p>This page was last updated on January 16, 2023.</p>
 <hr />
 <div id="background" class="section level2">
 <h2>Background</h2>
 <p>In this Practical you will:</p>
 <ul>
 <li>Write R functions for simulating data</li>
-<li>Explore the concepts of deterministic and stochastic components of models.</li>
-<li>Explore the concept of error distributions and independent and identically distributed (IID) errors.</li>
-<li>Fit a simple linear regression model to simulated and empirical data.</li>
+<li>Explore the concepts of deterministic and stochastic components of
+models.</li>
+<li>Explore the concept of error distributions and independent and
+identically distributed (IID) errors.</li>
+<li>Fit a simple linear regression model to simulated and empirical
+data.</li>
 <li>Estimate a parameter via maximum log-likelihood estimation</li>
 <li>Estimate confidence intervals via log-likelihood profiles</li>
 </ul>
@@ -430,13 +435,29 @@ div.tocify {
 </div>
 <div id="deterministic-models" class="section level2">
 <h2>Deterministic models</h2>
-<p>Statistical models are typically comprised of a deterministic component, that describes the basic trend in a system, and a stochastic component that describes the system’s randomness.</p>
-<p>Let us suppose that we are interested in the relationship between body mass and age for some species, and our hypothesis is that mass is proportional to age. This verbal description of our hypothesis does not give us any clear way of actually testing our hypothesis. We are instead going to formalise this hypothesis according to a simple linear deterministic model:</p>
+<p>Statistical models are typically comprised of a deterministic
+component, that describes the basic trend in a system, and a stochastic
+component that describes the system’s randomness.</p>
+<p>Let us suppose that we are interested in the relationship between
+body mass and age for some species, and our hypothesis is that mass is
+proportional to age. This verbal description of our hypothesis does not
+give us any clear way of actually testing our hypothesis. We are instead
+going to formalise this hypothesis according to a simple linear
+deterministic model:</p>
 <center>
 <span class="math inline">\(mass_i = \beta_0 + age_i \beta_1\)</span>
 </center>
 <p></br></p>
-<p>The parameter <span class="math inline">\(\beta_0\)</span> describes the intercept of this model, and <span class="math inline">\(\beta_1\)</span> the slope. When an individual is born, it starts out with some mass, so the intercept is probably non-zero. Let’s say our intercept here is <span class="math inline">\(\beta_0 = 1\)</span>, meaning individuals at age 0 have a mass of 1kg. Let’s also say that we know for every unit of time the animal ages, the mass increases by 2kg (i.e., <span class="math inline">\(\beta_1 = 2\)</span>). We can then more formally express the deterministic relationship as:</p>
+<p>The parameter <span class="math inline">\(\beta_0\)</span> describes
+the intercept of this model, and <span
+class="math inline">\(\beta_1\)</span> the slope. When an individual is
+born, it starts out with some mass, so the intercept is probably
+non-zero. Let’s say our intercept here is <span
+class="math inline">\(\beta_0 = 1\)</span>, meaning individuals at age 0
+have a mass of 1kg. Let’s also say that we know for every unit of time
+the animal ages, the mass increases by 2kg (i.e., <span
+class="math inline">\(\beta_1 = 2\)</span>). We can then more formally
+express the deterministic relationship as:</p>
 <center>
 <span class="math inline">\(mass_i = 1 + age_i\times2\)</span>
 </center>
@@ -445,48 +466,95 @@ div.tocify {
 <li><ol></li>
 </ol>
 <ul>
-<li>Write an <code>R</code> function that expresses this relationship.</li>
-<li>Generate a vector of ages from 0 to 20 years, separated by 1 year.</li>
-<li>Use the deterministic model to predict the mass of animals of these ages.</li>
+<li>Write an <code>R</code> function that expresses this
+relationship.</li>
+<li>Generate a vector of ages from 0 to 20 years, separated by 1
+year.</li>
+<li>Use the deterministic model to predict the mass of animals of these
+ages.</li>
 <li>Plot the simulated data to inspect the results.</li>
-<li>Generate predictions for 20 animals all of age 5 and inspect the results.</li>
+<li>Generate predictions for 20 animals all of age 5 and inspect the
+results.</li>
 </ul>
-Note: The R Tips page on the course website contains information on simulation from models.
+Note: The R Tips page on the course website contains information on
+simulation from models.
 </ol>
-<p>This model is entirely deterministic. That means that all animals at age <span class="math inline">\(i\)</span> in our population will have the exact same mass. This is informative (we can say that at age 5, individuals are expected to have a mass of 11kg), but a mass of exactly 11kg, and not an atom more is also very unlikely in the real world. That’s where the stochastic component of a model comes in handy.</p>
+<p>This model is entirely deterministic. That means that all animals at
+age <span class="math inline">\(i\)</span> in our population will have
+the exact same mass. This is informative (we can say that at age 5,
+individuals are expected to have a mass of 11kg), but a mass of exactly
+11kg, and not an atom more is also very unlikely in the real world.
+That’s where the stochastic component of a model comes in handy.</p>
 <hr />
 </div>
 <div id="stochastic-models" class="section level2">
 <h2>Stochastic models</h2>
-<p>Stochastic models describe the randomness of a process. Simple linear regression describes stochasticity by assuming that observations <span class="math inline">\(age_i\)</span> are not purely deterministic, but rather that they are drawn from a normal distribution with a mean <span class="math inline">\(\mu_i\)</span> given by the deterministic model and some fixed variance <span class="math inline">\(\sigma^{2}\)</span>.</p>
+<p>Stochastic models describe the randomness of a process. Simple linear
+regression describes stochasticity by assuming that observations <span
+class="math inline">\(age_i\)</span> are not purely deterministic, but
+rather that they are drawn from a normal distribution with a mean <span
+class="math inline">\(\mu_i\)</span> given by the deterministic model
+and some fixed variance <span
+class="math inline">\(\sigma^{2}\)</span>.</p>
 <center>
-<span class="math inline">\(mass_i = \beta_0 + age_i \beta_1 + \varepsilon_i, \quad \quad\)</span> where <span class="math inline">\(\quad \varepsilon_i \sim \mathcal{N}(0,\,\sigma^{2})\)</span>
+<span class="math inline">\(mass_i = \beta_0 + age_i \beta_1 +
+\varepsilon_i, \quad \quad\)</span> where <span
+class="math inline">\(\quad \varepsilon_i \sim
+\mathcal{N}(0,\,\sigma^{2})\)</span>
 </center>
 <p></br></p>
-<p>Going back to our numbers from above, what we’re now saying is that all animals of age 5 will have a mass that’s Gaussian distributed around 11.</p>
+<p>Going back to our numbers from above, what we’re now saying is that
+all animals of age 5 will have a mass that’s Gaussian distributed around
+11.</p>
 <ol style="list-style-type: decimal">
 <li><ol></li>
 </ol>
 <ul>
-<li>Write a new function for our previous model that also includes a Gaussian distributed stochastic component with standard deviation of 2. Note: You will need to make use of the <code>rnorm()</code> function.</li>
-<li>Generate 60 uniformly distributed ages between 0 and 20. Note: You will need to make use of the <code>runif()</code> function.</li>
-<li>Use the stochastic model to predict the mass of these 60 animals.</li>
+<li>Write a new function for our previous model that also includes a
+Gaussian distributed stochastic component with standard deviation of 2.
+Note: You will need to make use of the <code>rnorm()</code>
+function.</li>
+<li>Generate 60 uniformly distributed ages between 0 and 20. Note: You
+will need to make use of the <code>runif()</code> function.</li>
+<li>Use the stochastic model to predict the mass of these 60
+animals.</li>
 <li>Plot the simulated data to inspect the results.</li>
 </ul>
-Note: The R Tips page on the course website contains information on simulation from distributions.
+Note: The R Tips page on the course website contains information on
+simulation from distributions.
 </ol>
-<p>Notice how there is now noise around the main trend. These simulated data now look more like what you would expect from real data if you went out and measured ages and masses.</p>
+<p>Notice how there is now noise around the main trend. These simulated
+data now look more like what you would expect from real data if you went
+out and measured ages and masses.</p>
 <hr />
 </div>
-<div id="independent-and-identically-distributed-iid-errors" class="section level2">
+<div id="independent-and-identically-distributed-iid-errors"
+class="section level2">
 <h2>Independent and identically distributed (IID) errors</h2>
-<p>Beyond making an assumption of normality on the errors, simple linear regression also assumes that the errors are Independent and Identically Distributed (IID)</p>
+<p>Beyond making an assumption of normality on the errors, simple linear
+regression also assumes that the errors are Independent and Identically
+Distributed (IID)</p>
 <center>
-<span class="math inline">\(\varepsilon_i \sim \mathcal{N}(0,\,\sigma^{2})\)</span>
+<span class="math inline">\(\varepsilon_i \sim
+\mathcal{N}(0,\,\sigma^{2})\)</span>
 </center>
 <p></br></p>
-<p>For our example, the identical part of IID means that the distribution of errors around each <span class="math inline">\(mass_i\)</span> is the same. In other words, <span class="math inline">\(\sigma^{2}\)</span> does not change with age and the error distribution for animals of age 2 is the same as the distribution of animals at age 3, which is the same as animals at age 4, and so on. The independent part means that there is no relationship among the errors. We will be discussing independence in greater detail in later lectures/practicals, but for now, let’s focus on what is meant by identically distributed errors.</p>
-<p>The first thing our model is saying, is that for any age <span class="math inline">\(i\)</span>, we can expect mass to be evenly distributed around the expected value. And our errors <span class="math inline">\(\varepsilon_i\)</span> to be evenly distributed around 0 (remember that <span class="math inline">\(\varepsilon_i = y_i - (\beta_0 + x_i \beta_1)\)</span>).</p>
+<p>For our example, the identical part of IID means that the
+distribution of errors around each <span
+class="math inline">\(mass_i\)</span> is the same. In other words, <span
+class="math inline">\(\sigma^{2}\)</span> does not change with age and
+the error distribution for animals of age 2 is the same as the
+distribution of animals at age 3, which is the same as animals at age 4,
+and so on. The independent part means that there is no relationship
+among the errors. We will be discussing independence in greater detail
+in later lectures/practicals, but for now, let’s focus on what is meant
+by identically distributed errors.</p>
+<p>The first thing our model is saying, is that for any age <span
+class="math inline">\(i\)</span>, we can expect mass to be evenly
+distributed around the expected value. And our errors <span
+class="math inline">\(\varepsilon_i\)</span> to be evenly distributed
+around 0 (remember that <span class="math inline">\(\varepsilon_i = y_i
+- (\beta_0 + x_i \beta_1)\)</span>).</p>
 <p></br></p>
 <ol style="list-style-type: decimal">
 <li><ol></li>
@@ -499,15 +567,21 @@ Note: The R Tips page on the course website contains information on simulation f
 <li>Use a histogram to inspect the distribution of errors.
 </ol></li>
 </ul>
-<p>The second thing our model is saying, is that for any age <span class="math inline">\(i\)</span>, we can expect the distribution of errors to be identical.</p>
+<p>The second thing our model is saying, is that for any age <span
+class="math inline">\(i\)</span>, we can expect the distribution of
+errors to be identical.</p>
 <ol style="list-style-type: decimal">
 <li><ol></li>
 </ol>
 <ul>
-<li>Quantify the errors on predictions for 1000 animals all of age 5.</li>
-<li>Quantify the errors on predictions for 1000 animals all of age 30.</li>
+<li>Quantify the errors on predictions for 1000 animals all of age
+5.</li>
+<li>Quantify the errors on predictions for 1000 animals all of age
+30.</li>
 <li>Calculate the means of these error distributions.</li>
-<li>Use histograms to inspect the results. Note: Use different colours for the two distributions. You can also use <code>add = TRUE</code> to overlay to plots.</li>
+<li>Use histograms to inspect the results. Note: Use different colours
+for the two distributions. You can also use <code>add = TRUE</code> to
+overlay to plots.</li>
 <li>Describe the results.
 </ol></li>
 </ul>
@@ -515,34 +589,49 @@ Note: The R Tips page on the course website contains information on simulation f
 </div>
 <div id="fitting-simple-linear-models-in-r" class="section level2">
 <h2>Fitting simple linear models in R</h2>
-<p>Simple linear regression models can be easily fit in <code>R</code> using the <code>lm()</code> function.</p>
+<p>Simple linear regression models can be easily fit in <code>R</code>
+using the <code>lm()</code> function.</p>
 <ol style="list-style-type: decimal">
 <li><ol></li>
 </ol>
 <ul>
 <li>Generate 60 uniformly distributed ages between 0 and 20.</li>
-<li>Use the stochastic model to predict the mass of these 60 animals.</li>
+<li>Use the stochastic model to predict the mass of these 60
+animals.</li>
 <li>Fit a linear regression using the <code>lm()</code> function.</li>
 <li>Use the <code>summary()</code> to inspect the results.</li>
-<li>Plot the data and the fitted regression line. Note: you can use the <code>abline()</code> function to easily plot the fitted model.</li>
-<li>use a histogram to plot the residuals for visual inspection. Note: use the <code>residuals()</code> function.
+<li>Plot the data and the fitted regression line. Note: you can use the
+<code>abline()</code> function to easily plot the fitted model.</li>
+<li>use a histogram to plot the residuals for visual inspection. Note:
+use the <code>residuals()</code> function.
 </ol></li>
 </ul>
-<p>Notice how the parameter estimates compare to the process that actually generated the data. Later we will work on interpreting and improving a model’s fit by diagnosing its residual structure.</p>
+<p>Notice how the parameter estimates compare to the process that
+actually generated the data. Later we will work on interpreting and
+improving a model’s fit by diagnosing its residual structure.</p>
 <ol style="list-style-type: decimal">
 <li><ol>
-Ecologists are often interested in understanding sexual size dimorphism (differences between male and female mass). Using a dataset of musteloid traits taken from a study by <a href="https://doi.org/10.1002/ece3.2480">Noonan et al. (2016)</a>, check for a linear relationship between male and female body mass. You will need to complete the following steps:</li>
+Ecologists are often interested in understanding sexual size dimorphism
+(differences between male and female mass). Using a dataset of musteloid
+traits taken from a study by <a
+href="https://doi.org/10.1002/ece3.2480">Noonan et al. (2016)</a>, check
+for a linear relationship between male and female body mass. You will
+need to complete the following steps:</li>
 </ol>
 <ul>
-<li>Import the dataset and check that the import proceeded as expected.</li>
-<li>Visually inspect the relationship between male and female body mass.</li>
+<li>Import the dataset and check that the import proceeded as
+expected.</li>
+<li>Visually inspect the relationship between male and female body
+mass.</li>
 <li>Calculate the regression parameters by matrix multiplication.</li>
-<li>Fit a linear regression to the data using the <code>lm()</code> function.</li>
+<li>Fit a linear regression to the data using the <code>lm()</code>
+function.</li>
 <li>Use the <code>summary()</code> to inspect the results.</li>
 <li>Plot the data and the fitted regression line.</li>
 <li>Use a histogram to plot the residuals for visual inspection.</li>
 </ul>
-Note: These data contain missing entries. This is very common in practice. You will have to factor this into your workflow.
+Note: These data contain missing entries. This is very common in
+practice. You will have to factor this into your workflow.
 </ol>
 <hr />
 </div>
@@ -550,17 +639,37 @@ Note: These data contain missing entries. This is very common in practice. You w
 <h2>Maximum likelihood</h2>
 <ol style="list-style-type: decimal">
 <li><ol>
-A tiny species of parasitic wasp, <em>Trichogramma brassicae</em>, rides on female cabbage white butterflies, <em>Pieris brassicae</em>. When a butterfly lays her eggs, the wasp climbs off of the female and parasitizes the freshly laid eggs. <a href="https://www.nature.com/articles/433704a">Fatouros et al. (2005)</a> carried out trials to determine whether the wasps can distinguish mated female butterflies from unmated females (recently mated females are more likely to lay eggs than unmated females and would make a better choice ride/follow around). In each trial a single wasp was presented with two female cabbage white butterflies, one an unmated female, the other recently mated, and the choice of which butterly to ride was recorded. The question is, are the wasps making an informed decision, or are the randomly selecting butterflies.</li>
+A tiny species of parasitic wasp, <em>Trichogramma brassicae</em>, rides
+on female cabbage white butterflies, <em>Pieris brassicae</em>. When a
+butterfly lays her eggs, the wasp climbs off of the female and
+parasitizes the freshly laid eggs. <a
+href="https://www.nature.com/articles/433704a">Fatouros et
+al. (2005)</a> carried out trials to determine whether the wasps can
+distinguish mated female butterflies from unmated females (recently
+mated females are more likely to lay eggs than unmated females and would
+make a better choice ride/follow around). In each trial a single wasp
+was presented with two female cabbage white butterflies, one an unmated
+female, the other recently mated, and the choice of which butterly to
+ride was recorded. The question is, are the wasps making an informed
+decision, or are the randomly selecting butterflies.</li>
 </ol>
-<p></br> Answer this by applying maximum likelihood estimation of the proportion of parasitic wasp individuals that choose the mated butterflies. You will need to cary out the following steps:</p>
+<p></br> Answer this by applying maximum likelihood estimation of the
+proportion of parasitic wasp individuals that choose the mated
+butterflies. You will need to cary out the following steps:</p>
 <ul>
-<li>Import and inspect the mate choice data. Note: use the <code>table()</code> function to create a frequency table.</li>
-<li>Calculate the likelihood and log-likelihood of random host choice. Note these are yes/no data, what distribution should you use? What parameter values would result in a random, 50/50 split?</li>
+<li>Import and inspect the mate choice data. Note: use the
+<code>table()</code> function to create a frequency table.</li>
+<li>Calculate the likelihood and log-likelihood of random host choice.
+Note these are yes/no data, what distribution should you use? What
+parameter values would result in a random, 50/50 split?</li>
 <li>Calculate the log-likelihood of a range of parameter values.</li>
 <li>Find the maximum log-likelihood estimate.</li>
 <li>Plot the log-likelihood curve.</li>
-<li>Calculate the likelihood-based 95% confidence interval. Note: We learned in the lecture that an approximate 95% confidence interval is within 1.92 of the maximum log-likelihood.</li>
-<li>What do the ML estimate and 95% confidence interval tell you about host choice? Is it random, or non-random?
+<li>Calculate the likelihood-based 95% confidence interval. Note: We
+learned in the lecture that an approximate 95% confidence interval is
+within 1.92 of the maximum log-likelihood.</li>
+<li>What do the ML estimate and 95% confidence interval tell you about
+host choice? Is it random, or non-random?
 </ol></li>
 </ul>
 </div>

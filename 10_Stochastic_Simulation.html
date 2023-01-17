@@ -13,7 +13,7 @@
 
 <title>Practical 10 - Stochastic Simulation, Power Analysis, and Non-Linear Models</title>
 
-<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.19/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -60,6 +60,7 @@ if (window.hljs) {
 
 
 
+
 <link rel="stylesheet" href="tutorial.css" type="text/css" />
 
 
@@ -84,6 +85,9 @@ button.code-folding-btn:focus {
 }
 summary {
   display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
 }
 pre code {
   padding: 0;
@@ -141,11 +145,15 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.tab('show');
-
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
   // Navbar adjustments
   var navHeight = $(".navbar").first().height() + 15;
@@ -174,8 +182,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -183,16 +191,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -309,7 +310,7 @@ div.tocify {
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -328,7 +329,7 @@ div.tocify {
   <a href="Lectures.html">Lectures</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Practicals
      
     <span class="caret"></span>
@@ -367,7 +368,7 @@ div.tocify {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Datasets
      
     <span class="caret"></span>
@@ -382,7 +383,7 @@ div.tocify {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     R Help
      
     <span class="caret"></span>
@@ -408,12 +409,13 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Practical 10 - Stochastic Simulation, Power Analysis, and Non-Linear Models</h1>
+<h1 class="title toc-ignore">Practical 10 - Stochastic Simulation, Power
+Analysis, and Non-Linear Models</h1>
 
 </div>
 
 
-<p>This page was last updated on November 03, 2021.</p>
+<p>This page was last updated on January 16, 2023.</p>
 <script type="text/x-mathjax-config">
 MathJax.Hub.Register.StartupHook('TeX Jax Ready', function () {
 MathJax.InputJax.TeX.prefilterHooks.Add(function (data) {
@@ -422,68 +424,188 @@ data.math = data.math.replace(/^% <!\[CDATA\[/, '').replace(/%\]\]>$/, '');
 });
 </script>
 <hr />
-<div id="stochastic-simulation-and-the-monte-carlo-method" class="section level2">
+<div id="stochastic-simulation-and-the-monte-carlo-method"
+class="section level2">
 <h2>Stochastic Simulation and the Monte Carlo Method</h2>
-<p>Everything we’ve been doing so far has been focused on fitting/selecting models and estimating their parameters from a given dataset. This can been seen as <em>‘inverse’</em> modelling. In other words, we have the data in hand and we backtrack to try and identify the deterministic and stochastic processes that generated it. Simulation, on the other hand, can be seen as <em>`forward’</em> modelling. With forward modelling we don’t start with data, but with a model. If we pick and/or build a model to describe our system, our goal is to explore what patterns we might expect to see in the data. Because the computer code required to generate simulations are easier to learn than high-level mathematics, simulation studies can put practicing biologists on equal footing with even the most experienced mathematicians. This makes simulations powerful tools for understanding biological systems, generalising the results of our analyses, and making predictions.</p>
-<p>If we can write down a model that describes our system, or are prepared to make assumptions about what that model might look like, then we can generate simulated data. These simulated data can help us understand how a system might be expected to respond to conditions that we can not/couldn’t measure, or observe what patterns we would expect to see. If we chain together simulations from multiple models we can generate incredibly rich and complex descriptions of biological systems. There is an important caveat that comes with designing simulation studies however. It is critical to remember that the more moving pieces a simulation setup has, the harder the outcomes can be to understand (and this is even more true when weaving together non-linear models). Consequently, simple, carefully tailored simulations are often more informative than complex simulations that we can’t keep track of.</p>
-<p>‘Stochastic’ simulation is a special type of simulation that relies on computational algorithms to randomly sample values from probability distributions to emulate a system’s stochasticity (e.g., <code>rnorm()</code>, <code>runif()</code>, <code>rbinom()</code> etc.). Stochastic simulation is also referred to regularly as Monte Carlo sampling. In this practical will focus on how to use stochastic simulation as a tool for understanding and predicting biological systems.</p>
+<p>Everything we’ve been doing so far has been focused on
+fitting/selecting models and estimating their parameters from a given
+dataset. This can been seen as <em>‘inverse’</em> modelling. In other
+words, we have the data in hand and we backtrack to try and identify the
+deterministic and stochastic processes that generated it. Simulation, on
+the other hand, can be seen as <em>`forward’</em> modelling. With
+forward modelling we don’t start with data, but with a model. If we pick
+and/or build a model to describe our system, our goal is to explore what
+patterns we might expect to see in the data. Because the computer code
+required to generate simulations are easier to learn than high-level
+mathematics, simulation studies can put practicing biologists on equal
+footing with even the most experienced mathematicians. This makes
+simulations powerful tools for understanding biological systems,
+generalising the results of our analyses, and making predictions.</p>
+<p>If we can write down a model that describes our system, or are
+prepared to make assumptions about what that model might look like, then
+we can generate simulated data. These simulated data can help us
+understand how a system might be expected to respond to conditions that
+we can not/couldn’t measure, or observe what patterns we would expect to
+see. If we chain together simulations from multiple models we can
+generate incredibly rich and complex descriptions of biological systems.
+There is an important caveat that comes with designing simulation
+studies however. It is critical to remember that the more moving pieces
+a simulation setup has, the harder the outcomes can be to understand
+(and this is even more true when weaving together non-linear models).
+Consequently, simple, carefully tailored simulations are often more
+informative than complex simulations that we can’t keep track of.</p>
+<p>‘Stochastic’ simulation is a special type of simulation that relies
+on computational algorithms to randomly sample values from probability
+distributions to emulate a system’s stochasticity (e.g.,
+<code>rnorm()</code>, <code>runif()</code>, <code>rbinom()</code> etc.).
+Stochastic simulation is also referred to regularly as Monte Carlo
+sampling. In this practical will focus on how to use stochastic
+simulation as a tool for understanding and predicting biological
+systems.</p>
 <p>Biologists typically use simulations for two main tasks:</p>
 <ul>
 <li>Exploring patterns that would emerge from a given model(s); or</li>
 <li>Calculating power and/or planning future studies.</li>
 </ul>
 <p>We will explore both of these concepts in this practical.</p>
-<div id="exploring-patterns-that-would-emerge-from-a-fitted-model" class="section level3">
+<div id="exploring-patterns-that-would-emerge-from-a-fitted-model"
+class="section level3">
 <h3>Exploring Patterns That Would Emerge From a Fitted Model</h3>
-<p>We’re going to work with a dataset collected by Vicente et al. (2006). They analyzed the distribution of tuberculosis-like lesions in wild boar (<em>Sus scrofa</em>) for potential importance of persistence of tuberculosis in south central Spain. In class we saw that there was a positive relationship between body size and Tb prevalence. The pieces required to fit a logistic regression to these data are:</p>
+<p>We’re going to work with a dataset collected by Vicente et
+al. (2006). They analyzed the distribution of tuberculosis-like lesions
+in wild boar (<em>Sus scrofa</em>) for potential importance of
+persistence of tuberculosis in south central Spain. In class we saw that
+there was a positive relationship between body size and Tb prevalence.
+The pieces required to fit a logistic regression to these data are:</p>
 </br>
 <center>
-<p><span class="math inline">\(Y_i \sim Binomial(1, \pi_i) \quad \quad E(Y_i) = \pi_i \quad \mathrm{and} \quad var(Y_i) = \pi_i \times(1-\pi_i)\)</span></p>
+<p><span class="math inline">\(Y_i \sim Binomial(1, \pi_i) \quad \quad
+E(Y_i) = \pi_i \quad \mathrm{and} \quad var(Y_i) = \pi_i
+\times(1-\pi_i)\)</span></p>
 <p></br></p>
-<span class="math inline">\(\pi_i = \frac{e^{\beta_0 + \beta_1 \times \mathrm{Length}}} {1 + e^{\beta_0 + \beta_1 \times \mathrm{Length}}}\)</span>
+<span class="math inline">\(\pi_i = \frac{e^{\beta_0 + \beta_1 \times
+\mathrm{Length}}} {1 + e^{\beta_0 + \beta_1 \times
+\mathrm{Length}}}\)</span>
 </center>
 <p></br></p>
-<p>We’re going to pair this model with stochastic simulations to get an idea of what proportion of individuals in a population might be infected depending on the mean body size of the population. We will also look at how we might use the information from the model to inform management decisions to control Tb in this population.</p>
+<p>We’re going to pair this model with stochastic simulations to get an
+idea of what proportion of individuals in a population might be infected
+depending on the mean body size of the population. We will also look at
+how we might use the information from the model to inform management
+decisions to control Tb in this population.</p>
 <ol style="list-style-type: decimal">
 <li><ol></li>
 </ol>
 <ul>
-<li>Import the wild boar dataset and remove any <code>NA</code> values.</li>
-<li>Fit a logistic regression predicting Tb status from body length.</li>
+<li>Import the wild boar dataset and remove any <code>NA</code>
+values.</li>
+<li>Fit a logistic regression predicting Tb status from body
+length.</li>
 <li>Plot the data and the fitted regression line.</li>
-<li>Use the parameter values from the fitted model to build a function for predicting Tb status. This function should have both deterministic and stochastic components.</li>
-<li>If we assume that the body size of animals in the population is normally distributed with <span class="math inline">\(\mu\)</span> = 120 cm and <span class="math inline">\(\sigma\)</span> = 20, use a simulation to find out what proportion of a population of 1000 animals can be expected to be Tb positive? What if the mean body size in the population was 140 cm instead?
+<li>Use the parameter values from the fitted model to build a function
+for predicting Tb status. This function should have both deterministic
+and stochastic components.</li>
+<li>If we assume that the body size of animals in the population is
+normally distributed with <span class="math inline">\(\mu\)</span> = 120
+cm and <span class="math inline">\(\sigma\)</span> = 20, use a
+simulation to find out what proportion of a population of 1000 animals
+can be expected to be Tb positive? What if the mean body size in the
+population was 140 cm instead?
 </ol></li>
 </ul>
-<p>Let’s say that to control Tb in a population of wild boars consisting of 1,000 individuals we are going to undertake an antibiotic treatment program. Testing wild animals for Tb can be difficult, expensive and unreliable, and there are insufficient funds to treat the entire population. That means we can’t test each individual and only threat the Tb positive animals. Because Tb infection status correlates positively with body size, a reasonable recommendation would be to treat only animals above a certain size threshold. But what should that threshold be? One way to answer that question is via simulations.</p>
-<p><strong>Note:</strong> In reality, Tb is very infectious, takes a long time to treat with regular antibiotic treatments, and vaccines are not always effective. Tb is therefore usually controlled by culling populations to prevent further spread. This is a simulation though, so we can be kind to our simulated boar.</p>
+<p>Let’s say that to control Tb in a population of wild boars consisting
+of 1,000 individuals we are going to undertake an antibiotic treatment
+program. Testing wild animals for Tb can be difficult, expensive and
+unreliable, and there are insufficient funds to treat the entire
+population. That means we can’t test each individual and only threat the
+Tb positive animals. Because Tb infection status correlates positively
+with body size, a reasonable recommendation would be to treat only
+animals above a certain size threshold. But what should that threshold
+be? One way to answer that question is via simulations.</p>
+<p><strong>Note:</strong> In reality, Tb is very infectious, takes a
+long time to treat with regular antibiotic treatments, and vaccines are
+not always effective. Tb is therefore usually controlled by culling
+populations to prevent further spread. This is a simulation though, so
+we can be kind to our simulated boar.</p>
 <ol style="list-style-type: decimal">
 <li><ol></li>
 </ol>
 <ul>
-<li>Use simulations to explore how the proportion of Tb positive individuals in the population changes depending on the size threshold for treatment. Assume all animals above the size threshold get treated and can no longer be Tb positive, and that the body size of animals in the population is normally distributed with <span class="math inline">\(\mu\)</span> = 120cm and <span class="math inline">\(\sigma\)</span> = 20. Test size thresholds ranging between 80 cm and 160 cm.</li>
-<li>Visualise the results of your simulation by plotting the proportion of Tb positive animals in the population against the treatment size threshold.</li>
-<li>Based on these simulations, what is the size threshold needed to keep the proportion of infected individuals below 10% of the population?
+<li>Use simulations to explore how the proportion of Tb positive
+individuals in the population changes depending on the size threshold
+for treatment. Assume all animals above the size threshold get treated
+and can no longer be Tb positive, and that the body size of animals in
+the population is normally distributed with <span
+class="math inline">\(\mu\)</span> = 120cm and <span
+class="math inline">\(\sigma\)</span> = 20. Test size thresholds ranging
+between 80 cm and 160 cm.</li>
+<li>Visualise the results of your simulation by plotting the proportion
+of Tb positive animals in the population against the treatment size
+threshold.</li>
+<li>Based on these simulations, what is the size threshold needed to
+keep the proportion of infected individuals below 10% of the population?
 </ol></li>
 </ul>
 </div>
 <div id="simulation-based-power-analysis" class="section level3">
 <h3>Simulation Based Power Analysis</h3>
-<p>Power analysis, in a traditional sense, means identifying the minimum sample size needed to detect the presence of a real effect if one is present. It is traditionally associated with design based inference and pairwise hypothesis testing (ANOVAs, t-tests, etc.). In model based inference each parameter has it’s own effect, so the concept translates, but the tools required are different. Power analysis in our context involves a special kind of simulation study aimed at exploring how much data you would need in order to get reasonably accurate estimates of your parameters, detect significance of parameters with true effects, and/or detect differences between groups.</p>
-<p>We will explore power analysis for a multiple linear regression model using the data that were collected by <a href="https://doi.org/10.1371/journal.pone.0089437.g003">Ismail et al.</a> to explore the influence of forest degradation on the recruitment of <em>Dysoxylum malabaricum</em>. As we saw in Practical 03, <em>D. malabaricum</em> is a large canopy tree species found in highly fragmented forest patches within a complex agro-forest landscape of the Western Ghats biodiversity hot spot, South India. The measures of degradation include:</p>
+<p>Power analysis, in a traditional sense, means identifying the minimum
+sample size needed to detect the presence of a real effect if one is
+present. It is traditionally associated with design based inference and
+pairwise hypothesis testing (ANOVAs, t-tests, etc.). In model based
+inference each parameter has it’s own effect, so the concept translates,
+but the tools required are different. Power analysis in our context
+involves a special kind of simulation study aimed at exploring how much
+data you would need in order to get reasonably accurate estimates of
+your parameters, detect significance of parameters with true effects,
+and/or detect differences between groups.</p>
+<p>We will explore power analysis for a multiple linear regression model
+using the data that were collected by <a
+href="https://doi.org/10.1371/journal.pone.0089437.g003">Ismail et
+al.</a> to explore the influence of forest degradation on the
+recruitment of <em>Dysoxylum malabaricum</em>. As we saw in Practical
+03, <em>D. malabaricum</em> is a large canopy tree species found in
+highly fragmented forest patches within a complex agro-forest landscape
+of the Western Ghats biodiversity hot spot, South India. The measures of
+degradation include:</p>
 <ul>
 <li><code>Canopy_closure</code>: The percentage of closed canopy.</li>
-<li><code>Cv_juvenile_density</code>: The density of <em>Clerodendrum viscosum</em>, an early successional light demanding shrub that establishes itself well in degraded forests.</li>
-<li><code>Termite_nest_density</code>: The number of arboreal termite nests attached to branches and trees, which has been shown to be an effective indicator of forest disturbance, because termites are sensitive to forest disturbance and to canopy loss.</li>
+<li><code>Cv_juvenile_density</code>: The density of <em>Clerodendrum
+viscosum</em>, an early successional light demanding shrub that
+establishes itself well in degraded forests.</li>
+<li><code>Termite_nest_density</code>: The number of arboreal termite
+nests attached to branches and trees, which has been shown to be an
+effective indicator of forest disturbance, because termites are
+sensitive to forest disturbance and to canopy loss.</li>
 </ul>
-<p>Ismail et al. collected data on the densities of seedlings along with indicators of degradation in 17 forest patches, so it is possible that the small sample size would limit the power of detecting significant effects in these data. But what was the power of the model fit to these data? To answer that question we will rely on an approach that involves simulating data from an empirically defined model to re-create the study <em>post hoc</em>. This is termed ‘empirically guided power analysis’. With this type of approach, instead of defining a model prior to collecting data as we saw in the lectures, we assume that the fitted model is true and are interested in the power of our fitted model given our empirical sample size. To test the power in this context, we use the fitted model and random number generation to simulate data that look like the empirical data, re-fit a model to the simulated data, and look at whether the parameters are identified as being significant or not. We then repeat this process a sufficient number of times in order to allow us to quantify the power for each of our parameters.</p>
+<p>Ismail et al. collected data on the densities of seedlings along with
+indicators of degradation in 17 forest patches, so it is possible that
+the small sample size would limit the power of detecting significant
+effects in these data. But what was the power of the model fit to these
+data? To answer that question we will rely on an approach that involves
+simulating data from an empirically defined model to re-create the study
+<em>post hoc</em>. This is termed ‘empirically guided power analysis’.
+With this type of approach, instead of defining a model prior to
+collecting data as we saw in the lectures, we assume that the fitted
+model is true and are interested in the power of our fitted model given
+our empirical sample size. To test the power in this context, we use the
+fitted model and random number generation to simulate data that look
+like the empirical data, re-fit a model to the simulated data, and look
+at whether the parameters are identified as being significant or not. We
+then repeat this process a sufficient number of times in order to allow
+us to quantify the power for each of our parameters.</p>
 <ol style="list-style-type: decimal">
 <li><ol></li>
 </ol>
 <ul>
-<li>Write the pseudo-code for how you would expect to test the power of detecting the effects of <code>Canopy_closure</code>, <code>Cv_juvenile_density</code>, and <code>Termite_nest_density</code> on <code>Dm_seedling_density</code> from the seedling dataset. Note: use 1000 replicates to estimate the power.</li>
+<li>Write the pseudo-code for how you would expect to test the power of
+detecting the effects of <code>Canopy_closure</code>,
+<code>Cv_juvenile_density</code>, and <code>Termite_nest_density</code>
+on <code>Dm_seedling_density</code> from the seedling dataset. Note: use
+1000 replicates to estimate the power.</li>
 <li>Cary out the power analysis.</li>
-<li>Do you have equal confidence in your ability to detect an effect for all of the parameters? Remember that a reasonable power is 0.8.
+<li>Do you have equal confidence in your ability to detect an effect for
+all of the parameters? Remember that a reasonable power is 0.8.
 </ol></li>
 </ul>
 <hr />
@@ -491,14 +613,31 @@ data.math = data.math.replace(/^% <!\[CDATA\[/, '').replace(/%\]\]>$/, '');
 </div>
 <div id="fitting-non-linear-models" class="section level2">
 <h2>Fitting Non-Linear Models</h2>
-<p>All of the models we’ve been working with so far are categorised as `linear’ deterministic functions. We say linear not because of the shape of the relationship, but because our regression parameters, <span class="math inline">\(\beta_n\)</span>, are linear combinations of one another.</p>
+<p>All of the models we’ve been working with so far are categorised as
+`linear’ deterministic functions. We say linear not because of the shape
+of the relationship, but because our regression parameters, <span
+class="math inline">\(\beta_n\)</span>, are linear combinations of one
+another.</p>
 </br>
 <center>
-<span class="math inline">\(\mu = \beta_0 + \beta_1x_{1} + \beta_2x_{2}\)</span>
+<span class="math inline">\(\mu = \beta_0 + \beta_1x_{1} +
+\beta_2x_{2}\)</span>
 </center>
 <p></br></p>
-<p>Even if we add higher order polynomial terms, or fit GLMs with link functions that produce non-linear trends, the regression parameters still combine linearly. Biological systems are not always linear, and it is important to become familiar with a broad range of deterministic functions. Here we will learn how to fit non-linear models to data in <code>R</code>.</p>
-<p>In terms of the computer code required, fitting non-linear models in <code>R</code> is only slightly more challenging than fitting linear regressions. The <code>nls()</code> function allows fitting of non-linear relationships between a response variable and one or more explanatory variables using non-linear least squares. To learn how to do this we will use records of individual deers’ jaw bone lengths and their age from the R Book by Crawley. This dataset is comprised of two variables:</p>
+<p>Even if we add higher order polynomial terms, or fit GLMs with link
+functions that produce non-linear trends, the regression parameters
+still combine linearly. Biological systems are not always linear, and it
+is important to become familiar with a broad range of deterministic
+functions. Here we will learn how to fit non-linear models to data in
+<code>R</code>.</p>
+<p>In terms of the computer code required, fitting non-linear models in
+<code>R</code> is only slightly more challenging than fitting linear
+regressions. The <code>nls()</code> function allows fitting of
+non-linear relationships between a response variable and one or more
+explanatory variables using non-linear least squares. To learn how to do
+this we will use records of individual deers’ jaw bone lengths and their
+age from the R Book by Crawley. This dataset is comprised of two
+variables:</p>
 <ul>
 <li><code>age</code>: The animal’s age.</li>
 <li><code>bone</code>: The length of the jaw bone.</li>
@@ -507,44 +646,85 @@ data.math = data.math.replace(/^% <!\[CDATA\[/, '').replace(/%\]\]>$/, '');
 <li><ol></li>
 </ol>
 <ul>
-<li>Import the jaw_bone.csv dataset and inspect the data by creating a scatter plot depicting jaw bone length as a function of age.</li>
+<li>Import the jaw_bone.csv dataset and inspect the data by creating a
+scatter plot depicting jaw bone length as a function of age.</li>
 <li>Describe the relationship between deer jaw bone length and age.</li>
-<li>Fit a linear regression model predicting <code>bone</code> from <code>age</code>, using the <code>gls</code> function. Fit the model using maximum likelihood.</li>
-<li>Inspect the summary overview of the full model and plot the residuals against the fitted values. Does this fit look reasonable?
+<li>Fit a linear regression model predicting <code>bone</code> from
+<code>age</code>, using the <code>gls</code> function. Fit the model
+using maximum likelihood.</li>
+<li>Inspect the summary overview of the full model and plot the
+residuals against the fitted values. Does this fit look reasonable?
 </ol></li>
 </ul>
 <div id="polynomial-functions" class="section level3">
 <h3>Polynomial Functions</h3>
-<p>Polynomial functions have the general form <span class="math inline">\(y = \sum _{i=1}^{n} \beta_ix^i\)</span>. For instance: </br></p>
+<p>Polynomial functions have the general form <span
+class="math inline">\(y = \sum _{i=1}^{n} \beta_ix^i\)</span>. For
+instance: </br></p>
 <ul>
-<li><p><strong>Linear</strong>: <span class="math inline">\(f(x) = \beta_0 + \beta_1x\)</span></p></li>
-<li><p><strong>Quadratic</strong>: <span class="math inline">\(f(x) = \beta_0 + \beta_1x+ \beta_2x^2\)</span></p></li>
-<li><p><strong>Cubic</strong>: <span class="math inline">\(f(x) = \beta_0 + \beta_1x+ \beta_2x^2+ \beta_3x^3\)</span></p></li>
+<li><p><strong>Linear</strong>: <span class="math inline">\(f(x) =
+\beta_0 + \beta_1x\)</span></p></li>
+<li><p><strong>Quadratic</strong>: <span class="math inline">\(f(x) =
+\beta_0 + \beta_1x+ \beta_2x^2\)</span></p></li>
+<li><p><strong>Cubic</strong>: <span class="math inline">\(f(x) =
+\beta_0 + \beta_1x+ \beta_2x^2+ \beta_3x^3\)</span></p></li>
 <li><p>and so on… </br></p></li>
 </ul>
-<p>Polynomials benefit from being easy to understand, easy to reduce, easy to extend to higher orders, and can fit arbitrarily complex data. Before we attempting fitting a non-linear model to these data, it’s worth checking to see if a polynomial model would better fit our data as compared to the linear model above. Again, it’s important to note that polynomial deterministic functions still take the same general form of the linear model we just fit, despite the fact that the relationship is not a straight line.</p>
+<p>Polynomials benefit from being easy to understand, easy to reduce,
+easy to extend to higher orders, and can fit arbitrarily complex data.
+Before we attempting fitting a non-linear model to these data, it’s
+worth checking to see if a polynomial model would better fit our data as
+compared to the linear model above. Again, it’s important to note that
+polynomial deterministic functions still take the same general form of
+the linear model we just fit, despite the fact that the relationship is
+not a straight line.</p>
 <ol style="list-style-type: decimal">
 <li><ol></li>
 </ol>
 <ul>
-<li>Fit a second order polynomial (i.e., quadratic) regression model predicting <code>bone</code> from <code>age</code> and <code>I(age^2)</code>, using the <code>gls</code>. Fit the model using maximum likelihood.</li>
-<li>Fit a third order polynomial (i.e., cubic) regression model predicting <code>bone</code> from from <code>age</code>, <code>I(age^2)</code>, and <code>I(age^3)</code>, using the <code>gls</code> function. Fit the model using maximum likelihood.</li>
-<li>Plot the data and the fitted polynomial regression lines. Do these fits look better than a linear model?</li>
-<li>Plot the data and the fitted polynomial regression lines again, but this time ensure that the ages used to generate the predicted values range from the minimum observed age to 100 (i.e., extrapolate beyond the sampled values). Make sure the axis limits extend far enough to see the how the fitted models do at predicting jaw bone size beyond the observed ages. Do these fits still look like good options?
+<li>Fit a second order polynomial (i.e., quadratic) regression model
+predicting <code>bone</code> from <code>age</code> and
+<code>I(age^2)</code>, using the <code>gls</code>. Fit the model using
+maximum likelihood.</li>
+<li>Fit a third order polynomial (i.e., cubic) regression model
+predicting <code>bone</code> from from <code>age</code>,
+<code>I(age^2)</code>, and <code>I(age^3)</code>, using the
+<code>gls</code> function. Fit the model using maximum likelihood.</li>
+<li>Plot the data and the fitted polynomial regression lines. Do these
+fits look better than a linear model?</li>
+<li>Plot the data and the fitted polynomial regression lines again, but
+this time ensure that the ages used to generate the predicted values
+range from the minimum observed age to 100 (i.e., extrapolate beyond the
+sampled values). Make sure the axis limits extend far enough to see the
+how the fitted models do at predicting jaw bone size beyond the observed
+ages. Do these fits still look like good options?
 </ol></li>
 </ul>
 </div>
 <div id="non-linear-functions" class="section level3">
 <h3>Non-linear functions</h3>
-<p>As we just saw, a challenge of working with higher order polynomial functions is that they do not level off as <span class="math inline">\(X \to \infty~\mathrm{or}~-\infty\)</span>. As a result, extrapolations are often very unrealistic (would you expect a deer’s jaw size to shrink to 0 or grow exponentially as it ages?). Consequently, higher order polynomials can be unstable and difficult to interpret. We could try piecewise polynomials, but really what we need here is a non-linear model with asymptotic behaviour.</p>
-<p>A good option for these data would be a Michaelis-Menten function.</p>
+<p>As we just saw, a challenge of working with higher order polynomial
+functions is that they do not level off as <span class="math inline">\(X
+\to \infty~\mathrm{or}~-\infty\)</span>. As a result, extrapolations are
+often very unrealistic (would you expect a deer’s jaw size to shrink to
+0 or grow exponentially as it ages?). Consequently, higher order
+polynomials can be unstable and difficult to interpret. We could try
+piecewise polynomials, but really what we need here is a non-linear
+model with asymptotic behaviour.</p>
+<p>A good option for these data would be a Michaelis-Menten
+function.</p>
 <ol style="list-style-type: decimal">
 <li><ol></li>
 </ol>
 <ul>
-<li>Fit a Michaelis-Menten model to the data using the <code>nls()</code> function. Remember to provide reasonable starting guesstimates of the parameter values.</li>
-<li>Re-create the same two plots from the previous exercise, but this time overlay the fitted Michaelis-Menten model. Which of these models do you expect to make more accurate predictions?</li>
-<li>Use AIC based model selection to find out which of the four models we just fit is the most appropriate for this dataset?
+<li>Fit a Michaelis-Menten model to the data using the
+<code>nls()</code> function. Remember to provide reasonable starting
+guesstimates of the parameter values.</li>
+<li>Re-create the same two plots from the previous exercise, but this
+time overlay the fitted Michaelis-Menten model. Which of these models do
+you expect to make more accurate predictions?</li>
+<li>Use AIC based model selection to find out which of the four models
+we just fit is the most appropriate for this dataset?
 </ol></li>
 </ul>
 <hr />
@@ -552,10 +732,18 @@ data.math = data.math.replace(/^% <!\[CDATA\[/, '').replace(/%\]\]>$/, '');
 </div>
 <div id="references" class="section level2">
 <h2>References</h2>
-<p>Bolker, B. M. (2008). Ecological models and data in R. Princeton University Press.</p>
+<p>Bolker, B. M. (2008). Ecological models and data in R. Princeton
+University Press.</p>
 <p>Crawley, M. J. (2012). The R book. John Wiley &amp; Sons.</p>
-<p>Ismail, S. A., Ghazoul, J., Ravikanth, G., Kushalappa, C. G., Shaanker, R. U., &amp; Kettle, C. J. (2014). Forest trees in human modified landscapes: ecological and genetic drivers of recruitment failure in Dysoxylum malabaricum (Meliaceae). PLoS One, 9(2), e89437.</p>
-<p>Vicente, J., Höfle, U., Garrido, J. M., Fernández-De-Mera, I. G., Juste, R., Barral, M., &amp; Gortazar, C. (2006). Wild boar and red deer display high prevalences of tuberculosis-like lesions in Spain. Veterinary research, 37(1), 107-119.</p>
+<p>Ismail, S. A., Ghazoul, J., Ravikanth, G., Kushalappa, C. G.,
+Shaanker, R. U., &amp; Kettle, C. J. (2014). Forest trees in human
+modified landscapes: ecological and genetic drivers of recruitment
+failure in Dysoxylum malabaricum (Meliaceae). PLoS One, 9(2),
+e89437.</p>
+<p>Vicente, J., Höfle, U., Garrido, J. M., Fernández-De-Mera, I. G.,
+Juste, R., Barral, M., &amp; Gortazar, C. (2006). Wild boar and red deer
+display high prevalences of tuberculosis-like lesions in Spain.
+Veterinary research, 37(1), 107-119.</p>
 </div>
 
 

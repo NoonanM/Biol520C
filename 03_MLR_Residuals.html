@@ -13,7 +13,7 @@
 
 <title>Practical 03 - Multiple linear regression and model residuals</title>
 
-<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.19/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -60,6 +60,7 @@ if (window.hljs) {
 
 
 
+
 <link rel="stylesheet" href="tutorial.css" type="text/css" />
 
 
@@ -84,6 +85,9 @@ button.code-folding-btn:focus {
 }
 summary {
   display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
 }
 pre code {
   padding: 0;
@@ -141,11 +145,15 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.tab('show');
-
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
   // Navbar adjustments
   var navHeight = $(".navbar").first().height() + 15;
@@ -174,8 +182,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -183,16 +191,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -309,7 +310,7 @@ div.tocify {
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -328,7 +329,7 @@ div.tocify {
   <a href="Lectures.html">Lectures</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Practicals
      
     <span class="caret"></span>
@@ -367,7 +368,7 @@ div.tocify {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Datasets
      
     <span class="caret"></span>
@@ -382,7 +383,7 @@ div.tocify {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     R Help
      
     <span class="caret"></span>
@@ -408,42 +409,69 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Practical 03 - Multiple linear regression and model residuals</h1>
+<h1 class="title toc-ignore">Practical 03 - Multiple linear regression
+and model residuals</h1>
 
 </div>
 
 
-<p>This page was last updated on November 03, 2021.</p>
+<p>This page was last updated on January 16, 2023.</p>
 <hr />
 <div id="background" class="section level2">
 <h2>Background</h2>
 <p>In this Practical you will:</p>
 <ul>
 <li>Fit a multiple linear regression model to empirical data.</li>
-<li>Use simulated data to explore the difference between R-squared and adjusted R-squared</li>
-<li>Explore the residuals of models for data with heteroskedastic errors</li>
+<li>Use simulated data to explore the difference between R-squared and
+adjusted R-squared</li>
+<li>Explore the residuals of models for data with heteroskedastic
+errors</li>
 <li>Explore the residuals of models for data with lots of 0 entries</li>
 </ul>
 <hr />
 </div>
 <div id="multiple-linear-regression-model" class="section level2">
 <h2>Multiple linear regression model</h2>
-<p>For most biological systems there are typically multiple variables that influence outcomes. To account for this, we fit multiple-linear regression models to our data. Multiple linear regression models typically tale the form:</p>
+<p>For most biological systems there are typically multiple variables
+that influence outcomes. To account for this, we fit multiple-linear
+regression models to our data. Multiple linear regression models
+typically tale the form:</p>
 <center>
-<span class="math inline">\(y_i = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + ... \beta_m x_m + \varepsilon_i\)</span>
+<span class="math inline">\(y_i = \beta_0 + \beta_1 x_1 + \beta_2 x_2 +
+... \beta_m x_m + \varepsilon_i\)</span>
 </center>
 <p></br></p>
-<p>We will explore multiple linear regression using data that were collected by <a href="https://doi.org/10.1371/journal.pone.0089437.g003">Ismail et al.</a> to explore the influence of forest degradation on the recruitment of Dysoxylum malabaricum. D. malabaricum is a large canopy tree species found in highly fragmented forest patches within a complex agro-forest landscape of the Western Ghats biodiversity hot spot, South India. Ismail et al. collected data on the densities of seedlings along with indicators of degradation in 17 forest patches, to investigate whether measures of degradation correlated with seedling density. The measures of degradation include i) the percentage of closed canopy; ii) the density of Clerodendrum viscosum, an early successional light demanding shrub that establishes itself well in degraded forests; and iii) the number of arboreal termite nests attached to branches and trees, which has been shown to be an effective indicator of forest disturbance, because termites are sensitive to forest disturbance and to canopy loss.</p>
+<p>We will explore multiple linear regression using data that were
+collected by <a
+href="https://doi.org/10.1371/journal.pone.0089437.g003">Ismail et
+al.</a> to explore the influence of forest degradation on the
+recruitment of Dysoxylum malabaricum. D. malabaricum is a large canopy
+tree species found in highly fragmented forest patches within a complex
+agro-forest landscape of the Western Ghats biodiversity hot spot, South
+India. Ismail et al. collected data on the densities of seedlings along
+with indicators of degradation in 17 forest patches, to investigate
+whether measures of degradation correlated with seedling density. The
+measures of degradation include i) the percentage of closed canopy; ii)
+the density of Clerodendrum viscosum, an early successional light
+demanding shrub that establishes itself well in degraded forests; and
+iii) the number of arboreal termite nests attached to branches and
+trees, which has been shown to be an effective indicator of forest
+disturbance, because termites are sensitive to forest disturbance and to
+canopy loss.</p>
 <ol style="list-style-type: decimal">
 <li><ol></li>
 </ol>
 <ul>
 <li>Import the Seedling dataset.</li>
 <li>Check for any correlations between the 3 predictor variables.</li>
-<li>Fit a simple linear regression model to model the relationship between Dm seedling density and Canopy closure.</li>
-<li>Manually calculate the the ordinary residuals, then compare them to the output of the <code>residuals()</code> function.</li>
-<li>Plot the ordinary residuals against the fitted values, plot a histogram of the ordinary residuals, describe what you see.</li>
-<li>Fit a model to the Dm seedling density data that includes all predictor variables, what happened to the R-squared?</li>
+<li>Fit a simple linear regression model to model the relationship
+between Dm seedling density and Canopy closure.</li>
+<li>Manually calculate the the ordinary residuals, then compare them to
+the output of the <code>residuals()</code> function.</li>
+<li>Plot the ordinary residuals against the fitted values, plot a
+histogram of the ordinary residuals, describe what you see.</li>
+<li>Fit a model to the Dm seedling density data that includes all
+predictor variables, what happened to the R-squared?</li>
 <li>Plot and inspect the ordinary residuals, describe what you see.
 </ol></li>
 </ul>
@@ -453,39 +481,72 @@ div.tocify {
 <h2>R-squared and adjusted R-squared</h2>
 <div id="r-squared" class="section level3">
 <h3>R-squared</h3>
-<p>The residuals measure how accurately a fitted model predicts the observed data, and they are also used to calculate the coefficient of determination (i.e., R-squared). A model’s R-squared value is the proportion of the variance in the response variable that is predictable from the predictor(s). You will often see ecologists say things like our model explained 87% of the variance in our response variable. In most cases they are getting this number from a model’s R-squared.</p>
+<p>The residuals measure how accurately a fitted model predicts the
+observed data, and they are also used to calculate the coefficient of
+determination (i.e., R-squared). A model’s R-squared value is the
+proportion of the variance in the response variable that is predictable
+from the predictor(s). You will often see ecologists say things like our
+model explained 87% of the variance in our response variable. In most
+cases they are getting this number from a model’s R-squared.</p>
 <ol style="list-style-type: decimal">
 <li><ol></li>
 </ol>
 <ul>
-<li>Manually calculate the R-squared for the full model you just fit to the seedling data</li>
+<li>Manually calculate the R-squared for the full model you just fit to
+the seedling data</li>
 <li>Compare this value to the output of <code>summary()</code>
 </ol></li>
 </ul>
-<p>The problem with R-squared values is that they don’t take into account the number of parameters in the model. If we keep adding meaningless parameters to a model to soak up some of the residual variation, the R-square will necessarily decrease, which can trick us into thinking we have a better model.</p>
+<p>The problem with R-squared values is that they don’t take into
+account the number of parameters in the model. If we keep adding
+meaningless parameters to a model to soak up some of the residual
+variation, the R-square will necessarily decrease, which can trick us
+into thinking we have a better model.</p>
 <ol style="list-style-type: decimal">
 <li><ol></li>
 </ol>
 <ul>
 <li>Generate a dataset of 40 normally distributed y values</li>
-<li>Use a for loop to sequentially add 30 predictor variables, made up of Gaussian noise (i.e., noise variables simulated from a Gaussian distribution), to a model predicting y (i.e., model<span class="math inline">\(_1: y_i = \beta_0 + \beta_1x_1\)</span>; model<span class="math inline">\(_2: y_i = \beta_0 + \beta_1x_1 + \beta_2x_2\)</span>, etc…).</li>
-<li>Extract the R-squared values from these models, and plot them against the number of parameters. Describe the effect.
+<li>Use a for loop to sequentially add 30 predictor variables, made up
+of Gaussian noise (i.e., noise variables simulated from a Gaussian
+distribution), to a model predicting y (i.e., model<span
+class="math inline">\(_1: y_i = \beta_0 + \beta_1x_1\)</span>;
+model<span class="math inline">\(_2: y_i = \beta_0 + \beta_1x_1 +
+\beta_2x_2\)</span>, etc…).</li>
+<li>Extract the R-squared values from these models, and plot them
+against the number of parameters. Describe the effect.
 </ol></li>
 </ul>
 </div>
 <div id="adjusted-r-squared" class="section level3">
 <h3>Adjusted R-squared</h3>
-<p>When you add more parameters to the model, the r-squared converges to 1. This suggests that we have an increasingly better model, but we know for a fact that most of the parameters are just noise. The reason for this is that the R-squared value doesn’t factor in the number of parameters in the model. As a correction, the adjusted R-square is ‘adjusted’ based on the number of parameters in the model.</p>
+<p>When you add more parameters to the model, the r-squared converges to
+1. This suggests that we have an increasingly better model, but we know
+for a fact that most of the parameters are just noise. The reason for
+this is that the R-squared value doesn’t factor in the number of
+parameters in the model. As a correction, the adjusted R-square is
+‘adjusted’ based on the number of parameters in the model.</p>
 <ol style="list-style-type: decimal">
 <li><ol></li>
 </ol>
 <ul>
 <li>Generate a dataset of 40 normally distributed y values</li>
-<li>Again, use a for loop to sequentially add 30 predictor variables, made up of Gaussian noise (i.e., noise variables simulated from a Gaussian distribution), to a model predicting y (i.e., model<span class="math inline">\(_1: y_i = \beta_0 + \beta_1x_1\)</span>; model<span class="math inline">\(_2: y_i = \beta_0 + \beta_1x_1 + \beta_2x_2\)</span>, etc…).</li>
-<li>This time, extract the Adjusted R-squared values from these models, and plot them against the number of parameters. Describe what you see now.
+<li>Again, use a for loop to sequentially add 30 predictor variables,
+made up of Gaussian noise (i.e., noise variables simulated from a
+Gaussian distribution), to a model predicting y (i.e., model<span
+class="math inline">\(_1: y_i = \beta_0 + \beta_1x_1\)</span>;
+model<span class="math inline">\(_2: y_i = \beta_0 + \beta_1x_1 +
+\beta_2x_2\)</span>, etc…).</li>
+<li>This time, extract the Adjusted R-squared values from these models,
+and plot them against the number of parameters. Describe what you see
+now.
 </ol></li>
 </ul>
-<p>Now when you add more parameters to the model, the adjusted r-squared does not converge to 1. The reason for this is that the adjusted R-squared accounts for the number of parameters in the model. When reporting R-squared values for models with multiple parameters, it’s safer to report the adjusted R-squared.</p>
+<p>Now when you add more parameters to the model, the adjusted r-squared
+does not converge to 1. The reason for this is that the adjusted
+R-squared accounts for the number of parameters in the model. When
+reporting R-squared values for models with multiple parameters, it’s
+safer to report the adjusted R-squared.</p>
 <hr />
 </div>
 </div>
@@ -493,12 +554,16 @@ div.tocify {
 <h2>Heteroskedasticity</h2>
 <div id="problem" class="section level4">
 <h4>Problem</h4>
-<p>Sometime data will exhibit “heteroscedasticity”, meaning that the residuals (i.e., variance in the data that is not explained by the model) get larger as the prediction moves from small to large values of x (or from large to small).</p>
+<p>Sometime data will exhibit “heteroscedasticity”, meaning that the
+residuals (i.e., variance in the data that is not explained by the
+model) get larger as the prediction moves from small to large values of
+x (or from large to small).</p>
 <ol style="list-style-type: decimal">
 <li><ol></li>
 </ol>
 <ul>
-<li>Describe how the following function works to generate heteroskedastic data:</li>
+<li>Describe how the following function works to generate
+heteroskedastic data:</li>
 </ul>
 <pre class="r"><code>hetero &lt;- function(x) {
   B_0 &lt;- 0
@@ -509,30 +574,45 @@ div.tocify {
   y
 }</code></pre>
 <ul>
-<li>Use this function to generate 200 uniformly sampled data points between 1 and 50</li>
+<li>Use this function to generate 200 uniformly sampled data points
+between 1 and 50</li>
 <li>Plot the data and describe what you see</li>
 <li>Fit a model to these data</li>
-<li>Plot the residuals against the fitted values and describe the effect.
+<li>Plot the residuals against the fitted values and describe the
+effect.
 </ol></li>
 </ul>
 </div>
 <div id="implications" class="section level3">
 <h3>Implications</h3>
-<p>Heteroskedasticity on its own does not inherently create a problem (notice the parameter estimates), but it’s often an indication that your model can be improved. Importantly, if your sample size is small, and you can’t fix the issue, your p-values may be a bit be a bit higher or lower than they should be, so possibly a variable that is right on the border of significance may end up erroneously on the wrong side of that border. Your regression coefficients will still be generally accurate though. The accuracy of any of your predictions will also be off (either too narrow, or too wide), depending on where you fall along the x-axis.</p>
+<p>Heteroskedasticity on its own does not inherently create a problem
+(notice the parameter estimates), but it’s often an indication that your
+model can be improved. Importantly, if your sample size is small, and
+you can’t fix the issue, your p-values may be a bit be a bit higher or
+lower than they should be, so possibly a variable that is right on the
+border of significance may end up erroneously on the wrong side of that
+border. Your regression coefficients will still be generally accurate
+though. The accuracy of any of your predictions will also be off (either
+too narrow, or too wide), depending on where you fall along the
+x-axis.</p>
 </div>
 <div id="how-to-solve-the-issue" class="section level3">
 <h3>How to solve the issue</h3>
 <ul>
-<li><p>The most frequently successful solution is to transform a variable, however…</p></li>
-<li><p>More often than not, heteroscedasticity indicates that your model is missing a component</p></li>
+<li><p>The most frequently successful solution is to transform a
+variable, however…</p></li>
+<li><p>More often than not, heteroscedasticity indicates that your model
+is missing a component</p></li>
 </ul>
 <ol style="list-style-type: decimal">
 <li><ol></li>
 </ol>
 <ul>
-<li>Attempt to fix the heteroscedasticity in these data by square root transforming the y values.</li>
+<li>Attempt to fix the heteroscedasticity in these data by square root
+transforming the y values.</li>
 <li>Plot the transformed data and fitted regression line</li>
-<li>Plot the residuals against the fitted values and describe the effect of the transformation.
+<li>Plot the residuals against the fitted values and describe the effect
+of the transformation.
 </ol></li>
 </ul>
 <hr />
@@ -540,14 +620,24 @@ div.tocify {
 </div>
 <div id="zero-inflated-data" class="section level2">
 <h2>Zero inflated data</h2>
-<p>It’s very common in biology to have datasets with a lot of 0s. This can happen for any number of reasons, such as measurement error, detection issues, random stochasticty, and all of these combined. Such datasets contain more zeros than what one would expect to observe using the traditional model’s probability distribution, often termed zero-inflated data. This issue has a very clear effect on model residuals, and one we will explore here.</p>
+<p>It’s very common in biology to have datasets with a lot of 0s. This
+can happen for any number of reasons, such as measurement error,
+detection issues, random stochasticty, and all of these combined. Such
+datasets contain more zeros than what one would expect to observe using
+the traditional model’s probability distribution, often termed
+zero-inflated data. This issue has a very clear effect on model
+residuals, and one we will explore here.</p>
 <ol style="list-style-type: decimal">
 <li><ol></li>
 </ol>
 <ul>
-<li>Using the seedling dataset, generate 30 data points with values of 0 for Dm_seedling_density, but uniformly distributed across the range of all other predictors variables</li>
-<li>Combine these data with the original dataset, fit a model to the new data, and describe the fit.</li>
-<li>Plot the residuals against the fitted values and describe what you see.
+<li>Using the seedling dataset, generate 30 data points with values of 0
+for Dm_seedling_density, but uniformly distributed across the range of
+all other predictors variables</li>
+<li>Combine these data with the original dataset, fit a model to the new
+data, and describe the fit.</li>
+<li>Plot the residuals against the fitted values and describe what you
+see.
 </ol></li>
 </ul>
 </div>

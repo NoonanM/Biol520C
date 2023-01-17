@@ -13,7 +13,7 @@
 
 <title>Plotting</title>
 
-<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.19/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -60,6 +60,7 @@ if (window.hljs) {
 
 
 
+
 <link rel="stylesheet" href="tutorial.css" type="text/css" />
 
 
@@ -84,6 +85,9 @@ button.code-folding-btn:focus {
 }
 summary {
   display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
 }
 pre code {
   padding: 0;
@@ -141,11 +145,15 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.tab('show');
-
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
   // Navbar adjustments
   var navHeight = $(".navbar").first().height() + 15;
@@ -174,8 +182,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -183,16 +191,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -315,7 +316,7 @@ div.tocify {
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -334,7 +335,7 @@ div.tocify {
   <a href="Lectures.html">Lectures</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Practicals
      
     <span class="caret"></span>
@@ -373,7 +374,7 @@ div.tocify {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Datasets
      
     <span class="caret"></span>
@@ -388,7 +389,7 @@ div.tocify {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     R Help
      
     <span class="caret"></span>
@@ -419,49 +420,95 @@ div.tocify {
 </div>
 
 
-<p>This page was last updated on November 03, 2021.</p>
+<p>This page was last updated on January 16, 2023.</p>
 <hr />
 <div id="background" class="section level2">
 <h2>Background</h2>
-<p>Data visualization is an integral component of scientific progress. The capacity to efficiently explore data and communicate complex and often nuanced findings are essential skills for any scientist.</p>
-<p>“<em>Most of us need to listen to the music to understand how beautiful it is. But often that’s how we present statistics: we just show the notes, we don’t play the music.</em>” - <a href="https://www.ted.com/talks/hans_rosling_the_best_stats_you_ve_ever_seen">Hans Rosling</a></p>
-<p>This page provides basic guidance on how to plot data in <code>R</code>. It is aimed at people who are new to <code>R</code>. It is not aimed at providing guidance on data visualisation <em>per se</em>, nor is it intended to be an exhaustive guidebook on plotting in <code>R</code>.</p>
+<p>Data visualization is an integral component of scientific progress.
+The capacity to efficiently explore data and communicate complex and
+often nuanced findings are essential skills for any scientist.</p>
+<p>“<em>Most of us need to listen to the music to understand how
+beautiful it is. But often that’s how we present statistics: we just
+show the notes, we don’t play the music.</em>” - <a
+href="https://www.ted.com/talks/hans_rosling_the_best_stats_you_ve_ever_seen">Hans
+Rosling</a></p>
+<p>This page provides basic guidance on how to plot data in
+<code>R</code>. It is aimed at people who are new to <code>R</code>. It
+is not aimed at providing guidance on data visualisation <em>per
+se</em>, nor is it intended to be an exhaustive guidebook on plotting in
+<code>R</code>.</p>
 <hr />
 </div>
 <div id="the-plot-function" class="section level2">
 <h2>The <code>plot()</code> function</h2>
-<p>This section describes some of the basics of plotting objects in <code>R</code>.</p>
+<p>This section describes some of the basics of plotting objects in
+<code>R</code>.</p>
 <div id="inherent-flexibility" class="section level3">
 <h3>Inherent flexibility</h3>
-<p>R comes with a built in <code>plot</code> function that has the capacity to generate a seemingly endless variety of graphical outputs. The beauty of plotting in <code>R</code> is the flexibility of the graphing system. This flexibility, however, can also make it challenging to develop a good working knowledge of the <code>plot</code> function.</p>
-<p>On of the most important things to know about the <code>plot</code> function is that it can be applied to just about any <code>R</code> object. The reason for this is that because many analytical workflows typically have standard data visualisation steps (e.g., model fitting is usually followed by visualising the residuals), the people who develop <code>R</code> and <code>R</code> packages tend to develop bespoke versions of the <code>plot</code> function. As a result, there are special plotting methods for functions, data.frames, density objects, fitted model objects, and so on. While this flexibility can make it straightforward to generate the graphs that are usually expected from certain inputs, it also means you need to always ensure that <code>plot</code> is doing what you want it to do.</p>
-<p>For example, if we know that X and Y are inversely related to one another, we might want to visualise this relationship.</p>
+<p>R comes with a built in <code>plot</code> function that has the
+capacity to generate a seemingly endless variety of graphical outputs.
+The beauty of plotting in <code>R</code> is the flexibility of the
+graphing system. This flexibility, however, can also make it challenging
+to develop a good working knowledge of the <code>plot</code>
+function.</p>
+<p>On of the most important things to know about the <code>plot</code>
+function is that it can be applied to just about any <code>R</code>
+object. The reason for this is that because many analytical workflows
+typically have standard data visualisation steps (e.g., model fitting is
+usually followed by visualising the residuals), the people who develop
+<code>R</code> and <code>R</code> packages tend to develop bespoke
+versions of the <code>plot</code> function. As a result, there are
+special plotting methods for functions, data.frames, density objects,
+fitted model objects, and so on. While this flexibility can make it
+straightforward to generate the graphs that are usually expected from
+certain inputs, it also means you need to always ensure that
+<code>plot</code> is doing what you want it to do.</p>
+<p>For example, if we know that X and Y are inversely related to one
+another, we might want to visualise this relationship.</p>
 <pre class="r"><code>x &lt;- 20:1
 y &lt;- 1:20
 
 plot(y)</code></pre>
 <p><img src="Plotting_files/figure-html/unnamed-chunk-1-1.png" width="576" /></p>
-<p>Note here how <code>plot()</code> has returned a graph that, at a glance, might look correct. The X and Y axes run from 1:20, there are 20 ordered data points, and our y data are on the y. The problem is that we knew that X and Y were inversely related, but this figure shows a positive relationship. The <code>plot</code> function’s flexibility is reason for the discrepancy between the expectation and the graph that has been returned. When provided with a vector of values, <code>plot</code> displays these values based on a simple index of the order the individual values were provided (i.e., the first Y value was 1, so is displayed at 1,1, the second Y value was 2, so it is displayed at 2,2, and so on).</p>
-<p>In this case, it is important to tell the <code>plot</code> function which values belong on the X axis, and which belong on the Y.</p>
+<p>Note here how <code>plot()</code> has returned a graph that, at a
+glance, might look correct. The X and Y axes run from 1:20, there are 20
+ordered data points, and our y data are on the y. The problem is that we
+knew that X and Y were inversely related, but this figure shows a
+positive relationship. The <code>plot</code> function’s flexibility is
+reason for the discrepancy between the expectation and the graph that
+has been returned. When provided with a vector of values,
+<code>plot</code> displays these values based on a simple index of the
+order the individual values were provided (i.e., the first Y value was
+1, so is displayed at 1,1, the second Y value was 2, so it is displayed
+at 2,2, and so on).</p>
+<p>In this case, it is important to tell the <code>plot</code> function
+which values belong on the X axis, and which belong on the Y.</p>
 <pre class="r"><code>plot(x = x, y = y)</code></pre>
 <p><img src="Plotting_files/figure-html/unnamed-chunk-2-1.png" width="576" /></p>
 <p>Now the plot properly reflects our original expectation.</p>
 </div>
 <div id="standard-graphs" class="section level3 tabset">
 <h3 class="tabset">Standard graphs</h3>
-<p>Base <code>R</code> can generate a wide range of graphical outputs. We will use the <code>iris</code> dataset to explore these.</p>
+<p>Base <code>R</code> can generate a wide range of graphical outputs.
+We will use the <code>iris</code> dataset to explore these.</p>
 <pre class="r"><code>data(&quot;iris&quot;)</code></pre>
 <div id="scatterplots" class="section level4">
 <h4>Scatterplots</h4>
-<p>By default, <code>plot</code> returns a scatter plot when it is provided with numeric X and Y values. There are two ways of defining the X and Y components of the plot. The first is by manually defining the X and Y components.</p>
+<p>By default, <code>plot</code> returns a scatter plot when it is
+provided with numeric X and Y values. There are two ways of defining the
+X and Y components of the plot. The first is by manually defining the X
+and Y components.</p>
 <pre class="r"><code>plot(x = iris$Sepal.Length,
      y = iris$Sepal.Width)</code></pre>
 <p><img src="Plotting_files/figure-html/unnamed-chunk-4-1.png" width="576" /></p>
-<p>The second option is to define a formula, much as you would when building a regression model.</p>
+<p>The second option is to define a formula, much as you would when
+building a regression model.</p>
 <pre class="r"><code>plot(formula = Sepal.Width ~ Sepal.Length,
      data = iris)</code></pre>
 <p><img src="Plotting_files/figure-html/unnamed-chunk-5-1.png" width="576" /></p>
-<p>Be careful with these two formats because <code>plot(Sepal.Width ~ Sepal.Length)</code> is <strong>not the same</strong> as <code>plot(Sepal.Width, Sepal.Length)</code>.</p>
+<p>Be careful with these two formats because
+<code>plot(Sepal.Width ~ Sepal.Length)</code> is <strong>not the
+same</strong> as <code>plot(Sepal.Width, Sepal.Length)</code>.</p>
 <pre class="r"><code>plot(iris$Sepal.Width ~ iris$Sepal.Length)
 
 plot(iris$Sepal.Width, iris$Sepal.Length)</code></pre>
@@ -469,39 +516,58 @@ plot(iris$Sepal.Width, iris$Sepal.Length)</code></pre>
 </div>
 <div id="boxplots" class="section level4">
 <h4>Boxplots</h4>
-<p>In R, boxplots can be generated by using the <code>boxplot()</code> function. The <code>boxplot()</code> function takes in any number of numeric vectors, drawing a boxplot for each vector.</p>
+<p>In R, boxplots can be generated by using the <code>boxplot()</code>
+function. The <code>boxplot()</code> function takes in any number of
+numeric vectors, drawing a boxplot for each vector.</p>
 <pre class="r"><code>boxplot(iris$Petal.Length)</code></pre>
 <p><img src="Plotting_files/figure-html/unnamed-chunk-7-1.png" width="576" /></p>
-<p>It is also possible to draw multiple boxplots on a single plot, by passing in a list, data frame or multiple vectors</p>
+<p>It is also possible to draw multiple boxplots on a single plot, by
+passing in a list, data frame or multiple vectors</p>
 <pre class="r"><code>boxplot(iris$Petal.Length, iris$Sepal.Width, iris$Petal.Length)</code></pre>
 <p><img src="Plotting_files/figure-html/unnamed-chunk-8-1.png" width="576" /></p>
-<p>The <code>boxplot()</code> function can also take formulas of the form <code>y~x</code> where, <code>y</code> is a numeric vector which is grouped according to the value of <code>x</code>.</p>
+<p>The <code>boxplot()</code> function can also take formulas of the
+form <code>y~x</code> where, <code>y</code> is a numeric vector which is
+grouped according to the value of <code>x</code>.</p>
 <pre class="r"><code>boxplot(formula = Petal.Length ~ Species,
         data = iris)</code></pre>
 <p><img src="Plotting_files/figure-html/unnamed-chunk-9-1.png" width="576" /></p>
 </div>
 <div id="barplots" class="section level4">
 <h4>Barplots</h4>
-<p>Barplots are useful for comparing values side by side. The tend not to be used on raw data, but rather on statistics that are output from some analysis. For example, we can use barplots to compare the mean sepal length between irish species.</p>
+<p>Barplots are useful for comparing values side by side. The tend not
+to be used on raw data, but rather on statistics that are output from
+some analysis. For example, we can use barplots to compare the mean
+sepal length between irish species.</p>
 <pre class="r"><code>MEANS &lt;- aggregate(Sepal.Length ~ Species,
                    data = iris,
                    FUN = &quot;mean&quot;)
 
 barplot(MEANS[,2])</code></pre>
 <p><img src="Plotting_files/figure-html/unnamed-chunk-10-1.png" width="576" /></p>
-<p>Barplots can also be used to explore sampling structures. For example, when paired with the table function, we can visualise the sampling of trait values across the tree species of irish in the dataset.</p>
+<p>Barplots can also be used to explore sampling structures. For
+example, when paired with the table function, we can visualise the
+sampling of trait values across the tree species of irish in the
+dataset.</p>
 <pre class="r"><code>COUNTS &lt;- table(iris$Species)
 
 barplot(COUNTS)</code></pre>
 <p><img src="Plotting_files/figure-html/unnamed-chunk-11-1.png" width="576" /></p>
-<p>We can see that the sampling is even across all three species of iris.</p>
+<p>We can see that the sampling is even across all three species of
+iris.</p>
 </div>
 <div id="histograms-and-density-plots" class="section level4">
 <h4>Histograms and Density Plots</h4>
-<p>Histograms are useful for understanding the distribution of a dataset. In <code>R</code>, histograms can be generated by using the <code>hist()</code> function, which computes a histogram of the given data values.</p>
+<p>Histograms are useful for understanding the distribution of a
+dataset. In <code>R</code>, histograms can be generated by using the
+<code>hist()</code> function, which computes a histogram of the given
+data values.</p>
 <pre class="r"><code>hist(iris$Petal.Length)</code></pre>
 <p><img src="Plotting_files/figure-html/unnamed-chunk-12-1.png" width="576" /></p>
-<p>Histograms have discrete bins. Sometimes we might be interested in a continuous representation of the distribution of a particular dataset. Unlike the <code>hist()</code> function, this is a two step process that involves first estimating the density, and then plotting the results.</p>
+<p>Histograms have discrete bins. Sometimes we might be interested in a
+continuous representation of the distribution of a particular dataset.
+Unlike the <code>hist()</code> function, this is a two step process that
+involves first estimating the density, and then plotting the
+results.</p>
 <pre class="r"><code>DENSITY &lt;- density(iris$Petal.Length)
 
 plot(DENSITY)</code></pre>
@@ -510,7 +576,11 @@ plot(DENSITY)</code></pre>
 </div>
 <div id="improving-basic-plots" class="section level3">
 <h3>Improving basic plots</h3>
-<p>The basic plots that are returned by <code>R</code> can be perfectly fine for first passes at data exploration. They are rarely publication quality however. To counter this, the plot function has a large number of arguments that can be used to improve the quality of a plot. Some of the more useful ones include:</p>
+<p>The basic plots that are returned by <code>R</code> can be perfectly
+fine for first passes at data exploration. They are rarely publication
+quality however. To counter this, the plot function has a large number
+of arguments that can be used to improve the quality of a plot. Some of
+the more useful ones include:</p>
 <pre class="r"><code>main = &quot;Title&quot;      # add a title above the graph
 pch = 16            # set shape plot symbol (16 is a filled circle)
 col = &quot;red&quot;       # set the item color
@@ -525,7 +595,8 @@ xlab = &quot; X (units)&quot; # label for the x-axis
 ylab = &quot;Y (units)&quot;  # label for the y-axis
 ylab = &quot;Y (units)&quot;  # label for the y-axis
 family = &quot;serif&quot;    # font ype to apply</code></pre>
-<p>When used in conjunction, it can possible to produce high quality plots.</p>
+<p>When used in conjunction, it can possible to produce high quality
+plots.</p>
 <pre class="r"><code>plot(formula = Sepal.Width ~ Sepal.Length,
      data = iris,
      main = &quot;Iris traits&quot;,
@@ -546,12 +617,25 @@ family = &quot;serif&quot;    # font ype to apply</code></pre>
 <div id="ggplot2" class="section level2">
 <h2>ggplot2</h2>
 <p>Credit: This tutorial was developed in part by Jacob Hubner</p>
-<p>An alternative to base <code>R</code> are the methods from the <code>ggplot2</code> package. Building a graph using ggplot involves the combination of components or “layers” including data, “aesthetics” that map variables to visuals, and “geoms” that create different kinds of plots.</p>
+<p>An alternative to base <code>R</code> are the methods from the
+<code>ggplot2</code> package. Building a graph using ggplot involves the
+combination of components or “layers” including data, “aesthetics” that
+map variables to visuals, and “geoms” that create different kinds of
+plots.</p>
 <pre class="r"><code>library(ggplot2)</code></pre>
-<p>Let’s start with some data. Mtcars is a readily accessible dataset within R itself, so you can call it anytime.</p>
+<p>Let’s start with some data. Mtcars is a readily accessible dataset
+within R itself, so you can call it anytime.</p>
 <pre class="r"><code>data(mtcars)</code></pre>
-<p>We can explore any plot we want using a mix of catagorical variables (cyl,am,vs,gear,carb) and quantitative variable (mpg,disp.hp,drat,wt,qsec)</p>
-<p>To use ggplot you must always start with the ggplot function. This doesn’t create anything, but sets the scene for whatever plots you are wanting to make. It is here that you can choose to dictate the data you will use for the rest of the plot, using the ‘data’ and ‘aes’ arguments. ‘aes’ defines your x and y coordinates, and also any groupings you might want to make. It’s after this that you begin to define your graph type.</p>
+<p>We can explore any plot we want using a mix of catagorical variables
+(cyl,am,vs,gear,carb) and quantitative variable
+(mpg,disp.hp,drat,wt,qsec)</p>
+<p>To use ggplot you must always start with the ggplot function. This
+doesn’t create anything, but sets the scene for whatever plots you are
+wanting to make. It is here that you can choose to dictate the data you
+will use for the rest of the plot, using the ‘data’ and ‘aes’ arguments.
+‘aes’ defines your x and y coordinates, and also any groupings you might
+want to make. It’s after this that you begin to define your graph
+type.</p>
 <pre class="r"><code># Common graphing options:
 # Scatterplot: + geom_point()      - good for two quantitative variables
 # Line:        + geom_line         - good for trends over time
@@ -594,7 +678,9 @@ ggplot(cars,aes(x=am.f,y=qsec)) +
 ggplot(cars,aes(x=cyl.f)) + 
   geom_bar()</code></pre>
 <p><img src="Plotting_files/figure-html/unnamed-chunk-19-8.png" width="576" /></p>
-<p>Now lets go back to the scatterplot and add a trendline, the easiest line to make in a linear one, but you can plot any model you can think of with a couple steps. Let’s use geom_smooth…</p>
+<p>Now lets go back to the scatterplot and add a trendline, the easiest
+line to make in a linear one, but you can plot any model you can think
+of with a couple steps. Let’s use geom_smooth…</p>
 <pre class="r"><code>ggplot(mtcars,aes(x=wt,y=disp)) + 
   geom_point()</code></pre>
 <p><img src="Plotting_files/figure-html/unnamed-chunk-20-1.png" width="576" /></p>
@@ -610,7 +696,9 @@ ggplot(cars,aes(x=cyl.f)) +
   geom_point() +
   geom_smooth(method=&quot;lm&quot;,formula=y~x, se=T)</code></pre>
 <p><img src="Plotting_files/figure-html/unnamed-chunk-20-4.png" width="576" /></p>
-<p>When things get complicated, you can define aesthetics on a case-by-case basis instead of cramming everything into one dataframe.</p>
+<p>When things get complicated, you can define aesthetics on a
+case-by-case basis instead of cramming everything into one
+dataframe.</p>
 <pre class="r"><code>lm1 &lt;- lm(disp~wt,data=cars) # This can be any model you can think of. GLM, non-linear, whatever!
 df2 &lt;- data.frame(cars,fit=fitted(lm1))
 
@@ -618,7 +706,10 @@ ggplot() +
   geom_point(data=cars,aes(x=wt,y=disp,col=mpg)) + 
   geom_line(data=df2,aes(x=wt,y=fit))</code></pre>
 <p><img src="Plotting_files/figure-html/unnamed-chunk-21-1.png" width="576" /></p>
-<p>Once the general behaviour of the plot is working as expected, there are a lot of options for personalising the look of the figure. There are many useful tutorials for this online, however, here is a series of arguments to get you started with an uncluttered figure.</p>
+<p>Once the general behaviour of the plot is working as expected, there
+are a lot of options for personalising the look of the figure. There are
+many useful tutorials for this online, however, here is a series of
+arguments to get you started with an uncluttered figure.</p>
 <pre class="r"><code>ggplot(mtcars,aes(x=wt,y=disp)) +
   geom_point() +
   geom_smooth(method=&quot;lm&quot;,
@@ -634,7 +725,8 @@ ggplot() +
   ylab(&quot;Displacement (cubic inches)&quot;) +
   theme(plot.title = element_text(hjust = 0.5))</code></pre>
 <p><img src="Plotting_files/figure-html/unnamed-chunk-22-1.png" width="576" /></p>
-<p>There’s a lot more to discover but hopefully this is a useful launchpad into the world of ggplot.</p>
+<p>There’s a lot more to discover but hopefully this is a useful
+launchpad into the world of ggplot.</p>
 </div>
 
 

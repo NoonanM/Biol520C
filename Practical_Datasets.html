@@ -13,7 +13,7 @@
 
 <title>Datasets for practicals</title>
 
-<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.19/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -60,6 +60,7 @@ if (window.hljs) {
 
 
 
+
 <link rel="stylesheet" href="tutorial.css" type="text/css" />
 
 
@@ -84,6 +85,9 @@ button.code-folding-btn:focus {
 }
 summary {
   display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
 }
 pre code {
   padding: 0;
@@ -141,11 +145,15 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.tab('show');
-
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
   // Navbar adjustments
   var navHeight = $(".navbar").first().height() + 15;
@@ -174,8 +182,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -183,16 +191,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -309,7 +310,7 @@ div.tocify {
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -328,7 +329,7 @@ div.tocify {
   <a href="Lectures.html">Lectures</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Practicals
      
     <span class="caret"></span>
@@ -367,7 +368,7 @@ div.tocify {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Datasets
      
     <span class="caret"></span>
@@ -382,7 +383,7 @@ div.tocify {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     R Help
      
     <span class="caret"></span>
@@ -413,49 +414,73 @@ div.tocify {
 </div>
 
 
-<p>This page contains the datasets needed to complete the practicals for this course. To download, left click on the links and download the files as needed.</p>
+<p>This page contains the datasets needed to complete the practicals for
+this course. To download, left click on the links and download the files
+as needed.</p>
 <p></br></p>
-<div id="practical-02---deterministic-models-stochastic-models-simple-linear-regression-and-maximum-likelihood" class="section level3">
-<h3>Practical 02 - Deterministic models, stochastic models, simple linear regression, and maximum likelihood</h3>
-<p><a href="Practical_Datasets/Musteloid_Data.csv" >Musteloid traits</a></p>
+<div
+id="practical-02---deterministic-models-stochastic-models-simple-linear-regression-and-maximum-likelihood"
+class="section level3">
+<h3>Practical 02 - Deterministic models, stochastic models, simple
+linear regression, and maximum likelihood</h3>
+<p><a href="Practical_Datasets/Musteloid_Data.csv" >Musteloid
+traits</a></p>
 <p><a href="Practical_Datasets/Wasp_Choice.csv" >Wasp choice.</a></p>
 <p></br></p>
 </div>
-<div id="practical-03---multiple-linear-regression-and-model-residuals" class="section level3">
+<div id="practical-03---multiple-linear-regression-and-model-residuals"
+class="section level3">
 <h3>Practical 03 - Multiple linear regression and model residuals</h3>
 <p><a href="Practical_Datasets/Seedling.csv" >Seedlings.</a></p>
 <p><a href="Practical_Datasets/Ismail.csv" >Forest degredation.</a></p>
 <p></br></p>
 </div>
-<div id="practical-04---visualising-nested-data-prior-to-analysis" class="section level3">
+<div id="practical-04---visualising-nested-data-prior-to-analysis"
+class="section level3">
 <h3>Practical 04 - Visualising Nested Data Prior to Analysis</h3>
 <p><a href="Practical_Datasets/Owls.csv" >Owl begging behaviour</a></p>
 <p></br></p>
 </div>
-<div id="practical-05---mixed-effect-models-model-selection-and-model-averaging" class="section level3">
-<h3>Practical 05 - Mixed Effect Models, Model Selection, and Model Averaging</h3>
+<div
+id="practical-05---mixed-effect-models-model-selection-and-model-averaging"
+class="section level3">
+<h3>Practical 05 - Mixed Effect Models, Model Selection, and Model
+Averaging</h3>
 <p><a href="Practical_Datasets/Owls.csv" >Owl begging behaviour</a></p>
 <p></br></p>
 </div>
-<div id="practical-06---heteroskedasticity-temporal-autocorrelation-and-the-iid-assumption" class="section level3">
-<h3>Practical 06 - Heteroskedasticity, Temporal Autocorrelation, and the IID Assumption</h3>
-<p><a href="Practical_Datasets/Cod_daily_depth_data.csv" >Cod depths</a></p>
+<div
+id="practical-06---heteroskedasticity-temporal-autocorrelation-and-the-iid-assumption"
+class="section level3">
+<h3>Practical 06 - Heteroskedasticity, Temporal Autocorrelation, and the
+IID Assumption</h3>
+<p><a href="Practical_Datasets/Cod_daily_depth_data.csv" >Cod
+depths</a></p>
 <p></br></p>
 </div>
-<div id="practical-07---spatial-and-phylogenetic-autocorrelation" class="section level3">
+<div id="practical-07---spatial-and-phylogenetic-autocorrelation"
+class="section level3">
 <h3>Practical 07 - Spatial and Phylogenetic Autocorrelation</h3>
 <p><a href="Practical_Datasets/SDI2003.csv" >SDI and pH</a></p>
 <p><a href="Practical_Datasets/rockfish.csv" >Rockfish traits</a></p>
-<p><a href="Practical_Datasets/rockfish.phy.txt" >Rockfish phylogenetic tree</a></p>
+<p><a href="Practical_Datasets/rockfish.phy.txt" >Rockfish phylogenetic
+tree</a></p>
 <p></br></p>
 </div>
-<div id="practical-09---logistic-regression-generalised-linear-models-for-01-and-proportion-data" class="section level3">
-<h3>Practical 09 - Logistic Regression: Generalised Linear Models for 0,1 and Proportion Data</h3>
-<p><a href="Practical_Datasets/gophertortoise.csv" >Gopher tortoise infection status</a></p>
+<div
+id="practical-09---logistic-regression-generalised-linear-models-for-01-and-proportion-data"
+class="section level3">
+<h3>Practical 09 - Logistic Regression: Generalised Linear Models for
+0,1 and Proportion Data</h3>
+<p><a href="Practical_Datasets/gophertortoise.csv" >Gopher tortoise
+infection status</a></p>
 <p></br></p>
 </div>
-<div id="practical-10---stochastic-simulation-power-analysis-and-non-linear-models" class="section level3">
-<h3>Practical 10 - Stochastic Simulation, Power Analysis, and Non-Linear Models</h3>
+<div
+id="practical-10---stochastic-simulation-power-analysis-and-non-linear-models"
+class="section level3">
+<h3>Practical 10 - Stochastic Simulation, Power Analysis, and Non-Linear
+Models</h3>
 <p><a href="Practical_Datasets/Seedling.csv" >Seedlings</a></p>
 <p><a href="Practical_Datasets/jaw_bone.csv" >Deer jaw bones</a></p>
 <p><a href="Practical_Datasets/Wild_Boar.csv" >Wild boar Tb</a></p>

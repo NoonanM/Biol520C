@@ -13,7 +13,7 @@
 
 <title>Practical 06 - Heteroskedasticity, Temporal Autocorrelation, and the IID Assumption</title>
 
-<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.19/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -60,6 +60,7 @@ if (window.hljs) {
 
 
 
+
 <link rel="stylesheet" href="tutorial.css" type="text/css" />
 
 
@@ -84,6 +85,9 @@ button.code-folding-btn:focus {
 }
 summary {
   display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
 }
 pre code {
   padding: 0;
@@ -141,11 +145,15 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.tab('show');
-
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
   // Navbar adjustments
   var navHeight = $(".navbar").first().height() + 15;
@@ -174,8 +182,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -183,16 +191,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -309,7 +310,7 @@ div.tocify {
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -328,7 +329,7 @@ div.tocify {
   <a href="Lectures.html">Lectures</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Practicals
      
     <span class="caret"></span>
@@ -367,7 +368,7 @@ div.tocify {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Datasets
      
     <span class="caret"></span>
@@ -382,7 +383,7 @@ div.tocify {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     R Help
      
     <span class="caret"></span>
@@ -408,12 +409,13 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Practical 06 - Heteroskedasticity, Temporal Autocorrelation, and the IID Assumption</h1>
+<h1 class="title toc-ignore">Practical 06 - Heteroskedasticity, Temporal
+Autocorrelation, and the IID Assumption</h1>
 
 </div>
 
 
-<p>This page was last updated on November 03, 2021.</p>
+<p>This page was last updated on January 16, 2023.</p>
 <script type="text/x-mathjax-config">
 MathJax.Hub.Register.StartupHook('TeX Jax Ready', function () {
   MathJax.InputJax.TeX.prefilterHooks.Add(function (data) {
@@ -424,43 +426,83 @@ MathJax.Hub.Register.StartupHook('TeX Jax Ready', function () {
 <hr />
 <div id="background" class="section level2">
 <h2>Background</h2>
-<p>The linear regression models we’ve been working with so far assume that the residuals should be Independent and Identically Distributed (IID). More specifically, they should be normally distributed with a constant variance <span class="math inline">\(\sigma^{2}\)</span>:</p>
+<p>The linear regression models we’ve been working with so far assume
+that the residuals should be Independent and Identically Distributed
+(IID). More specifically, they should be normally distributed with a
+constant variance <span class="math inline">\(\sigma^{2}\)</span>:</p>
 </br>
 <center>
-<span class="math inline">\(\varepsilon_i \sim \mathcal{N}(0,\,\sigma^{2})\)</span>
+<span class="math inline">\(\varepsilon_i \sim
+\mathcal{N}(0,\,\sigma^{2})\)</span>
 </center>
 <p></br></p>
-<p>Biological data are often very noise and, in real systems, variances can differ across groups, times, etc. The IID assumption is therefore likely to be broken in many real datasets. Modification of the variance-covariance matrix can help correct for issues related to autocorrelation and/or variances that differ systematically.</p>
+<p>Biological data are often very noise and, in real systems, variances
+can differ across groups, times, etc. The IID assumption is therefore
+likely to be broken in many real datasets. Modification of the
+variance-covariance matrix can help correct for issues related to
+autocorrelation and/or variances that differ systematically.</p>
 <p>In this Practical we will:</p>
 <ul>
-<li>Use simulations to explore the impact of <em>unmodelled</em> heteroskedasticity.</li>
-<li>Explore the impact of <em>modelling</em> heteroskedasticity as a correction.</li>
+<li>Use simulations to explore the impact of <em>unmodelled</em>
+heteroskedasticity.</li>
+<li>Explore the impact of <em>modelling</em> heteroskedasticity as a
+correction.</li>
 <li>Identify temporal autocorrelation in residuals.</li>
-<li>Build mixed effects models that correct for temporal autocorrelation.</li>
-<li>Identify the best autocorrelation structure via AIC based model selection.</li>
+<li>Build mixed effects models that correct for temporal
+autocorrelation.</li>
+<li>Identify the best autocorrelation structure via AIC based model
+selection.</li>
 </ul>
 <hr />
 </div>
 <div id="temporal-autocorrelation" class="section level2">
 <h2>Temporal autocorrelation</h2>
-<p>Anything that causes some data points in a dataset to be more similar to each other than others can result in statistically detectable autocorrelation. Temporal autocorrelation is a phenomenon that occurs because events that occur close to each other in time tend to be more similar than events that occur further apart in time. This pattern can be found in many different situations, not only in biology but in any field where data are measured over time. As biologists we often find ourselves working in systems where the best (or at least the most pragmatic) way to understand what is going on is to collect data over time.</p>
+<p>Anything that causes some data points in a dataset to be more similar
+to each other than others can result in statistically detectable
+autocorrelation. Temporal autocorrelation is a phenomenon that occurs
+because events that occur close to each other in time tend to be more
+similar than events that occur further apart in time. This pattern can
+be found in many different situations, not only in biology but in any
+field where data are measured over time. As biologists we often find
+ourselves working in systems where the best (or at least the most
+pragmatic) way to understand what is going on is to collect data over
+time.</p>
 <p>To this end, standard linear regression models are of the form</p>
 </br>
 <center>
-<span class="math inline">\(y_i = \beta_0 + \beta_1 \times x_{i} + \varepsilon_i \quad\quad \varepsilon_i \sim \mathcal{N}(0,\, V) \quad\quad V = \sigma^2 {\begin{bmatrix}1&amp; 0 &amp;\cdots &amp; 0 \\ 0 &amp; 1 &amp; \cdots &amp; 0 \\ \vdots &amp;\vdots &amp;\ddots &amp;\vdots \\ 0 &amp; 0 &amp; \cdots &amp;1 \end{bmatrix}}\)</span>
+<span class="math inline">\(y_i = \beta_0 + \beta_1 \times x_{i} +
+\varepsilon_i \quad\quad \varepsilon_i \sim \mathcal{N}(0,\, V)
+\quad\quad V = \sigma^2 {\begin{bmatrix}1&amp; 0 &amp;\cdots &amp; 0 \\
+0 &amp; 1 &amp; \cdots &amp; 0 \\ \vdots &amp;\vdots &amp;\ddots
+&amp;\vdots \\ 0 &amp; 0 &amp; \cdots &amp;1 \end{bmatrix}}\)</span>
 </center>
 <p></br></p>
-<p>The diagonal in the variance-covariance matrix defines the variances. All 1s indicates homogeneity of variances. The off-diagonals define the co-variances and the 0s indicate independence. This standard format does not permit any covariance between the residuals, and violation of this assumption can bias parameter estimates and negatively impact our capacity to learn from our models. Correcting for autocorrelation `simply’ involves identifying the autocorrelation structure of the residuals and modifying the variance-covariance matrix such that the off-diagonals <span class="math inline">\(\neq\)</span> 0.</p>
+<p>The diagonal in the variance-covariance matrix defines the variances.
+All 1s indicates homogeneity of variances. The off-diagonals define the
+co-variances and the 0s indicate independence. This standard format does
+not permit any covariance between the residuals, and violation of this
+assumption can bias parameter estimates and negatively impact our
+capacity to learn from our models. Correcting for autocorrelation
+`simply’ involves identifying the autocorrelation structure of the
+residuals and modifying the variance-covariance matrix such that the
+off-diagonals <span class="math inline">\(\neq\)</span> 0.</p>
 </br>
 <center>
-<span class="math inline">\(V = \sigma^2 {\begin{bmatrix}1&amp; \rho &amp;\cdots &amp; \rho \\ \rho &amp; 1 &amp; \cdots &amp; \rho \\ \vdots &amp;\vdots &amp;\ddots &amp;\vdots \\ \rho &amp; \rho &amp; \cdots &amp;1 \end{bmatrix}}\)</span>
+<span class="math inline">\(V = \sigma^2 {\begin{bmatrix}1&amp; \rho
+&amp;\cdots &amp; \rho \\ \rho &amp; 1 &amp; \cdots &amp; \rho \\ \vdots
+&amp;\vdots &amp;\ddots &amp;\vdots \\ \rho &amp; \rho &amp; \cdots
+&amp;1 \end{bmatrix}}\)</span>
 </center>
 <p></br></p>
 <div id="identifying-temporal-autocorrelation" class="section level3">
 <h3>Identifying temporal autocorrelation</h3>
 <p>We are going to use data from:</p>
-<p>Freitas, C., E. M. Olsen, H. Knutsen, J. Albretsen, and E. Moland. 2016. Temperature-associated habitat selection in a cold-water marine fish. Journal of Animal Ecology 85:628–637.</p>
-<p>In this paper, the authors looked at the effect of ocean temperature on how deep individually tagged Atlantic cod (<em>Gadus morhua</em>) dove along the Norwegian coast. Variables in this dataset include:</p>
+<p>Freitas, C., E. M. Olsen, H. Knutsen, J. Albretsen, and E. Moland.
+2016. Temperature-associated habitat selection in a cold-water marine
+fish. Journal of Animal Ecology 85:628–637.</p>
+<p>In this paper, the authors looked at the effect of ocean temperature
+on how deep individually tagged Atlantic cod (<em>Gadus morhua</em>)
+dove along the Norwegian coast. Variables in this dataset include:</p>
 <ul>
 <li><code>fish</code>: The ID of the fish</li>
 <li><code>date</code>: The date the data were collected</li>
@@ -472,13 +514,24 @@ MathJax.Hub.Register.StartupHook('TeX Jax Ready', function () {
 <li><ol></li>
 </ol>
 <ul>
-<li>Import the Cod_daily_depth_data dataset (make sure the variable data is of the class date and make sure fish is a factor).</li>
-<li>Mean center the temperature data to reduce correlation between the intercepts and slopes.</li>
-<li>Fit a mixed-effects model predicting cod dive depth during the day from surface temperature that allows the intercept and slope to vary with each fish (i.e., include a random intercept and random <code>temperature_centered</code> slope grouped by <code>fish</code>). For this model, log transform the dive depth data. Use the <code>lme()</code> function from the <code>nlme</code> package.</li>
+<li>Import the Cod_daily_depth_data dataset (make sure the variable data
+is of the class date and make sure fish is a factor).</li>
+<li>Mean center the temperature data to reduce correlation between the
+intercepts and slopes.</li>
+<li>Fit a mixed-effects model predicting cod dive depth during the day
+from surface temperature that allows the intercept and slope to vary
+with each fish (i.e., include a random intercept and random
+<code>temperature_centered</code> slope grouped by <code>fish</code>).
+For this model, log transform the dive depth data. Use the
+<code>lme()</code> function from the <code>nlme</code> package.</li>
 <li>Inspect the summary overview of the model.</li>
 <li>Plot the normalized residuals against the fitted values.</li>
 <li>Plot the normalized residuals against date.</li>
-<li>Plot the acf of the normalized residuals. Note: The default residuals do not incorporate the correlation structure, which is not very helpful when we are trying to correct for autocorrelation. This is why we always plot normalized residuals when trying to deal with autocorrelation.
+<li>Plot the acf of the normalized residuals. Note: The default
+residuals do not incorporate the correlation structure, which is not
+very helpful when we are trying to correct for autocorrelation. This is
+why we always plot normalized residuals when trying to deal with
+autocorrelation.
 </ol></li>
 </ul>
 </div>
@@ -486,19 +539,32 @@ MathJax.Hub.Register.StartupHook('TeX Jax Ready', function () {
 <h3>Correcting temporal autocorrelation</h3>
 <div id="compound-symmetric-error-structure" class="section level4">
 <h4>Compound Symmetric Error Structure</h4>
-<p>The simplest case is when all the co-variances are constant, non-zero value (referred to as `compound symmetry’). With compound symmetric error structures the degree of correlation between residuals (<span class="math inline">\(\rho\)</span>) is equal to <span class="math inline">\(\rho=\frac{\theta}{\theta + \sigma^2}\)</span>.</p>
+<p>The simplest case is when all the co-variances are constant, non-zero
+value (referred to as `compound symmetry’). With compound symmetric
+error structures the degree of correlation between residuals (<span
+class="math inline">\(\rho\)</span>) is equal to <span
+class="math inline">\(\rho=\frac{\theta}{\theta +
+\sigma^2}\)</span>.</p>
 </br>
 <center>
-<span class="math inline">\(V = {\begin{bmatrix}\theta + \sigma^2&amp; \theta &amp;\cdots &amp; \theta \\ \theta &amp; \theta + \sigma^2 &amp; \cdots &amp; \theta \\ \vdots &amp;\vdots &amp;\ddots &amp;\vdots \\ \theta &amp; \theta &amp; \cdots &amp;\theta + \sigma^2 \end{bmatrix}}\)</span>
+<span class="math inline">\(V = {\begin{bmatrix}\theta + \sigma^2&amp;
+\theta &amp;\cdots &amp; \theta \\ \theta &amp; \theta + \sigma^2 &amp;
+\cdots &amp; \theta \\ \vdots &amp;\vdots &amp;\ddots &amp;\vdots \\
+\theta &amp; \theta &amp; \cdots &amp;\theta + \sigma^2
+\end{bmatrix}}\)</span>
 </center>
 <p></br></p>
-<p>Compound symmetric errors can be applied via the <code>corCompSymm()</code> function from the <code>nlme</code> package.</p>
+<p>Compound symmetric errors can be applied via the
+<code>corCompSymm()</code> function from the <code>nlme</code>
+package.</p>
 <ol style="list-style-type: decimal">
 <li><ol></li>
 </ol>
 <ul>
-<li>Refit the same model using <code>lme</code>, but this time add a compound symmetric correlation structure.</li>
-<li>Examine the residuals and acf as above. Visually, do you see an improvement?</li>
+<li>Refit the same model using <code>lme</code>, but this time add a
+compound symmetric correlation structure.</li>
+<li>Examine the residuals and acf as above. Visually, do you see an
+improvement?</li>
 <li>Check the improvement via AIC.</li>
 <li>Describe the effect
 </ol></li>
@@ -506,19 +572,35 @@ MathJax.Hub.Register.StartupHook('TeX Jax Ready', function () {
 </div>
 <div id="ar-1-error-structure" class="section level4">
 <h4>AR-1 Error Structure</h4>
-<p>The first order auto-regressive (AR1) structure defines a correlation structure in which the degree of correlation between two observations is proportional to the relative amount of elapsed time. With AR-1 error structures the degree of correlation between a pair of residuals is defined as <span class="math inline">\(\rho^{\vert t-s\vert}\)</span>, where <span class="math inline">\(\vert t-s\vert\)</span> is the absolute difference between the current time (<span class="math inline">\(t\)</span>) and the previous time (<span class="math inline">\(s\)</span>).</p>
+<p>The first order auto-regressive (AR1) structure defines a correlation
+structure in which the degree of correlation between two observations is
+proportional to the relative amount of elapsed time. With AR-1 error
+structures the degree of correlation between a pair of residuals is
+defined as <span class="math inline">\(\rho^{\vert t-s\vert}\)</span>,
+where <span class="math inline">\(\vert t-s\vert\)</span> is the
+absolute difference between the current time (<span
+class="math inline">\(t\)</span>) and the previous time (<span
+class="math inline">\(s\)</span>).</p>
 </br>
 <center>
-<span class="math inline">\(V = \sigma^2 {\begin{bmatrix}1&amp; \rho &amp; \rho^2 &amp;\cdots &amp; \rho^i \\ \rho &amp; 1 &amp; \rho &amp; \ddots &amp; \vdots \\ \rho^2 &amp; \rho &amp; 1 &amp; \ddots &amp; \rho^2 \\ \vdots &amp;\ddots &amp;\ddots &amp;\ddots &amp; \rho \\ \rho^1 &amp; \cdots &amp; \rho^2 &amp; \rho &amp;1 \end{bmatrix}}\)</span>
+<span class="math inline">\(V = \sigma^2 {\begin{bmatrix}1&amp; \rho
+&amp; \rho^2 &amp;\cdots &amp; \rho^i \\ \rho &amp; 1 &amp; \rho &amp;
+\ddots &amp; \vdots \\ \rho^2 &amp; \rho &amp; 1 &amp; \ddots &amp;
+\rho^2 \\ \vdots &amp;\ddots &amp;\ddots &amp;\ddots &amp; \rho \\
+\rho^1 &amp; \cdots &amp; \rho^2 &amp; \rho &amp;1
+\end{bmatrix}}\)</span>
 </center>
 <p></br></p>
-<p>AR-1 errors can be applied via the <code>corAR1()</code> function from the <code>nlme</code> package.</p>
+<p>AR-1 errors can be applied via the <code>corAR1()</code> function
+from the <code>nlme</code> package.</p>
 <ol style="list-style-type: decimal">
 <li><ol></li>
 </ol>
 <ul>
-<li>Refit the same model using <code>lme</code>, but this time add an AR-1 correlation structure.</li>
-<li>Examine the residuals and acf as above. Visually, do you see an improvement?</li>
+<li>Refit the same model using <code>lme</code>, but this time add an
+AR-1 correlation structure.</li>
+<li>Examine the residuals and acf as above. Visually, do you see an
+improvement?</li>
 <li>Check the improvement via AIC.</li>
 <li>Describe the effect
 </ol></li>
@@ -529,22 +611,55 @@ MathJax.Hub.Register.StartupHook('TeX Jax Ready', function () {
 </div>
 <div id="impact-of-heteroskedasticity" class="section level2">
 <h2>Impact of heteroskedasticity</h2>
-<p><strong>Note: The following 2 exercises are bonus problems worth a total of 0.5% on your final grade. They involve the use of nested for loops which are detailed on the R help page.</strong></p>
-<p>This week we learned that when the IID assumption is violated by <em>unmodelled</em> heteroskedasticity, variances, and hence standard errors, can be poorly estimated resulting in misleading p-values. When this is the case, the deterministic part of the model may be correctly specified, but any inference is likely to be unreliable. Not the emphasis on unmodelled. This is because, unless there are extreme issues with the data, it is by ignoring key features that we run into issues (not just the presence of heteroskedasticity). Let’s explore that concept using a simulation experiment.</p>
+<p><strong>Note: The following 2 exercises are bonus problems worth a
+total of 0.5% on your final grade. They involve the use of nested for
+loops which are detailed on the R help page.</strong></p>
+<p>This week we learned that when the IID assumption is violated by
+<em>unmodelled</em> heteroskedasticity, variances, and hence standard
+errors, can be poorly estimated resulting in misleading p-values. When
+this is the case, the deterministic part of the model may be correctly
+specified, but any inference is likely to be unreliable. Not the
+emphasis on unmodelled. This is because, unless there are extreme issues
+with the data, it is by ignoring key features that we run into issues
+(not just the presence of heteroskedasticity). Let’s explore that
+concept using a simulation experiment.</p>
 <div id="unmodelled-heteroskedasticity" class="section level3">
 <h3>Unmodelled heteroskedasticity</h3>
 <ol style="list-style-type: decimal">
 <li><ol></li>
 </ol>
 <ul>
-<li>Create a function for simulating from a linear model which has the following parameters: an intercept, <span class="math inline">\(\beta_0\)</span>, of 0, <span class="math inline">\(\beta_1 = 2\)</span> and <span class="math inline">\(\beta_2 = 0.5\)</span>. Have the errors for these data be drawn from a power variance error structure <span class="math inline">\(\varepsilon_{ij} \sim \mathcal{N}(0,\,\sigma^{2} \times \vert x_{1,i} \vert ^{2\delta_j})\)</span> that is a function of <span class="math inline">\(x_1\)</span> and with <span class="math inline">\(\sigma^2\)</span> = 4.</li>
-<li>Create a sequence of <span class="math inline">\(\delta\)</span> values ranging from 0 to 1 by an interval of 0.05.</li>
-<li>For each of the <span class="math inline">\(\delta\)</span> values: i) simulate 50 uniformly sampled <span class="math inline">\(x_1\)</span> and 50 uniformly sampled <span class="math inline">\(x_2\)</span> values each ranging from 0 to 20; ii) use these data and your function to generate the y values; iii) fit a linear model to the data; iv) extract and store the p-values for the intercept,<span class="math inline">\(\beta_1\)</span> and <span class="math inline">\(\beta_2\)</span>.</li>
-<li>Repeat this 100 times per <span class="math inline">\(\delta\)</span> value.</li>
-<li>Plot the mean <span class="math inline">\(p\)</span>-value for each parameter at each <span class="math inline">\(\delta\)</span> value.</li>
+<li>Create a function for simulating from a linear model which has the
+following parameters: an intercept, <span
+class="math inline">\(\beta_0\)</span>, of 0, <span
+class="math inline">\(\beta_1 = 2\)</span> and <span
+class="math inline">\(\beta_2 = 0.5\)</span>. Have the errors for these
+data be drawn from a power variance error structure <span
+class="math inline">\(\varepsilon_{ij} \sim \mathcal{N}(0,\,\sigma^{2}
+\times \vert x_{1,i} \vert ^{2\delta_j})\)</span> that is a function of
+<span class="math inline">\(x_1\)</span> and with <span
+class="math inline">\(\sigma^2\)</span> = 4.</li>
+<li>Create a sequence of <span class="math inline">\(\delta\)</span>
+values ranging from 0 to 1 by an interval of 0.05.</li>
+<li>For each of the <span class="math inline">\(\delta\)</span> values:
+i) simulate 50 uniformly sampled <span
+class="math inline">\(x_1\)</span> and 50 uniformly sampled <span
+class="math inline">\(x_2\)</span> values each ranging from 0 to 20; ii)
+use these data and your function to generate the y values; iii) fit a
+linear model to the data; iv) extract and store the p-values for the
+intercept,<span class="math inline">\(\beta_1\)</span> and <span
+class="math inline">\(\beta_2\)</span>.</li>
+<li>Repeat this 100 times per <span
+class="math inline">\(\delta\)</span> value.</li>
+<li>Plot the mean <span class="math inline">\(p\)</span>-value for each
+parameter at each <span class="math inline">\(\delta\)</span>
+value.</li>
 <li>Describe the impact of unmodelled heteroskedasticity.</li>
 </ul>
-Hint: Using for loops that store values in a list is a straightforward approach to this exercise. The following <code>R</code> functions can help make this exercise easier: <code>aggregate()</code>, <code>do.call()</code>
+Hint: Using for loops that store values in a list is a straightforward
+approach to this exercise. The following <code>R</code> functions can
+help make this exercise easier: <code>aggregate()</code>,
+<code>do.call()</code>
 </ol>
 </div>
 <div id="modelled-heteroskedasticity" class="section level3">
@@ -553,8 +668,11 @@ Hint: Using for loops that store values in a list is a straightforward approach 
 <li><ol></li>
 </ol>
 <ul>
-<li>Repeat the above simulation experiment but this time, instead of ignoring the heteroskedasticity, fit a model with a power variance structure.</li>
-<li>Describe the impact that modelling heteroskedasticity has on the capacity to identify significant parameters.
+<li>Repeat the above simulation experiment but this time, instead of
+ignoring the heteroskedasticity, fit a model with a power variance
+structure.</li>
+<li>Describe the impact that modelling heteroskedasticity has on the
+capacity to identify significant parameters.
 </ol></li>
 </ul>
 </div>

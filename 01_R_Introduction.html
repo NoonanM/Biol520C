@@ -13,7 +13,7 @@
 
 <title>Practical 01 - An introduction to R as a programming language</title>
 
-<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.19/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -60,6 +60,7 @@ if (window.hljs) {
 
 
 
+
 <link rel="stylesheet" href="tutorial.css" type="text/css" />
 
 
@@ -84,6 +85,9 @@ button.code-folding-btn:focus {
 }
 summary {
   display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
 }
 pre code {
   padding: 0;
@@ -141,11 +145,15 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.tab('show');
-
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
   // Navbar adjustments
   var navHeight = $(".navbar").first().height() + 15;
@@ -174,8 +182,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -183,16 +191,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -309,7 +310,7 @@ div.tocify {
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -328,7 +329,7 @@ div.tocify {
   <a href="Lectures.html">Lectures</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Practicals
      
     <span class="caret"></span>
@@ -367,7 +368,7 @@ div.tocify {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Datasets
      
     <span class="caret"></span>
@@ -382,7 +383,7 @@ div.tocify {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     R Help
      
     <span class="caret"></span>
@@ -408,32 +409,51 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Practical 01 - An introduction to R as a programming language</h1>
+<h1 class="title toc-ignore">Practical 01 - An introduction to R as a
+programming language</h1>
 
 </div>
 
 
-<p>This page was last updated on November 03, 2021.</p>
+<p>This page was last updated on January 16, 2023.</p>
 <hr />
 <div id="background" class="section level2">
 <h2>Background</h2>
-<p>Programming is a structured way of telling the computer what to do. A key advantage of <code>R</code> relative to other statistics packages (e.g., SPSS) is that it is also a full-featured programming language. This mean you can do far more than just statistics.</p>
+<p>Programming is a structured way of telling the computer what to do. A
+key advantage of <code>R</code> relative to other statistics packages
+(e.g., SPSS) is that it is also a full-featured programming language.
+This mean you can do far more than just statistics.</p>
 <p>There are many benefits of working in <code>R</code>, including:</p>
 <ul>
 <li>It’s free</li>
 <li>It’s open (anyone can build on it and inspect every element)</li>
-<li>It’s popular (which means that all main streams analytical methods are probably implemented, and there is a large, active support community)</li>
+<li>It’s popular (which means that all main streams analytical methods
+are probably implemented, and there is a large, active support
+community)</li>
 <li>You can carry out complex data manipulation</li>
 <li>You can write your own statistical procedures</li>
-<li>You can build and explore dynamic models of your specific study system instead of relying entirely on ‘off-the-shelf’ methods</li>
-<li>You can easily retrace your steps and allow others to reproduce your work</li>
-<li>You can keep your data, and data analysis separate which means you are less likely to experience irreparable data alteration and/or loss</li>
+<li>You can build and explore dynamic models of your specific study
+system instead of relying entirely on ‘off-the-shelf’ methods</li>
+<li>You can easily retrace your steps and allow others to reproduce your
+work</li>
+<li>You can keep your data, and data analysis separate which means you
+are less likely to experience irreparable data alteration and/or
+loss</li>
 </ul>
-<p>However, working with <code>R</code> is not without its downsides, including:</p>
+<p>However, working with <code>R</code> is not without its downsides,
+including:</p>
 <ul>
 <li>There’s a learning curve</li>
-<li>Unlike point-and-click programs, <code>R</code> Doesn’t guide you down an analytical path, so you need to know what tests to apply to each situation. In other words, it assumes you know where you want to go and gives you the tools to get there, but doesn’t provide you with statistical guidance along the way.</li>
-<li>Because of the popularity and open-source nature of <code>R</code>, package quality is highly variable. Anybody can make an <code>R</code> package and there is no quality control on whether it is doing anything meaningful under the hood. This means you need to be very careful with which packages you chose to use.</li>
+<li>Unlike point-and-click programs, <code>R</code> Doesn’t guide you
+down an analytical path, so you need to know what tests to apply to each
+situation. In other words, it assumes you know where you want to go and
+gives you the tools to get there, but doesn’t provide you with
+statistical guidance along the way.</li>
+<li>Because of the popularity and open-source nature of <code>R</code>,
+package quality is highly variable. Anybody can make an <code>R</code>
+package and there is no quality control on whether it is doing anything
+meaningful under the hood. This means you need to be very careful with
+which packages you chose to use.</li>
 </ul>
 <p>In this practical you will be asked to:</p>
 <ul>
@@ -447,11 +467,35 @@ div.tocify {
 </div>
 <div id="installing-r" class="section level2">
 <h2>Installing R</h2>
-<p>In order to complete the practicals for this course you will need to install <code>R</code>, R Studio, and <code>rmarkdown</code>. If these are already installed on your computer, feel free to skip this section.</p>
-<p>You will first need to download and install the most recent version of <code>R</code>. The software is freely available from <a href="https://cran.r-project.org" class="uri">https://cran.r-project.org</a>. Once complete, the installation process should provide you with a clickable icon that can be used to start the program. Run the program to ensure your installation ran through to completion without issue.</p>
-<p>After installing <code>R</code>, you are encouraged to install R Studio. While not strictly necessary, R Studio provides an enhanced interface that makes working with <code>R</code> significantly more user friendly. R Studio Desktop is freely available from <a href="https://rstudio.com/products/rstudio/download/" class="uri">https://rstudio.com/products/rstudio/download/</a>.</p>
-<p>The final piece of software that is required for completing the practicals is <code>rmarkdown</code>. R Markdown documents weave together narrative text and code to produce formatted, fully reproducible outputs. If you are unfamiliar with R Markdown, a short tutorial is available from <a href="https://rmarkdown.rstudio.com/articles_intro.html" class="uri">https://rmarkdown.rstudio.com/articles_intro.html</a></p>
-<p>R Markdown files are designed to be used with the <code>rmarkdown</code> package. <code>rmarkdown</code> comes installed with the R Studio, but you can also acquire <code>rmarkdown</code> from CRAN by entering the command (see below for more information on installing packages)</p>
+<p>In order to complete the practicals for this course you will need to
+install <code>R</code>, R Studio, and <code>rmarkdown</code>. If these
+are already installed on your computer, feel free to skip this
+section.</p>
+<p>You will first need to download and install the most recent version
+of <code>R</code>. The software is freely available from <a
+href="https://cran.r-project.org"
+class="uri">https://cran.r-project.org</a>. Once complete, the
+installation process should provide you with a clickable icon that can
+be used to start the program. Run the program to ensure your
+installation ran through to completion without issue.</p>
+<p>After installing <code>R</code>, you are encouraged to install R
+Studio. While not strictly necessary, R Studio provides an enhanced
+interface that makes working with <code>R</code> significantly more user
+friendly. R Studio Desktop is freely available from <a
+href="https://rstudio.com/products/rstudio/download/"
+class="uri">https://rstudio.com/products/rstudio/download/</a>.</p>
+<p>The final piece of software that is required for completing the
+practicals is <code>rmarkdown</code>. R Markdown documents weave
+together narrative text and code to produce formatted, fully
+reproducible outputs. If you are unfamiliar with R Markdown, a short
+tutorial is available from <a
+href="https://rmarkdown.rstudio.com/articles_intro.html"
+class="uri">https://rmarkdown.rstudio.com/articles_intro.html</a></p>
+<p>R Markdown files are designed to be used with the
+<code>rmarkdown</code> package. <code>rmarkdown</code> comes installed
+with the R Studio, but you can also acquire <code>rmarkdown</code> from
+CRAN by entering the command (see below for more information on
+installing packages)</p>
 <p><code>install.packages("rmarkdown")</code></p>
 <hr />
 </div>
@@ -459,17 +503,26 @@ div.tocify {
 <h2>Conceptual overview of R</h2>
 <div id="concept-1-command-line" class="section level3">
 <h3>Concept 1: Command line</h3>
-<p><code>R</code> is a command line program that takes in written commands and passes them to the computer to run. When you start R, the first thing you see is a command prompt <code>&gt;</code>. This tells you that the program is waiting for a command. After entering a command, and issuing it by hitting ENTER, one of three things can happen:</p>
+<p><code>R</code> is a command line program that takes in written
+commands and passes them to the computer to run. When you start R, the
+first thing you see is a command prompt <code>&gt;</code>. This tells
+you that the program is waiting for a command. After entering a command,
+and issuing it by hitting ENTER, one of three things can happen:</p>
 <p>A correctly issued command will run through to completion</p>
 <pre class="r"><code>2+2</code></pre>
 <pre><code>## [1] 4</code></pre>
-<p>An incomplete command will ask to be completed (indicated by a hanging + sign)</p>
+<p>An incomplete command will ask to be completed (indicated by a
+hanging + sign)</p>
 <p><code>2+</code></p>
 <p><code>+</code></p>
 <p>An incorrect command will return an error message</p>
 <pre class="r"><code>2+X</code></pre>
 <pre><code>## Error in eval(expr, envir, enclos): object &#39;X&#39; not found</code></pre>
-<p>When entering commands, it is important to know that <code>R</code> will ignore any text that follows after a hash symbol <code>#</code>. This is a useful way for adding comments in an <code>R</code> script, or blocking out certain unwanted commands without deleting them outright.</p>
+<p>When entering commands, it is important to know that <code>R</code>
+will ignore any text that follows after a hash symbol <code>#</code>.
+This is a useful way for adding comments in an <code>R</code> script, or
+blocking out certain unwanted commands without deleting them
+outright.</p>
 <pre class="r"><code>The following text returns an error so the command underneath doesnt run
 2+2</code></pre>
 <pre><code>## Error: &lt;text&gt;:1:5: unexpected symbol
@@ -482,14 +535,17 @@ div.tocify {
 </div>
 <div id="concept-2-procedural-work-flow" class="section level3">
 <h3>Concept 2: Procedural work flow</h3>
-<p>When working in <code>R</code>, you issue statements that the program evaluates sequentially.</p>
+<p>When working in <code>R</code>, you issue statements that the program
+evaluates sequentially.</p>
 <pre class="r"><code>#Statement 1
 2+2</code></pre>
 <pre><code>## [1] 4</code></pre>
 <pre class="r"><code>#Statement 2
 2-2</code></pre>
 <pre><code>## [1] 0</code></pre>
-<p>Statements spanning multiple lines use blocks denoted by <code>{}</code> to define where that statement’s code begins and ends</p>
+<p>Statements spanning multiple lines use blocks denoted by
+<code>{}</code> to define where that statement’s code begins and
+ends</p>
 <pre class="r"><code>#Statement 1
 2+2</code></pre>
 <pre><code>## [1] 4</code></pre>
@@ -498,19 +554,31 @@ div.tocify {
 2/2
   }</code></pre>
 <pre><code>## [1] 1</code></pre>
-<p>Note how only the last result of the blocked statement has been printed to the screen.</p>
+<p>Note how only the last result of the blocked statement has been
+printed to the screen.</p>
 </div>
 <div id="concept-3-variables" class="section level3">
 <h3>Concept 3: Variables</h3>
-<p>Variables are just named pieces of the computer’s memory. You can name them almost anything, but names need to start with a letter. They can contain letters, numbers, <code>.</code>, or <code>_</code>, but can not be one of R’s reserved words/names/symbols. You can store values in variables (which stores them in the computer’s memory), and use those values in later calculations. Variables are signed using the assignment operator <code>&lt;-</code>. Variables are also case sensitive, which means that x is not the same as X.</p>
+<p>Variables are just named pieces of the computer’s memory. You can
+name them almost anything, but names need to start with a letter. They
+can contain letters, numbers, <code>.</code>, or <code>_</code>, but can
+not be one of R’s reserved words/names/symbols. You can store values in
+variables (which stores them in the computer’s memory), and use those
+values in later calculations. Variables are signed using the assignment
+operator <code>&lt;-</code>. Variables are also case sensitive, which
+means that x is not the same as X.</p>
 <pre class="r"><code>X &lt;- 2+7
 
 Y &lt;- FALSE
 
 pizza &lt;- &quot;tasty&quot;</code></pre>
-<p>In <code>R</code>, vectors are fundamental to programming, and many programs you write will build up vectors of values. All elements of a vector must be of the same type: integers, real numbers, character strings, etc…</p>
+<p>In <code>R</code>, vectors are fundamental to programming, and many
+programs you write will build up vectors of values. All elements of a
+vector must be of the same type: integers, real numbers, character
+strings, etc…</p>
 <pre class="r"><code>Z &lt;- c(1,2,3)</code></pre>
-<p>Variables can also be deleted (i.e., removed from the computer’s memory) using the <code>rm()</code> function</p>
+<p>Variables can also be deleted (i.e., removed from the computer’s
+memory) using the <code>rm()</code> function</p>
 <pre class="r"><code>Z</code></pre>
 <pre><code>## [1] 1 2 3</code></pre>
 <pre class="r"><code>rm(Z)
@@ -521,7 +589,8 @@ Z</code></pre>
 </ol>
 <ul>
 <li>Calculate 10 minus 6</li>
-<li>Calculate 2 times 3 and store the results in a variable called ‘x’</li>
+<li>Calculate 2 times 3 and store the results in a variable called
+‘x’</li>
 <li>Calculate x/4 and store the results in a variable called ‘y’</li>
 <li>Calculate 2x plus y</li>
 <li>Make a vector of length 5, call it anything you’d like</li>
@@ -531,12 +600,21 @@ Z</code></pre>
 </div>
 <div id="concept-4-functions" class="section level3">
 <h3>Concept 4: Functions</h3>
-<p>Functions are the core workhorses of the <code>R</code> environment. They are pieces of packaged code that take some input (the arguments) and return some output. <code>R</code> has many built-in functions: <code>mean()</code>, <code>sd()</code>, <code>cor()</code>, <code>anova()</code>, <code>t.test()</code>, etc… If you want more information on a function you can use the <code>?</code> operator to see the documentation (e.g., <code>?mean</code>). Alternatively, you can use <code>help('mean')</code></p>
+<p>Functions are the core workhorses of the <code>R</code> environment.
+They are pieces of packaged code that take some input (the arguments)
+and return some output. <code>R</code> has many built-in functions:
+<code>mean()</code>, <code>sd()</code>, <code>cor()</code>,
+<code>anova()</code>, <code>t.test()</code>, etc… If you want more
+information on a function you can use the <code>?</code> operator to see
+the documentation (e.g., <code>?mean</code>). Alternatively, you can use
+<code>help('mean')</code></p>
 <pre class="r"><code>Z &lt;- c(1,2,3,4,5)
 
 mean(Z)</code></pre>
 <pre><code>## [1] 3</code></pre>
-<p>You can also write your own functions using the <code>function()</code> function. Let’s write an <code>R</code> function that multiples any input number by 5.</p>
+<p>You can also write your own functions using the
+<code>function()</code> function. Let’s write an <code>R</code> function
+that multiples any input number by 5.</p>
 <pre class="r"><code>times.five &lt;- function(input){
   input*5
 }
@@ -559,16 +637,28 @@ times.five(1)</code></pre>
 </div>
 <div id="concept-5-the-working-directory" class="section level3">
 <h3>Concept 5: The working directory</h3>
-<p>When you run an <code>R</code> session, the program is always ‘pointing’ towards a location on your computer. This is called the working directory. It is the location where <code>R</code> will search for, and/or save any files. The first step in any project should be to set the working directory so you know where <code>R</code> will be pulling files from (so you can import the right data), and saving files (so you can find and inspect any results).</p>
+<p>When you run an <code>R</code> session, the program is always
+‘pointing’ towards a location on your computer. This is called the
+working directory. It is the location where <code>R</code> will search
+for, and/or save any files. The first step in any project should be to
+set the working directory so you know where <code>R</code> will be
+pulling files from (so you can import the right data), and saving files
+(so you can find and inspect any results).</p>
 <ol style="list-style-type: decimal">
 <li><ol></li>
 </ol>
 <ul>
-<li>Create a folder on your computer for this course. Create a sub folder called “Practicals”. Create another sub folder called “01_R_Introduction”.</li>
-<li>Get the current working directory using the <code>getwd()</code> function</li>
-<li>Set the working directory to the folder you created for this practical using the <code>setwd()</code> function</li>
-<li>Check to make sure you have indeed changed the working directory</li>
-<li>List all the files in the current working directory using <code>list.files()</code></li>
+<li>Create a folder on your computer for this course. Create a sub
+folder called “Practicals”. Create another sub folder called
+“01_R_Introduction”.</li>
+<li>Get the current working directory using the <code>getwd()</code>
+function</li>
+<li>Set the working directory to the folder you created for this
+practical using the <code>setwd()</code> function</li>
+<li>Check to make sure you have indeed changed the working
+directory</li>
+<li>List all the files in the current working directory using
+<code>list.files()</code></li>
 <li>Comment every step using <code>#</code>
 </ol></li>
 </ul>
@@ -579,29 +669,57 @@ times.five(1)</code></pre>
 <h2>Working with variables</h2>
 <div id="data-import" class="section level3">
 <h3>Data import</h3>
-<p>Data sets are essentially complex variables. They can be imported into <code>R</code> using the <code>read.csv()</code> function. <code>R</code>, and many <code>R</code> packages also have a number of built in data sets that can be imported using the <code>data()</code> function. For example the <code>iris</code> data set gives the measurements in centimeters of the variables sepal length, sepal width, petal length and petal width, for 50 flowers from each of 3 species of iris.</p>
+<p>Data sets are essentially complex variables. They can be imported
+into <code>R</code> using the <code>read.csv()</code> function.
+<code>R</code>, and many <code>R</code> packages also have a number of
+built in data sets that can be imported using the <code>data()</code>
+function. For example the <code>iris</code> data set gives the
+measurements in centimeters of the variables sepal length, sepal width,
+petal length and petal width, for 50 flowers from each of 3 species of
+iris.</p>
 <pre class="r"><code>data(&quot;iris&quot;)</code></pre>
 </div>
 <div id="data-inspection" class="section level3">
 <h3>Data inspection</h3>
-<p>When you import a data set, R tries to automatically determine what class of information is in each column (e.g., numeric, factor, string of text, etc…). The first steps after importing a data set should always be to inspect the data to make sure the import was correct. This is done by applying the following functions to the data set variable: <code>str()</code>, <code>summary()</code>, <code>class()</code>, <code>names()</code>, <code>head()</code>, <code>tail()</code>, <code>View()</code>.</p>
+<p>When you import a data set, R tries to automatically determine what
+class of information is in each column (e.g., numeric, factor, string of
+text, etc…). The first steps after importing a data set should always be
+to inspect the data to make sure the import was correct. This is done by
+applying the following functions to the data set variable:
+<code>str()</code>, <code>summary()</code>, <code>class()</code>,
+<code>names()</code>, <code>head()</code>, <code>tail()</code>,
+<code>View()</code>.</p>
 <ol style="list-style-type: decimal">
 <li><ol></li>
 </ol>
 <ul>
-<li>Apply <code>str()</code>, <code>summary()</code>, <code>class()</code>, <code>names()</code>, <code>head()</code>, <code>tail()</code>, <code>View()</code> to the <code>mtcars</code> data set and briefly describe the outcome.
+<li>Apply <code>str()</code>, <code>summary()</code>,
+<code>class()</code>, <code>names()</code>, <code>head()</code>,
+<code>tail()</code>, <code>View()</code> to the <code>mtcars</code> data
+set and briefly describe the outcome.
 </ol></li>
 </ul>
 </div>
 <div id="sub-setting-elements" class="section level3">
 <h3>Sub setting elements</h3>
-<p>There are three operators that can be used to extract subsets of R objects.</p>
+<p>There are three operators that can be used to extract subsets of R
+objects.</p>
 <ul>
-<li><p>The <code>[</code> operator always returns an object of the same class as the original. It can be used to select multiple elements of an object</p></li>
-<li><p>The <code>[[</code> operator is used to extract elements of a list or a data frame. It can only be used to extract a single element and the class of the returned object will not necessarily be a list or data frame.</p></li>
-<li><p>The <code>$</code> operator is used to extract elements of a list or data frame by name.</p></li>
+<li><p>The <code>[</code> operator always returns an object of the same
+class as the original. It can be used to select multiple elements of an
+object</p></li>
+<li><p>The <code>[[</code> operator is used to extract elements of a
+list or a data frame. It can only be used to extract a single element
+and the class of the returned object will not necessarily be a list or
+data frame.</p></li>
+<li><p>The <code>$</code> operator is used to extract elements of a list
+or data frame by name.</p></li>
 </ul>
-<p>In a standard data set with some number of rows and columns, the <code>[</code> operator can be used to extract specific values from a data set: DATA[row,column]. Rows are typically indexed by i and columns indexed by j, such that DATA[i,j] denotes the ith row in the jth column.</p>
+<p>In a standard data set with some number of rows and columns, the
+<code>[</code> operator can be used to extract specific values from a
+data set: DATA[row,column]. Rows are typically indexed by i and columns
+indexed by j, such that DATA[i,j] denotes the ith row in the jth
+column.</p>
 <p>The command [,1] will return the first column of a data set</p>
 <pre class="r"><code>mtcars[,1]</code></pre>
 <pre><code>##  [1] 21.0 21.0 22.8 21.4 18.7 18.1 14.3 24.4 22.8 19.2 17.8 16.4 17.3 15.2 10.4
@@ -619,7 +737,11 @@ times.five(1)</code></pre>
 </div>
 <div id="conditional-sub-setting" class="section level3">
 <h3>Conditional sub setting</h3>
-<p>You will often want to select certain parts of a data set if some condition is <code>TRUE</code>, and/or remove parts if that condition is <code>FALSE</code>. The <code>which()</code> function allows you to identify elements that satisfy a condition (e.g., <code>==</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>!=</code>).</p>
+<p>You will often want to select certain parts of a data set if some
+condition is <code>TRUE</code>, and/or remove parts if that condition is
+<code>FALSE</code>. The <code>which()</code> function allows you to
+identify elements that satisfy a condition (e.g., <code>==</code>,
+<code>&gt;</code>, <code>&lt;=</code>, <code>!=</code>).</p>
 <pre class="r"><code>#Identify which cars have a miles/gallon greater than or equal to 25
 KEEPERS &lt;- which(mtcars$mpg &gt;=25)
 
@@ -638,8 +760,10 @@ Using the iris data set:</li>
 </ol>
 <ul>
 <li>Get the mean petal length</li>
-<li>Select the first, third, and sixth rows of the first and third columns</li>
-<li>Make a new variable called ‘SUBSET’ from rows where sepal length is greater than 7</li>
+<li>Select the first, third, and sixth rows of the first and third
+columns</li>
+<li>Make a new variable called ‘SUBSET’ from rows where sepal length is
+greater than 7</li>
 <li>Find the median petal width of Iris setosa</li>
 <li>Comment every step
 </ol></li>
@@ -649,7 +773,10 @@ Using the iris data set:</li>
 </div>
 <div id="vectors" class="section level2">
 <h2>Vectors</h2>
-<p>A vector is the simplest type of data structure in R. Simply, a vector is a sequence of data elements, each of the same basic type. Vectors can be created by using the <code>c()</code> function, which is a generic function that combines its arguments.</p>
+<p>A vector is the simplest type of data structure in R. Simply, a
+vector is a sequence of data elements, each of the same basic type.
+Vectors can be created by using the <code>c()</code> function, which is
+a generic function that combines its arguments.</p>
 <pre class="r"><code>help(&#39;c&#39;)
 
 X &lt;- c(2,3,4)
@@ -674,7 +801,10 @@ X</code></pre>
 </ul>
 <div id="vector-classes" class="section level3">
 <h3>Vector classes</h3>
-<p>As was just noted, a vector is a sequence of data elements, each of the SAME BASIC TYPE. This means that all arguments are coerced to a common type which is the type of the returned value, and all attributes except names are removed.</p>
+<p>As was just noted, a vector is a sequence of data elements, each of
+the SAME BASIC TYPE. This means that all arguments are coerced to a
+common type which is the type of the returned value, and all attributes
+except names are removed.</p>
 <pre class="r"><code># numeric vector
 2:4</code></pre>
 <pre><code>## [1] 2 3 4</code></pre>
@@ -699,7 +829,8 @@ Z[1]</code></pre>
 </ol>
 <ul>
 <li>Create a vector of the numbers 1, 2, and 3</li>
-<li>Create a character vector “COL” with 3 color names from the output of colors()</li>
+<li>Create a character vector “COL” with 3 color names from the output
+of colors()</li>
 <li>Plot the vector, colouring each point with your chosen colors
 </ol></li>
 </ul>
@@ -708,7 +839,10 @@ Z[1]</code></pre>
 </div>
 <div id="sequences" class="section level2">
 <h2>Sequences</h2>
-<p>Sequences of numbers are used in many different tasks, from plotting the axes of graphs to generating simulated data. The simplest way to create a sequence of numbers in <code>R</code> is by using the <code>:</code> operator, or the <code>seq()</code> function</p>
+<p>Sequences of numbers are used in many different tasks, from plotting
+the axes of graphs to generating simulated data. The simplest way to
+create a sequence of numbers in <code>R</code> is by using the
+<code>:</code> operator, or the <code>seq()</code> function</p>
 <pre class="r"><code>help(&#39;seq&#39;)
 
 seq(from=2,to=4,by=1)</code></pre>
@@ -732,7 +866,11 @@ seq(from=2,to=4,by=1)</code></pre>
 </div>
 <div id="lists" class="section level2">
 <h2>Lists</h2>
-<p>A list is a generic vector containing other objects. The elements of a list (also called slots) can be of different types like − numbers, strings, vectors, even other lists. A list can also contain a matrix or a function as its elements. List is created using <code>list()</code> function.</p>
+<p>A list is a generic vector containing other objects. The elements of
+a list (also called slots) can be of different types like − numbers,
+strings, vectors, even other lists. A list can also contain a matrix or
+a function as its elements. List is created using <code>list()</code>
+function.</p>
 <pre class="r"><code>#Vectors cannot combine multiple input types
 A &lt;- vector(1,TRUE,&#39;cat&#39;)</code></pre>
 <pre><code>## Error in vector(1, TRUE, &quot;cat&quot;): unused argument (&quot;cat&quot;)</code></pre>
@@ -747,7 +885,8 @@ A</code></pre>
 ## 
 ## [[3]]
 ## [1] &quot;cat&quot;</code></pre>
-<p>Indexing lists is slightly more complicated than indexing a vector</p>
+<p>Indexing lists is slightly more complicated than indexing a
+vector</p>
 <pre class="r"><code>A[1] # a list of length one</code></pre>
 <pre><code>## [[1]]
 ## [1] 1</code></pre>
@@ -782,15 +921,20 @@ B[[3]] # indexed by number</code></pre>
 <li><ol></li>
 </ol>
 <ul>
-<li>Create a list “C” with your favorite number, color, and species—named “number”, “color”, “species” (the color must be selected from the output of <code>colors()</code>)</li>
-<li>Run the following: <code>plot(C$number,col=C$color,main=C$species)</code>
+<li>Create a list “C” with your favorite number, color, and
+species—named “number”, “color”, “species” (the color must be selected
+from the output of <code>colors()</code>)</li>
+<li>Run the following:
+<code>plot(C$number,col=C$color,main=C$species)</code>
 </ol></li>
 </ul>
 <hr />
 </div>
 <div id="for-loops" class="section level2">
 <h2>for loops</h2>
-<p>Let’s say we have a repeated task like naming all of R’s colours (note the <code>print()</code>function will print out whatever you input).</p>
+<p>Let’s say we have a repeated task like naming all of R’s colours
+(note the <code>print()</code>function will print out whatever you
+input).</p>
 <pre class="r"><code>COLS &lt;- colors()[1:10]
 print(COLS[1])</code></pre>
 <pre><code>## [1] &quot;white&quot;</code></pre>
@@ -798,7 +942,10 @@ print(COLS[1])</code></pre>
 <pre><code>## [1] &quot;aliceblue&quot;</code></pre>
 <pre class="r"><code>print(COLS[3])</code></pre>
 <pre><code>## [1] &quot;antiquewhite&quot;</code></pre>
-<p>but we don’t want to type (or copy/paste/edit) the same code over and over. A for loop is a way to repeat a blocked sequence of instructions. This will allow you to automate parts of your code that are in need of repetition.</p>
+<p>but we don’t want to type (or copy/paste/edit) the same code over and
+over. A for loop is a way to repeat a blocked sequence of instructions.
+This will allow you to automate parts of your code that are in need of
+repetition.</p>
 <pre class="r"><code>for(i in 1:length(COLS)){
   print(COLS[i])
 }</code></pre>
@@ -812,19 +959,30 @@ print(COLS[1])</code></pre>
 ## [1] &quot;aquamarine&quot;
 ## [1] &quot;aquamarine1&quot;
 ## [1] &quot;aquamarine2&quot;</code></pre>
-<p>An easy way to understand what is going on in the for loop is by reading it as follows: For each number from 1 to the number of colours in your vector COLS, you execute the code chunk <code>print(COLS[i])</code>, which prints the indexed colour. Once the for loop has executed the code chunk for every colour in the vector, the loop stops and goes to the next command after the loop block.</p>
+<p>An easy way to understand what is going on in the for loop is by
+reading it as follows: For each number from 1 to the number of colours
+in your vector COLS, you execute the code chunk
+<code>print(COLS[i])</code>, which prints the indexed colour. Once the
+for loop has executed the code chunk for every colour in the vector, the
+loop stops and goes to the next command after the loop block.</p>
 <ol style="list-style-type: decimal">
 <li><ol></li>
 </ol>
 <ul>
-<li>Create a for loop that prints out the square root of numbers 1 through 20
+<li>Create a for loop that prints out the square root of numbers 1
+through 20
 </ol></li>
 </ul>
 <hr />
 </div>
 <div id="saving-your-progress" class="section level2">
 <h2>Saving your progress</h2>
-<p><code>R</code> makes it easy to re-create the steps of an analysis, but some analyses can take a long time to run. It’s always a good idea to save important variables for future use. To save a data set as a file you can open in other applications use the <code>write.csv()</code> function. To save a data set as an <code>R</code> specific file format you can use the <code>save()</code> function.</p>
+<p><code>R</code> makes it easy to re-create the steps of an analysis,
+but some analyses can take a long time to run. It’s always a good idea
+to save important variables for future use. To save a data set as a file
+you can open in other applications use the <code>write.csv()</code>
+function. To save a data set as an <code>R</code> specific file format
+you can use the <code>save()</code> function.</p>
 <hr />
 </div>
 <div id="review" class="section level2">

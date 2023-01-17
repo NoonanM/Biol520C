@@ -13,7 +13,7 @@
 
 <title>For Loops</title>
 
-<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.19/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -60,6 +60,7 @@ if (window.hljs) {
 
 
 
+
 <link rel="stylesheet" href="tutorial.css" type="text/css" />
 
 
@@ -84,6 +85,9 @@ button.code-folding-btn:focus {
 }
 summary {
   display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
 }
 pre code {
   padding: 0;
@@ -141,11 +145,15 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.tab('show');
-
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
   // Navbar adjustments
   var navHeight = $(".navbar").first().height() + 15;
@@ -174,8 +182,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -183,16 +191,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -315,7 +316,7 @@ div.tocify {
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -334,7 +335,7 @@ div.tocify {
   <a href="Lectures.html">Lectures</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Practicals
      
     <span class="caret"></span>
@@ -373,7 +374,7 @@ div.tocify {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Datasets
      
     <span class="caret"></span>
@@ -388,7 +389,7 @@ div.tocify {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     R Help
      
     <span class="caret"></span>
@@ -419,17 +420,28 @@ div.tocify {
 </div>
 
 
-<p>This page was last updated on November 03, 2021.</p>
+<p>This page was last updated on January 16, 2023.</p>
 <hr />
 <div id="background" class="section level2">
 <h2>Background</h2>
-<p>This page provides some basic guidance on repeating a blocked sequence of instructions using for loops.</p>
+<p>This page provides some basic guidance on repeating a blocked
+sequence of instructions using for loops.</p>
 <hr />
 </div>
 <div id="for-loop-basics" class="section level2">
 <h2><code>for</code> loop basics</h2>
-<p>The <code>for</code> loop is probably the simplest way to carry out a repeated task without having to type (or copy/paste/edit) the same code over and over. In essence, a for loop is a way to repeat a blocked sequence of instructions, allowing you to automate parts of your code that are in need of repetition.</p>
-<p>An easy way to understand what is going on in the <code>for</code> loop is by reading it as follows: For each number from 1 to the last number of your index (5 in the example below), you execute the code chunk <code>{...}</code> that immediately follows (in the example below we just print the index). Once the for loop has executed the code chunk for every number (i.e., iteration) in the sequence you defined at the outset, the loop stops.</p>
+<p>The <code>for</code> loop is probably the simplest way to carry out a
+repeated task without having to type (or copy/paste/edit) the same code
+over and over. In essence, a for loop is a way to repeat a blocked
+sequence of instructions, allowing you to automate parts of your code
+that are in need of repetition.</p>
+<p>An easy way to understand what is going on in the <code>for</code>
+loop is by reading it as follows: For each number from 1 to the last
+number of your index (5 in the example below), you execute the code
+chunk <code>{...}</code> that immediately follows (in the example below
+we just print the index). Once the for loop has executed the code chunk
+for every number (i.e., iteration) in the sequence you defined at the
+outset, the loop stops.</p>
 <pre class="r"><code>for(i in 1:5){
   print(i)
 }</code></pre>
@@ -438,7 +450,12 @@ div.tocify {
 ## [1] 3
 ## [1] 4
 ## [1] 5</code></pre>
-<p>There are a few basic things to note about for loops. The first is that the index does not have to be called <code>i</code>. We can call it anything we like. We usually use <code>i</code> and <code>j</code> because these line up with the standard row and column notation from matrix algebra, but we could just as easily use the word <code>ROW</code> (or any other word we might want).</p>
+<p>There are a few basic things to note about for loops. The first is
+that the index does not have to be called <code>i</code>. We can call it
+anything we like. We usually use <code>i</code> and <code>j</code>
+because these line up with the standard row and column notation from
+matrix algebra, but we could just as easily use the word
+<code>ROW</code> (or any other word we might want).</p>
 <pre class="r"><code>for(ROW in 1:5){
   print(ROW)
 }</code></pre>
@@ -447,7 +464,11 @@ div.tocify {
 ## [1] 3
 ## [1] 4
 ## [1] 5</code></pre>
-<p>Another thing to note is that a <code>for</code> loop does not need to contain the index. It will loop a sequence of code whether it contains the index or not. The index is just a useful way to not only repeat a process, but make incremental changes in the behaviour of a loop.</p>
+<p>Another thing to note is that a <code>for</code> loop does not need
+to contain the index. It will loop a sequence of code whether it
+contains the index or not. The index is just a useful way to not only
+repeat a process, but make incremental changes in the behaviour of a
+loop.</p>
 <pre class="r"><code>for(i in 1:5){
   print(&quot;hello world&quot;)
 }</code></pre>
@@ -464,7 +485,10 @@ div.tocify {
 ## [1] &quot;hello world, I&#39;m replicate 3&quot;
 ## [1] &quot;hello world, I&#39;m replicate 4&quot;
 ## [1] &quot;hello world, I&#39;m replicate 5&quot;</code></pre>
-<p>For loops also don’t have to start at 1, and they don’t have to be perfect sequences of numbers. They can run backwards, start and end at any number you chose, have gaps, or even be characters. For example, any of these for loops will run without issue.</p>
+<p>For loops also don’t have to start at 1, and they don’t have to be
+perfect sequences of numbers. They can run backwards, start and end at
+any number you chose, have gaps, or even be characters. For example, any
+of these for loops will run without issue.</p>
 <pre class="r"><code>for(i in 3:7){print(i)}</code></pre>
 <pre><code>## [1] 3
 ## [1] 4
@@ -490,12 +514,29 @@ div.tocify {
 </div>
 <div id="saving-the-results-of-a-for-loop" class="section level2">
 <h2>Saving the results of a <code>for</code> loop</h2>
-<p>Generally, when you automate a repetitive task you will also want to save the results after the loop has completed running. For example, you might want to generate 50 random samples from a Gaussian distribution, each with <span class="math inline">\(n\)</span> = 10, and calculate the mean each time. The following loop will accomplish this</p>
+<p>Generally, when you automate a repetitive task you will also want to
+save the results after the loop has completed running. For example, you
+might want to generate 50 random samples from a Gaussian distribution,
+each with <span class="math inline">\(n\)</span> = 10, and calculate the
+mean each time. The following loop will accomplish this</p>
 <pre class="r"><code>for(i in 1:50){
   SAMPLE &lt;- rnorm(n = 10)
   mean(SAMPLE)
 }</code></pre>
-<p>The problem with this setup is that after the loop has finished running, there are no results to inspect. This is because everything that happens within the blocked code of a <code>for</code> loop happens within an internal environment, and we need to take extra steps to pull the results out of the loop. Otherwise, the results of an iteration will disappear after it has completed. In this example we are expecting a single number to be returned from the loop (the estimated mean). If we have a single number to save, the best way is to place it in the appropriate ‘slot’ in a vector (i.e., the first mean should go in slot 1, the second mean in slot 2, and so on…). To save the results in a vector, we first need to create a vector before running the loop. Inside the loop all we need to do then is save the result from each iteration <code>i</code> into the <code>i</code>’th element of the vector using standard sub-setting notation <code>[]</code>.</p>
+<p>The problem with this setup is that after the loop has finished
+running, there are no results to inspect. This is because everything
+that happens within the blocked code of a <code>for</code> loop happens
+within an internal environment, and we need to take extra steps to pull
+the results out of the loop. Otherwise, the results of an iteration will
+disappear after it has completed. In this example we are expecting a
+single number to be returned from the loop (the estimated mean). If we
+have a single number to save, the best way is to place it in the
+appropriate ‘slot’ in a vector (i.e., the first mean should go in slot
+1, the second mean in slot 2, and so on…). To save the results in a
+vector, we first need to create a vector before running the loop. Inside
+the loop all we need to do then is save the result from each iteration
+<code>i</code> into the <code>i</code>’th element of the vector using
+standard sub-setting notation <code>[]</code>.</p>
 <pre class="r"><code>MEANS &lt;- vector()
 
 for(i in 1:50){
@@ -504,15 +545,24 @@ for(i in 1:50){
 }
 
 head(MEANS)</code></pre>
-<pre><code>## [1]  0.1362611  0.1832126 -0.1497073  0.3822945 -0.4012500 -0.4698536</code></pre>
-<p>Generally speaking it’s best practice to define the length of the vector before running the for loop. This is because ‘growing’ the length of a variable in a for loop is computationally inefficient and can slow down your code. For simple tasks the difference is trivial, but for complex tasks the slow downs can be very important. Best practice for the previous loop would look like this:</p>
+<pre><code>## [1]  0.002506012 -0.203400891 -0.328856133  0.592182541 -0.209915468
+## [6] -0.155346691</code></pre>
+<p>Generally speaking it’s best practice to define the length of the
+vector before running the for loop. This is because ‘growing’ the length
+of a variable in a for loop is computationally inefficient and can slow
+down your code. For simple tasks the difference is trivial, but for
+complex tasks the slow downs can be very important. Best practice for
+the previous loop would look like this:</p>
 <pre class="r"><code>MEANS &lt;- vector(&quot;numeric&quot;, length = 50)
 
 for(i in 1:50){
   SAMPLE &lt;- rnorm(n = 10)
   MEANS[i] &lt;- mean(SAMPLE)
 }</code></pre>
-<p>Sometimes we might want more than a single piece of information from a loop. For example, let’s say we wanted to save not only the mean of each sample, but the standard deviation. One simple way to do this is to have a vector for each results.</p>
+<p>Sometimes we might want more than a single piece of information from
+a loop. For example, let’s say we wanted to save not only the mean of
+each sample, but the standard deviation. One simple way to do this is to
+have a vector for each results.</p>
 <pre class="r"><code>MEANS &lt;- vector(&quot;numeric&quot;, length = 50)
 SDs &lt;- vector(&quot;numeric&quot;, length = 50)
 
@@ -523,10 +573,12 @@ for(i in 1:50){
 }
 
 head(MEANS)</code></pre>
-<pre><code>## [1] -0.01896359  0.45216170 -0.44298265 -0.15449636 -0.16452333 -0.31124921</code></pre>
+<pre><code>## [1]  0.06012594 -0.31360252  0.33516949 -0.03728472  0.07185272  0.16114432</code></pre>
 <pre class="r"><code>head(SDs)</code></pre>
-<pre><code>## [1] 1.1696440 1.0199771 0.8698273 0.6577031 1.1782455 0.8665337</code></pre>
-<p>But this can quickly get unwieldy if we have a lot of information we want to save. Another option is to save our outputs in lists. Lists are extremely flexible ways of storing information.</p>
+<pre><code>## [1] 0.5934963 0.9105416 0.6834467 0.8254305 0.6578908 1.0600351</code></pre>
+<p>But this can quickly get unwieldy if we have a lot of information we
+want to save. Another option is to save our outputs in lists. Lists are
+extremely flexible ways of storing information.</p>
 <pre class="r"><code>RESULTS &lt;- list()
 
 for(i in 1:50){
@@ -540,39 +592,53 @@ for(i in 1:50){
 
 head(RESULTS)</code></pre>
 <pre><code>## [[1]]
-## [1] -0.02930003  0.82708174  0.68406421
+## [1] -0.4130188  1.2642180  1.5982472
 ## 
 ## [[2]]
-## [1] -0.4789223  1.3509678  1.8251140
+## [1] 0.2721396 0.5698196 0.3246943
 ## 
 ## [[3]]
-## [1] 0.4284872 0.8045823 0.6473528
+## [1] -0.1877859  0.9312209  0.8671724
 ## 
 ## [[4]]
-## [1] 0.5381244 0.8125610 0.6602554
+## [1] -0.3121261  0.7446711  0.5545351
 ## 
 ## [[5]]
-## [1] 0.2643556 1.3643883 1.8615555
+## [1] -0.4027019  0.8656936  0.7494255
 ## 
 ## [[6]]
-## [1] -0.3503663  0.8826134  0.7790065</code></pre>
-<p>Here each slot in the list contains a vector of length 3 which contains the estimated mean, standard deviation, and variance. Storing results in a list is very convenient because everything gets stored in the same object, but working with the results can be challenging. To make it easier to inspect the results of a for loop stored in a list, a bit of post-processing is required to get the data back into an easy to work with format.</p>
+## [1] -0.03727681  1.20737208  1.45774734</code></pre>
+<p>Here each slot in the list contains a vector of length 3 which
+contains the estimated mean, standard deviation, and variance. Storing
+results in a list is very convenient because everything gets stored in
+the same object, but working with the results can be challenging. To
+make it easier to inspect the results of a for loop stored in a list, a
+bit of post-processing is required to get the data back into an easy to
+work with format.</p>
 <pre class="r"><code>RESULTS_CLEAN &lt;- do.call(rbind, RESULTS)
 RESULTS_CLEAN &lt;- data.frame(RESULTS_CLEAN)
 names(RESULTS_CLEAN) &lt;- c(&quot;mean&quot;, &quot;sd&quot;, &quot;var&quot;)
 head(RESULTS_CLEAN)</code></pre>
 <pre><code>##          mean        sd       var
-## 1 -0.02930003 0.8270817 0.6840642
-## 2 -0.47892229 1.3509678 1.8251140
-## 3  0.42848718 0.8045823 0.6473528
-## 4  0.53812435 0.8125610 0.6602554
-## 5  0.26435562 1.3643883 1.8615555
-## 6 -0.35036629 0.8826134 0.7790065</code></pre>
+## 1 -0.41301876 1.2642180 1.5982472
+## 2  0.27213956 0.5698196 0.3246943
+## 3 -0.18778591 0.9312209 0.8671724
+## 4 -0.31212611 0.7446711 0.5545351
+## 5 -0.40270193 0.8656936 0.7494255
+## 6 -0.03727681 1.2073721 1.4577473</code></pre>
 <hr />
 </div>
 <div id="nested-for-loops" class="section level2">
 <h2>Nested for loops</h2>
-<p>Sometimes we’re interested in repeating a repeated task. This can be done using nested for loops (i.e., a for loop inside a for loop). With nested for loops the ‘outer’ loop controls the number of repetition of the whole block, while the inner loop executes n-times every time the outer for loop. For example let’s say I want to estimate the means of datasets with sample sizes ranging between 1 and 20, but I’m not just interested in estimating each of these means a single time, but in the variance of 100 means for each sample size. We could do this using nested for loops as follows.</p>
+<p>Sometimes we’re interested in repeating a repeated task. This can be
+done using nested for loops (i.e., a for loop inside a for loop). With
+nested for loops the ‘outer’ loop controls the number of repetition of
+the whole block, while the inner loop executes n-times every time the
+outer for loop. For example let’s say I want to estimate the means of
+datasets with sample sizes ranging between 1 and 20, but I’m not just
+interested in estimating each of these means a single time, but in the
+variance of 100 means for each sample size. We could do this using
+nested for loops as follows.</p>
 <pre class="r"><code>#Number of replicates
 nReps &lt;- 100
 

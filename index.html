@@ -13,7 +13,7 @@
 
 <title>Course website for Biol 520C: Statistical modelling for biological data</title>
 
-<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.19/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -60,6 +60,7 @@ if (window.hljs) {
 
 
 
+
 <link rel="stylesheet" href="tutorial.css" type="text/css" />
 
 
@@ -84,6 +85,9 @@ button.code-folding-btn:focus {
 }
 summary {
   display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
 }
 pre code {
   padding: 0;
@@ -141,11 +145,15 @@ $(document).ready(function () {
     href = "index.html";
   var menuAnchor = $('a[href="' + href + '"]');
 
-  // mark it active
-  menuAnchor.tab('show');
-
-  // if it's got a parent navbar menu mark it active as well
-  menuAnchor.closest('li.dropdown').addClass('active');
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
 
   // Navbar adjustments
   var navHeight = $(".navbar").first().height() + 15;
@@ -174,8 +182,8 @@ $(document).ready(function () {
   border-radius: 4px;
 }
 
-.tabset-dropdown > .nav-tabs > li.active:before {
-  content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
   font-family: 'Glyphicons Halflings';
   display: inline-block;
   padding: 10px;
@@ -183,16 +191,9 @@ $(document).ready(function () {
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-  content: "&#xe258;";
-  border: none;
-}
-
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-  content: "";
+  content: "\e258";
   font-family: 'Glyphicons Halflings';
-  display: inline-block;
-  padding: 10px;
-  border-right: 1px solid #ddd;
+  border: none;
 }
 
 .tabset-dropdown > .nav-tabs > li.active {
@@ -309,7 +310,7 @@ div.tocify {
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -328,7 +329,7 @@ div.tocify {
   <a href="Lectures.html">Lectures</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Practicals
      
     <span class="caret"></span>
@@ -367,7 +368,7 @@ div.tocify {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Datasets
      
     <span class="caret"></span>
@@ -382,7 +383,7 @@ div.tocify {
   </ul>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     R Help
      
     <span class="caret"></span>
@@ -408,18 +409,36 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Course website for Biol 520C: Statistical modelling for biological data</h1>
+<h1 class="title toc-ignore">Course website for Biol 520C: Statistical
+modelling for biological data</h1>
 
 </div>
 
 
 <div id="course-description" class="section level2">
 <h2>Course Description</h2>
-<p>Advanced course on biostatistics focused on combining data with models to generate mechanistic descriptions of biological patterns. Building from simple linear regression, the course teaches regression methods for handling the most routinely encountered features in biological data. Emphasis is placed on understanding and interpreting the analyses in biological terms and linking analyses to theoretical or applied questions. The course is divided into core lectures and practicals.</p>
+<p>Advanced course on biostatistics focused on combining data with
+models to generate mechanistic descriptions of biological patterns.
+Building from simple linear regression, the course teaches regression
+methods for handling the most routinely encountered features in
+biological data. Emphasis is placed on understanding and interpreting
+the analyses in biological terms and linking analyses to theoretical or
+applied questions. The course is divided into core lectures and
+practicals.</p>
 </div>
 <div id="course-objectives" class="section level2">
 <h2>Course Objectives</h2>
-<p>This course combines lectures on theory and concepts with time practicing statistical tools in <code>R</code> based software packages. The course is designed to equip students with the tools and knowledge they need to perform a variety of regression-based analyses that can model common features of biological data. For each topic, there will be a core lecture module and a lab based practical module. With the lectures, students will learn the theory behind core modelling tools including multiple linear regression, mixed effects models, generalised linear models, and generalised least squares, while the lab modules are intended to provide a pathway that students can follow over the longer term as their skills develop.</p>
+<p>This course combines lectures on theory and concepts with time
+practicing statistical tools in <code>R</code> based software packages.
+The course is designed to equip students with the tools and knowledge
+they need to perform a variety of regression-based analyses that can
+model common features of biological data. For each topic, there will be
+a core lecture module and a lab based practical module. With the
+lectures, students will learn the theory behind core modelling tools
+including multiple linear regression, mixed effects models, generalised
+linear models, and generalised least squares, while the lab modules are
+intended to provide a pathway that students can follow over the longer
+term as their skills develop.</p>
 <p>Learning Outcomes:</p>
 <ul>
 <li>Fit regression models via maximum likelihood</li>
@@ -427,7 +446,8 @@ div.tocify {
 <li>Fit models with fixed and random effects</li>
 <li>Fit models with non-Gaussian error distributions</li>
 <li>Fit non-linear models</li>
-<li>Handle non-independence in data, including phylogenetic inertia and temporal/spatial autocorrelation</li>
+<li>Handle non-independence in data, including phylogenetic inertia and
+temporal/spatial autocorrelation</li>
 <li>Perform AIC-based model selection</li>
 <li>Build models to simulate data and conduct power analyses</li>
 <li>Link questions, analyses, and studying design</li>
@@ -435,30 +455,87 @@ div.tocify {
 </div>
 <div id="course-format" class="section level2">
 <h2>Course Format</h2>
-<p><strong>Lectures</strong>: Lectures will cover the core concepts of the course. Lecture slides will be posted on the course website the evening prior to the lecture. Students are encouraged to take notes, and to ask questions in the lectures. Lectures will be given in Zoom and a link to the lecture is available here (Links to an external site.) and in the Canvas navigation sidebar. All lectures will be recorded and made available to the students. Calculators will be useful in the lectures but are not mandatory. Questions will be used throughout the lectures to reinforce key concepts. No grades are assigned to these questions, but and students are encouraged to answer these to the best of their ability in order to assist them in tracking their progress.</p>
-<p><strong>Practicals</strong>: The practicals use structured tutorials to guide students on the use of the open-source software program R for applying the methods learned in the lectures to data. The lectures will cover the material required for students to complete the practical assignments, however, they are designed to be complementary and not all the material in the practicals will be covered in the lectures and vice versa. These also provide training on communicating the results of statistical analyses, with a focus on reproducibility. Assessment of student learning will be based on submitted assignments (see detailed schedule below).</p>
-<p><strong>Core project</strong>: The core research project is a major component of the course and is designed to train students in data analysis and presentation using best practices in open science. The core project is divided into 3 components aimed at replicating the typical analytical process: 1) initial hypothesis and expected outcome(s); 2) a verbal presentation of the analyses and findings; and 3) the submission of a paper describing the work (see details below).</p>
+<p><strong>Lectures</strong>: Lectures will cover the core concepts of
+the course. Lecture slides will be posted on the course website the
+evening prior to the lecture. Students are encouraged to take notes, and
+to ask questions in the lectures. Lectures will be given in Zoom and a
+link to the lecture is available here (Links to an external site.) and
+in the Canvas navigation sidebar. All lectures will be recorded and made
+available to the students. Calculators will be useful in the lectures
+but are not mandatory. Questions will be used throughout the lectures to
+reinforce key concepts. No grades are assigned to these questions, but
+and students are encouraged to answer these to the best of their ability
+in order to assist them in tracking their progress.</p>
+<p><strong>Practicals</strong>: The practicals use structured tutorials
+to guide students on the use of the open-source software program R for
+applying the methods learned in the lectures to data. The lectures will
+cover the material required for students to complete the practical
+assignments, however, they are designed to be complementary and not all
+the material in the practicals will be covered in the lectures and vice
+versa. These also provide training on communicating the results of
+statistical analyses, with a focus on reproducibility. Assessment of
+student learning will be based on submitted assignments (see detailed
+schedule below).</p>
+<p><strong>Core project</strong>: The core research project is a major
+component of the course and is designed to train students in data
+analysis and presentation using best practices in open science. The core
+project is divided into 3 components aimed at replicating the typical
+analytical process: 1) initial hypothesis and expected outcome(s); 2) a
+verbal presentation of the analyses and findings; and 3) the submission
+of a paper describing the work (see details below).</p>
 </div>
 <div id="pre-course-checklist" class="section level2">
 <h2>Pre-course Checklist</h2>
 <ul>
-<li>The material learned in most entry level statistics course provides important background and context on the topics that will be covered in this course. It is recommended that you re-familiarise yourself with this material before the course (e.g., understand the differences between means, medians, and modes, variances, standard deviations, etc.).</li>
-<li>To fully engage in all of the course material will require a basic familiarity with R. Working through the book `R for Beginners’ by Paradis (available at <a href="https://cran.r-project.org" class="uri">https://cran.r-project.org</a> (Links to an external site.) –&gt; ~Documentation/Contributed) before beginning the course is a good idea if you want to improve with R or with coding. Alternatively, the swirl R package (available at: <a href="https://swirlstats.com/students.html" class="uri">https://swirlstats.com/students.html</a> (Links to an external site.)) teaches R programming and data science interactively, at your own pace, and right in the R console.</li>
-<li>If you intend to use your personal computer during the course, it is a good idea to try and install R, and RStudio before the course.</li>
+<li>The material learned in most entry level statistics course provides
+important background and context on the topics that will be covered in
+this course. It is recommended that you re-familiarise yourself with
+this material before the course (e.g., understand the differences
+between means, medians, and modes, variances, standard deviations,
+etc.).</li>
+<li>To fully engage in all of the course material will require a basic
+familiarity with R. Working through the book `R for Beginners’ by
+Paradis (available at <a href="https://cran.r-project.org"
+class="uri">https://cran.r-project.org</a> (Links to an external site.)
+–&gt; ~Documentation/Contributed) before beginning the course is a good
+idea if you want to improve with R or with coding. Alternatively, the
+swirl R package (available at: <a
+href="https://swirlstats.com/students.html"
+class="uri">https://swirlstats.com/students.html</a> (Links to an
+external site.)) teaches R programming and data science interactively,
+at your own pace, and right in the R console.</li>
+<li>If you intend to use your personal computer during the course, it is
+a good idea to try and install R, and RStudio before the course.</li>
 </ul>
 </div>
 <div id="optional-material" class="section level2">
 <h2>Optional Material</h2>
-<p>There is no textbook for this course, but if students are interested in expanding their knowledge beyond what is covered in the course, the following textbooks are recommended:</p>
+<p>There is no textbook for this course, but if students are interested
+in expanding their knowledge beyond what is covered in the course, the
+following textbooks are recommended:</p>
 <ul>
-<li>Bolker, B. M. (2008). Ecological models and data in R. Princeton University Press.</li>
-<li>Hilborn R, Mangel M. The ecological detective: confronting models with data. 1997. Princeton University Press. ISBN 978-0691034973.</li>
-<li>Zuur, A., Ieno, E. N., Walker, N., Saveliev, A. A., &amp; Smith, G. M. (2009). Mixed effects models and extensions in ecology with R. Springer Science &amp; Business Media.</li>
+<li>Bolker, B. M. (2008). Ecological models and data in R. Princeton
+University Press.</li>
+<li>Hilborn R, Mangel M. The ecological detective: confronting models
+with data. 1997. Princeton University Press. ISBN 978-0691034973.</li>
+<li>Zuur, A., Ieno, E. N., Walker, N., Saveliev, A. A., &amp; Smith, G.
+M. (2009). Mixed effects models and extensions in ecology with R.
+Springer Science &amp; Business Media.</li>
 </ul>
 </div>
 <div id="course-evaluation" class="section level2">
 <h2>Course Evaluation</h2>
-<p>The assignments and evaluation for this course are structured along two distinct, but complimentary lines: i) guided practical assignments; and ii) a core research project. The practical assignments are designed to provide students with the opportunity to learn how to apply the methods learned in the lectures to real data using the statistical software R. The core research project is designed to train students in data analysis and presentation using best practices in open science. The core project is divided into 3 components aimed at replicating the typical analytical process: 1) initial hypothesis and expected outcome(s); 2) a verbal presentation of the analyses and findings; and 3) the submission of a paper describing the work.</p>
+<p>The assignments and evaluation for this course are structured along
+two distinct, but complimentary lines: i) guided practical assignments;
+and ii) a core research project. The practical assignments are designed
+to provide students with the opportunity to learn how to apply the
+methods learned in the lectures to real data using the statistical
+software R. The core research project is designed to train students in
+data analysis and presentation using best practices in open science. The
+core project is divided into 3 components aimed at replicating the
+typical analytical process: 1) initial hypothesis and expected
+outcome(s); 2) a verbal presentation of the analyses and findings; and
+3) the submission of a paper describing the work.</p>
 <table>
 <colgroup>
 <col width="42%" />
@@ -498,32 +575,105 @@ div.tocify {
 </tr>
 </tbody>
 </table>
-<div id="practical-assignments-and-participation-50" class="section level3">
+<div id="practical-assignments-and-participation-50"
+class="section level3">
 <h3>Practical Assignments and Participation (50%)</h3>
-<p>Beginning the first week of class, students will be asked to complete practical assignments on an approximately weekly basis (schedule below). There will be a total of 10 practicals to be completed throughout the course. Each is designed to provide students with the opportunity to learn how to apply the methods learned in the lectures to data using the statistical software R. The purpose of these practical assignments is to ensure that students have the practical skills necessary to complete effective statistical analyses and data presentation that are central to science. The skills gained by completing each week’s assignment will help students complete their theses and research projects. The course web page on github will host the practicals, and the various datasets associated with each practical. Lectures will be given on Tuesdays and Thursdays. After the Thursdays lecture, we will have covered all of the material that is needed to complete the week’s practical assignment material which is due before the start of the following Thursday lecture (to be submitted online via canvas).</p>
-<p><strong>Grading</strong>: Students are to submit answers to all questions in the practical. Each practical assignment is worth a total of 5% of your total grade. Of this, 1% is given for submitting the tutorial on time, irrespective of whether or not the answers are correct. This is intended as the participation component of the course. The remaining 4% comes from the answers provided. Solutions to each the practicals will be posted after the weekly submission deadline. Late practicals will be accepted after the solutions have been posted, but no participation grade will be given.</p>
+<p>Beginning the first week of class, students will be asked to complete
+practical assignments on an approximately weekly basis (schedule below).
+There will be a total of 10 practicals to be completed throughout the
+course. Each is designed to provide students with the opportunity to
+learn how to apply the methods learned in the lectures to data using the
+statistical software R. The purpose of these practical assignments is to
+ensure that students have the practical skills necessary to complete
+effective statistical analyses and data presentation that are central to
+science. The skills gained by completing each week’s assignment will
+help students complete their theses and research projects. The course
+web page on github will host the practicals, and the various datasets
+associated with each practical. Lectures will be given on Tuesdays and
+Thursdays. After the Thursdays lecture, we will have covered all of the
+material that is needed to complete the week’s practical assignment
+material which is due before the start of the following Thursday lecture
+(to be submitted online via canvas).</p>
+<p><strong>Grading</strong>: Students are to submit answers to all
+questions in the practical. Each practical assignment is worth a total
+of 5% of your total grade. Of this, 1% is given for submitting the
+tutorial on time, irrespective of whether or not the answers are
+correct. This is intended as the participation component of the course.
+The remaining 4% comes from the answers provided. Solutions to each the
+practicals will be posted after the weekly submission deadline. Late
+practicals will be accepted after the solutions have been posted, but no
+participation grade will be given.</p>
 </div>
 <div id="hypothesis-and-expected-outcomes-5" class="section level3">
 <h3>Hypothesis and expected outcome(s) (5%)</h3>
-<p>At the end of week four, students will be expected to submit a one page proposal describing the study system they will be working on for their course project, the initial hypothesis, the expected outcome, and the data that they will be using to address this question.</p>
-<p><strong>Grading</strong>: All submitted proposals will receive a grade of 5/5. Late assignments will receive a grade of 0. In addition, no other assignment related to the core project will be accepted until the study proposal has been submitted.</p>
+<p>At the end of week four, students will be expected to submit a one
+page proposal describing the study system they will be working on for
+their course project, the initial hypothesis, the expected outcome, and
+the data that they will be using to address this question.</p>
+<p><strong>Grading</strong>: All submitted proposals will receive a
+grade of 5/5. Late assignments will receive a grade of 0. In addition,
+no other assignment related to the core project will be accepted until
+the study proposal has been submitted.</p>
 </div>
 <div id="papers-35" class="section level3">
 <h3>Papers (35%)</h3>
-<p>Students will be required to complete one core written assignments for this course. This assignment is designed to provide students with an opportunity to apply what they have learned in the lectures and practicals in an unguided format as they would if they were analysing data outside of a classroom setting. For this paper, students will apply the modelling tools covered in the lectures on an empirical dataset (details below) and write a short scientific paper about their work on these data and summarise their findings. This paper should be comprised of six sections: Introduction, Methods, Results, Discussion, References, and an Appendix Section.</p>
-<p><em>Introduction</em>: Provide a brief description of the study system from which the data come and an outline of what questions you intend on exploring with the data, citing all relevant literature. Length: ca. 1-2 pages.</p>
-<p><em>Methods</em>: Briefly describe how the data were collected and what variables are included. Provide a detailed description of the analytical workflow that was applied to the data, citing all relevant literature and statistical packages employed. There should be enough information that anyone can reproduce the workflow if they had access to the data. Length: As long as necessary.</p>
-<p><em>Results</em>: Length: Describe your statistical findings. Tables and figures should be used throughout. Length: As long as necessary.</p>
-<p><em>Discussion</em>: Provide a brief summary of your findings and place them in a biological context. Length: ca. 1-2 pages</p>
-<p><em>References</em>: Include references to all necessary literature.</p>
-<p><em>Appendix</em>: The appendix material should include an html document created via R markdown that details every step of the analyses. The code should be commented and clearly show how you arrived at the numbers presented in your results from the data on hand.</p>
-<p><strong>Datasets</strong>: To complete these assignments, students will have access to a number of pre-selected datasets. Students can opt to use their own data to complete these assignments if they prefer, and are highly encouraged to do so, but must seek instructor approval. If you intend on using your own data, it is recommended that you discuss this with the instructor as early as possible. The pre-selected datasets are available on the course website.</p>
-<p><strong>Grading</strong>: Students are to submit their final paper by the end of the day on Sunday of the 13th week of the course Papers will be graded out of 100, and will be worth a total of 35% of your total grade. Each section has the following value: Introduction 10%, Methods 25%, Results 20%, Discussion 10%, References 5%, and an Appendix Section 30%. Late papers will have 10% deducted per day that they are overdue, and will receive a grade of zero if more than 10 days late without a valid excuse.</p>
+<p>Students will be required to complete one core written assignments
+for this course. This assignment is designed to provide students with an
+opportunity to apply what they have learned in the lectures and
+practicals in an unguided format as they would if they were analysing
+data outside of a classroom setting. For this paper, students will apply
+the modelling tools covered in the lectures on an empirical dataset
+(details below) and write a short scientific paper about their work on
+these data and summarise their findings. This paper should be comprised
+of six sections: Introduction, Methods, Results, Discussion, References,
+and an Appendix Section.</p>
+<p><em>Introduction</em>: Provide a brief description of the study
+system from which the data come and an outline of what questions you
+intend on exploring with the data, citing all relevant literature.
+Length: ca. 1-2 pages.</p>
+<p><em>Methods</em>: Briefly describe how the data were collected and
+what variables are included. Provide a detailed description of the
+analytical workflow that was applied to the data, citing all relevant
+literature and statistical packages employed. There should be enough
+information that anyone can reproduce the workflow if they had access to
+the data. Length: As long as necessary.</p>
+<p><em>Results</em>: Length: Describe your statistical findings. Tables
+and figures should be used throughout. Length: As long as necessary.</p>
+<p><em>Discussion</em>: Provide a brief summary of your findings and
+place them in a biological context. Length: ca. 1-2 pages</p>
+<p><em>References</em>: Include references to all necessary
+literature.</p>
+<p><em>Appendix</em>: The appendix material should include an html
+document created via R markdown that details every step of the analyses.
+The code should be commented and clearly show how you arrived at the
+numbers presented in your results from the data on hand.</p>
+<p><strong>Datasets</strong>: To complete these assignments, students
+will have access to a number of pre-selected datasets. Students can opt
+to use their own data to complete these assignments if they prefer, and
+are highly encouraged to do so, but must seek instructor approval. If
+you intend on using your own data, it is recommended that you discuss
+this with the instructor as early as possible. The pre-selected datasets
+are available on the course website.</p>
+<p><strong>Grading</strong>: Students are to submit their final paper by
+the end of the day on Sunday of the 13th week of the course Papers will
+be graded out of 100, and will be worth a total of 35% of your total
+grade. Each section has the following value: Introduction 10%, Methods
+25%, Results 20%, Discussion 10%, References 5%, and an Appendix Section
+30%. Late papers will have 10% deducted per day that they are overdue,
+and will receive a grade of zero if more than 10 days late without a
+valid excuse.</p>
 </div>
 <div id="presentations-10" class="section level3">
 <h3>Presentations (10%)</h3>
-<p>Prior to submitting their papers to the instructor, students will be required to give a 15-minute presentation to the class. The presentation should include all of the sections that are included in the paper (detailed above), however the appendix detailing the R code that was used should be integrated into the methods section of the presentation.</p>
-<p><strong>Grading</strong>: Grading will based on <a href="Biol520C_Presentation_Rubric.pdf" target="_blank">the following rubric.</a></p>
+<p>Prior to submitting their papers to the instructor, students will be
+required to give a 15-minute presentation to the class. The presentation
+should include all of the sections that are included in the paper
+(detailed above), however the appendix detailing the R code that was
+used should be integrated into the methods section of the
+presentation.</p>
+<p><strong>Grading</strong>: Grading will based on
+<a href="Biol520C_Presentation_Rubric.pdf" target="_blank">the following
+rubric.</a></p>
 </div>
 </div>
 <div id="lecture-outline" class="section level2">
@@ -551,27 +701,32 @@ div.tocify {
 <tr class="even">
 <td>2</td>
 <td>Probability theory; Likelihood; Maximum likelihood</td>
-<td>Practical 02: Deterministic and stochastic models, simple linear regression, and maximum likelihood (4%)</td>
+<td>Practical 02: Deterministic and stochastic models, simple linear
+regression, and maximum likelihood (4%)</td>
 </tr>
 <tr class="odd">
 <td>3</td>
-<td>Multiple linear regression; Parameter interactions; Interpreting residuals</td>
+<td>Multiple linear regression; Parameter interactions; Interpreting
+residuals</td>
 <td>Practical 03: Multiple linear regression, Residuals (4%)</td>
 </tr>
 <tr class="even">
 <td>4</td>
 <td>Mixed effects models; Model Selection; Information criterion</td>
-<td>Practical 04: Data visualisation (4%); Hypothesis and predictions due (5%)</td>
+<td>Practical 04: Data visualisation (4%); Hypothesis and predictions
+due (5%)</td>
 </tr>
 <tr class="odd">
 <td>5</td>
 <td>Model Selection; Model averaging; Heteroskedasticity</td>
-<td>Practical 05: Mixed effect models, model selection, and model averaging (4%)</td>
+<td>Practical 05: Mixed effect models, model selection, and model
+averaging (4%)</td>
 </tr>
 <tr class="even">
 <td>6</td>
 <td>Temporal autocorrelation; Spatial Autocorrelation</td>
-<td>Practical 06: Heteroskedasticity; Autocorrelation Function; Models with autocorrelated errors (4%)</td>
+<td>Practical 06: Heteroskedasticity; Autocorrelation Function; Models
+with autocorrelated errors (4%)</td>
 </tr>
 <tr class="odd">
 <td>7</td>
@@ -580,18 +735,21 @@ div.tocify {
 </tr>
 <tr class="even">
 <td>8</td>
-<td>Non-Gaussian residuals; Generalised linear regression Poisson and Logistic regression</td>
+<td>Non-Gaussian residuals; Generalised linear regression Poisson and
+Logistic regression</td>
 <td>Practical 08: Generalised Linear Models for Count Data (4%)</td>
 </tr>
 <tr class="odd">
 <td>9</td>
-<td>Zero-inflated data; Non-linear modelling; Deterministic functions</td>
+<td>Zero-inflated data; Non-linear modelling; Deterministic
+functions</td>
 <td>Practical 09: GLMs for Binary and Proportion Data (4%)</td>
 </tr>
 <tr class="even">
 <td>10</td>
 <td>Stochastic simulation and power analysis; Course Overview</td>
-<td>Practical 10: Stochastic Simulations, Power Analysis, Non-linear models (4%)</td>
+<td>Practical 10: Stochastic Simulations, Power Analysis, Non-linear
+models (4%)</td>
 </tr>
 <tr class="odd">
 <td>11</td>
