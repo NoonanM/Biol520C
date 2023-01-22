@@ -30,9 +30,23 @@ Lecture slides and recordings for Biol 520C: Statistical modelling for biologica
 
 #### Lecture 03 - Probability
 
-<a href="Lectures/03_Probability.pdf" target="_blank">Lecture 03 Probability.</a>
+<a href="Lectures/03_Probability.pdf" target="_blank">Slides.</a>
 
-<a href="Lectures/04_Likelihood.pdf" target="_blank">Lecture 04 Likelihood. </a>
+<a href="https://ubc.zoom.us/rec/share/HJqt-WkM4sQnfR79YrWxfxNoZO9_GpWQnSu1G73yc7JvoCHOeaYaQrta16eLxkHU.nbpvWrU5avB-dQXz" target="_blank">Recording - 2023.</a>
+
+
+#### Lecture 04 - Likelihood
+
+<a href="Lectures/04_Likelihood.pdf" target="_blank">Slides. </a>
+
+<a href="https://ubc.zoom.us/rec/share/XuV_dXMZ38hwfNr06jNqP3Io8PAW76J2Cbxqi0vxQIWz700QwvvnFON4UQL0Bi47.q8FpHpXRReF4-Hyt" target="_blank">Recording - 2023.</a>
+
+
+***
+# Mulitple Linear Regression
+***
+
+#### Lecture 05 - Mulitple Linear Regression
 
 <a href="Lectures/05_Multiple_Linear_Regression.pdf" target="_blank">Lecture 05 Multiple Linear Regression </a>
 
@@ -44,6 +58,14 @@ Lecture slides and recordings for Biol 520C: Statistical modelling for biologica
 
 <a href="Lectures/09_Model_Averaging.pdf" target="_blank">Lecture 09 Model Selection and Model Averaging </a>
 
+<br />
+
+***
+# Breaking the IID Assumption
+***
+
+<br />
+
 <a href="Lectures/10_Heteroscedasticity.pdf" target="_blank">Lecture 10 Dealing with Heteroskedasticity </a>
 
 <a href="Lectures/11_Autocorrelation_1.pdf" target="_blank">Lecture 11 Autocorrelation 1: Temporal Autocorrelation </a>
@@ -52,9 +74,25 @@ Lecture slides and recordings for Biol 520C: Statistical modelling for biologica
 
 <a href="Lectures/13_Autocorrelation_3.pdf" target="_blank">Lecture 13 Autocorrelation 3: Phylogenetic Autocorrelation </a>
 
+<br />
+
+***
+# Breaking the Gaussian Assumption
+***
+
+<br />
+
 <a href="Lectures/14_GLMs_1.pdf" target="_blank">Lecture 14 Generalised Linear Models 1: Intro to GLMs and Modelling Count Data </a>
 
 <a href="Lectures/15_GLMs_2.pdf" target="_blank">Lecture 15 Generalised Linear Models 2: Modelling Binary and Proportional Data </a>
+
+<br />
+
+***
+# Non-linearity and Stochastic Simulation
+***
+
+<br />
 
 <a href="Lectures/16_Stochastic_Simulation.pdf" target="_blank">Lecture 16 Stochastic Simulation and Power Analysis </a>
 
