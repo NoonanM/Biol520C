@@ -48,15 +48,32 @@ Lecture slides and recordings for Biol 520C: Statistical modelling for biologica
 
 #### Lecture 05 - Mulitple Linear Regression
 
-<a href="Lectures/05_Multiple_Linear_Regression.pdf" target="_blank">Lecture 05 Multiple Linear Regression </a>
+<a href="Lectures/05_Multiple_Linear_Regression.pdf" target="_blank">Slides. </a>
 
-<a href="Lectures/06_Residuals.pdf" target="_blank">Lecture 06 Interpreting Residuals </a>
+<a href="https://ubc.zoom.us/rec/share/aXsD4vfEv-I8RGgnECHoIh-pvy_niveq2YquHuMaphZIozSMSPc7AYTHQ6EAMV5-.jkxdJtyeTWbVJNSA" target="_blank">Recording - 2023.</a>
 
-<a href="Lectures/07_Mixed_Models.pdf" target="_blank">Lecture 07 Mixed Effects Models </a>
+#### Lecture 06 - Interpreting Residuals
 
-<a href="Lectures/08_Model_Selection.pdf" target="_blank">Lecture 08 Model Selection </a>
+<a href="Lectures/06_Residuals.pdf" target="_blank">Slides. </a>
 
-<a href="Lectures/09_Model_Averaging.pdf" target="_blank">Lecture 09 Model Selection and Model Averaging </a>
+<a href="https://ubc.zoom.us/rec/share/vEduJeGqKx6H-ZOW4RwzPop92Mhkmx5JO7EpwyOvaKpJ-u8-vPmcU01Ll7MQXsYw.zYMcWrFgF_960Q8m" target="_blank">Recording - 2023.</a>
+
+
+#### Lecture 07 - Mixed Effects Models
+
+<a href="Lectures/07_Mixed_Models.pdf" target="_blank">Slides. </a>
+
+<a href="https://ubc.zoom.us/rec/share/m4wkZJoUxftCtobAI_mU7uvzhIIpobShuq7W3CUPtCEuIYy-fCquMK9_sTpSQUy_.MYQ0xYm47YpZotzr" target="_blank">Recording - 2022 (There was a technical issue in 2023).</a> 
+
+
+#### Lecture 08 - Model Selection
+
+<a href="Lectures/08_Model_Selection.pdf" target="_blank">Slides. </a>
+
+
+#### Lecture 09 - Model Selection and Model Averaging
+
+<a href="Lectures/09_Model_Averaging.pdf" target="_blank">Slides. </a>
 
 <br />
 
