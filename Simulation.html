@@ -420,7 +420,7 @@ div.tocify {
 </div>
 
 
-<p>This page was last updated on February 02, 2023.</p>
+<p>This page was last updated on February 08, 2023.</p>
 <hr />
 <div id="background" class="section level2">
 <h2>Background</h2>
@@ -453,7 +453,7 @@ working with the normal distribution see <code>help(Normal)</code></p>
 <pre class="r"><code>rnorm(n = 5,                  # number of observations
       mean = 0,               # vector of means
       sd = 1)                 # vector of standard deviations</code></pre>
-<pre><code>## [1] -0.6458897  1.1561340  3.3153814  0.1233632  0.3689694</code></pre>
+<pre><code>## [1]  0.8711607 -0.2323996 -0.4740601  1.4044645  0.6286758</code></pre>
 <p>Because <code>rnorm</code> is expecting a vector for each entry, this
 function is very flexible. For example we can sample 5 values from
 normal distributions with different means and different standard
@@ -461,7 +461,7 @@ deviations without having to re-write the function 5 times.</p>
 <pre class="r"><code>rnorm(n = 5,                  # number of observations
       mean = c(1,2,3,4,5),    # vector of means
       sd = 1:5)               # vector of standard deviations</code></pre>
-<pre><code>## [1] 0.794360 2.083276 4.670422 9.229824 4.979709</code></pre>
+<pre><code>## [1] -0.1740518  1.4218170  1.5916066  5.8592335 -0.1779193</code></pre>
 <hr />
 </div>
 <div id="poisson" class="section level3">
@@ -473,7 +473,7 @@ on working with the Poisson distribution see
 <p><strong>Note:</strong> Will only return whole numbers</p>
 <pre class="r"><code>rpois(n = 5,                  # number of observations
       lambda = 1)             # vector of (non-negative) rate parameters</code></pre>
-<pre><code>## [1] 0 1 2 0 0</code></pre>
+<pre><code>## [1] 0 0 1 3 3</code></pre>
 <p>Because <code>rpois</code> is expecting a vector for each entry, this
 function is very flexible. For example we can sample 5 values from
 Poisson distributions with different rate parameters <span
@@ -481,7 +481,7 @@ class="math inline">\(\lambda\)</span>, without having to re-write the
 function 5 times.</p>
 <pre class="r"><code>rpois(n = 5,                  # number of observations
       lambda = c(1,2,3,4,5))  # vector of (non-negative) rate parameters</code></pre>
-<pre><code>## [1] 0 3 3 2 2</code></pre>
+<pre><code>## [1] 1 1 3 6 7</code></pre>
 <hr />
 </div>
 <div id="binomial" class="section level3">
@@ -493,14 +493,14 @@ on working with the binomial distribution see
 <pre class="r"><code>rbinom(n = 5,                  # number of observations
        size = 1,               # number of trials (zero or more)
        prob = 0.5)             # probability of success on each trial.</code></pre>
-<pre><code>## [1] 1 1 1 1 0</code></pre>
+<pre><code>## [1] 1 0 0 1 1</code></pre>
 <p>If we change the number of trials we get the number of successes
 across the number of trials. In this example we have simulated the
 number of successes in 5 replicates of 20 trials.</p>
 <pre class="r"><code>rbinom(n = 5,                  # number of observations
        size = 20,              # number of trials (zero or more)
        prob = 0.5)             # probability of success on each trial.</code></pre>
-<pre><code>## [1] 11  8  9  7 11</code></pre>
+<pre><code>## [1] 12 10 10 15  8</code></pre>
 <p>Because <code>rbinom</code> is expecting a vector for each entry,
 this function is very flexible. For example we can simulate the number
 of successes in 5 replicates of 20 trials, with a different probability
@@ -508,7 +508,7 @@ of success in each trial</p>
 <pre class="r"><code>rbinom(n = 5,
        size = 20,
        prob = c(0.2, 0.4, 0.6, 0.8, 1))</code></pre>
-<pre><code>## [1]  2  7  8 18 20</code></pre>
+<pre><code>## [1]  4  4 11 15 20</code></pre>
 <hr />
 </div>
 <div id="uniform" class="section level3">
@@ -520,7 +520,7 @@ on working with the uniform distribution see
 <pre class="r"><code>runif(n = 5,                  # number of observations
       min = 0,                # lower limit of the distribution. Must be finite.
       max = 20)               # upper limit of the distribution. Must be finite.</code></pre>
-<pre><code>## [1] 13.1412562  4.9856234 17.9168885 10.3476498  0.3662723</code></pre>
+<pre><code>## [1]  5.539538 15.010011 13.806990  5.995118  9.282681</code></pre>
 <p>Unlike the other distributions <code>runif</code> is not expecting
 vector for the <code>min</code> and <code>max</code> arguments, so this
 function does not have the same amount of inherent flexibility.</p>
@@ -535,11 +535,11 @@ random numbers.</p>
 <p>For example, we can sample 5 random numbers from a normal
 distribution with <code>rnorm()</code>.</p>
 <pre class="r"><code>rnorm(5)</code></pre>
-<pre><code>## [1] -1.9659753 -1.1464585 -1.9416435  0.6755073  0.4401635</code></pre>
+<pre><code>## [1] -2.5383123 -0.8065577 -0.8385571 -0.4746551 -0.5322007</code></pre>
 <p>If we do this a second time the sequence of numbers will always be
 different.</p>
 <pre class="r"><code>rnorm(5)</code></pre>
-<pre><code>## [1]  0.9387347  1.0653176  0.1625060 -0.5693104  1.6668417</code></pre>
+<pre><code>## [1]  0.1730535 -1.2213963  1.1290759 -0.2869011  0.2245427</code></pre>
 <p>But if we want to be sure we can get the same sequence of randomly
 generated numbers every single time, we have to set the seed prior to
 simulating.</p>
