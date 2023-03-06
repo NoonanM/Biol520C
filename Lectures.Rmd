@@ -86,13 +86,29 @@ Lecture slides and recordings for Biol 520C: Statistical modelling for biologica
 
 <br />
 
-<a href="Lectures/10_Heteroscedasticity.pdf" target="_blank">Lecture 10 Dealing with Heteroskedasticity </a>
+#### Lecture 10 Dealing with Heteroskedasticity
 
-<a href="Lectures/11_Autocorrelation_1.pdf" target="_blank">Lecture 11 Autocorrelation 1: Temporal Autocorrelation </a>
+<a href="Lectures/10_Heteroscedasticity.pdf" target="_blank">Slides. </a>
 
-<a href="Lectures/12_Autocorrelation_2.pdf" target="_blank">Lecture 12 Autocorrelation 2: Spatial Autocorrelation </a>
+<a href="https://ubc.zoom.us/rec/share/YDIEtUiXpzuN9AU0lMN487C9jC3-jQex95vKBFAC4aUwt9jdc2ydALH0rj6vSI55.6ZAnCkUwQPquLdvy?startTime=1676045128000" target="_blank">Recording - 2023.</a>
 
-<a href="Lectures/13_Autocorrelation_3.pdf" target="_blank">Lecture 13 Autocorrelation 3: Phylogenetic Autocorrelation </a>
+#### Lecture 11 Autocorrelation 1: Temporal Autocorrelation
+
+<a href="Lectures/11_Autocorrelation_1.pdf" target="_blank">Slides. </a>
+
+<a href="https://ubc.zoom.us/rec/share/EcyI5lYNSfFi6v0mgxHyOliGCjbG-IDPB-omP4KOIqvMGIYZCRvhGab7V_NxX-nD.yXorLt_j5_xmDd2z?startTime=1676477167000" target="_blank">Recording - 2023.</a>
+
+#### Lecture 12 Autocorrelation 2: Spatial Autocorrelation
+
+<a href="Lectures/12_Autocorrelation_2.pdf" target="_blank">Slides. </a>
+
+<a href="https://ubc.zoom.us/rec/share/x1mSUUTy644GF3jhJTTm8ewmV1m1Q0nvscAVPk6eKCvfWOkovhd86ARqfIPlBqKg.1gbg5vvPDw_IJAtP?startTime=1676649882000" target="_blank">Recording - 2023.</a>
+
+#### Lecture 13 Autocorrelation 3: Phylogenetic Autocorrelation
+
+<a href="Lectures/13_Autocorrelation_3.pdf" target="_blank">Slides. </a>
+
+<a href="https://ubc.zoom.us/rec/share/0NsYixXNGMb3xBKtTCwEpS5jb57Y1bgQrFCIpUn1mPFISxs-mxLWouLx9av05cmv.MAs7d21er4RhUqqn?startTime=1677859471000" target="_blank">Recording - 2023.</a>
 
 <br />
 
