@@ -1,0 +1,13 @@
+﻿island,bird_species,island_area,maximum_altitude,distance_continent,island_age,habitat_complexity,habitat_diversity
+Tenerife,51,2471.6,3718,288,11.6,2.1,2.2
+Gran Canaria,51,1640.8,1949,197,15,1.7,1.7
+Fuerteventura,40,1730.4,807,96,20,1.5,0.7
+La Gomera,40,387.8,1487,337,10,2,2.1
+El Hierro,36,273.1,1500,384,1,1.7,1.7
+La Palma,38,832.6,2426,417,2,2.2,2
+Lanzarote,37,814.9,670,127,15.5,1.2,1.5
+La Graciosa,19,303.3,266,152,0.04,1.3,0.8
+Alegranza,14,10.2,289,168,0.03,1.5,0.6
+Lobos,14,4.9,122,123,0.1,1.6,0.8
+Montana Clara,8,1.8,256,160,0.04,1.6,0.5
+Selvagem Grande,2,2,75,375,25.5,1.5,0

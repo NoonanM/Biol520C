@@ -20,11 +20,15 @@ Lecture slides and recordings for Biol 520C: Statistical modelling for biologica
 
 <a href="Lectures/Course_Intro.pdf" target="_blank">Slides.</a>
 
+<a href="https://ubc.zoom.us/rec/share/08AoqO1QiyE-6nJNUo6zVg6Qu4d55fYClNpVOvMLyv_e0KHvAa2DX0nc5Bu1Ap3c.j1ofp1GZoXRK4DOO" target="_blank">Recording - 2024.</a>
+
 <a href="https://ubc.zoom.us/rec/share/LhYPK9kO0J2msQ_o4AOuCYj5Uqlmj58nvCn0BiRGaRI1ZD1SOcEG3Dyu3aBNuJA6.Ub0iqzTk___JOq76" target="_blank">Recording - 2023.</a>
 
 #### Lecture 02 - Simple Linear Regression
 
 <a href="Lectures/02_Regression.pdf" target="_blank">Slides.</a>
+
+<a href="https://ubc.zoom.us/rec/share/upK1SbC0VlG4RVpSu-VjCsHQrmj3zA-y8-bDbSbTZtdL7pMTbx2CHGJjlLSSKJGl.t5zaGXXwnBCwAfVt" target="_blank">Recording - 2024.</a>
 
 <a href="https://ubc.zoom.us/rec/share/bFo0zeOrw1kNqdHZz7cthoyeez1Iv1eqRpomtTQEn2HbechNlTCkIAH_zOAXuqXG.kq-f3DNJrsgDUlIQ?startTime=1673625942000" target="_blank">Recording - 2023.</a>
 
