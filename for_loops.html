@@ -545,7 +545,7 @@ for(i in 1:50){
 }
 
 head(MEANS)</code></pre>
-<pre><code>## [1]  0.40961063  0.19675023 -0.21791814 -0.17141071 -0.34942078  0.02223958</code></pre>
+<pre><code>## [1] -0.17111269  0.15467939  0.32410864  0.19290684  0.05056639  0.75787909</code></pre>
 <p>Generally speaking it’s best practice to define the length of the
 vector before running the for loop. This is because ‘growing’ the length
 of a variable in a for loop is computationally inefficient and can slow
@@ -572,9 +572,9 @@ for(i in 1:50){
 }
 
 head(MEANS)</code></pre>
-<pre><code>## [1] -0.5132904 -0.3086265 -0.8607564  0.2544084  0.1912292 -0.1816867</code></pre>
+<pre><code>## [1]  0.3467781 -0.3233572 -0.2822661  0.1345904 -0.1649032  0.1371965</code></pre>
 <pre class="r"><code>head(SDs)</code></pre>
-<pre><code>## [1] 0.8503615 0.9169652 0.6936309 0.7252403 1.3754009 1.0282688</code></pre>
+<pre><code>## [1] 1.0497313 0.6784765 1.2754238 1.0216542 0.7660731 1.0529051</code></pre>
 <p>But this can quickly get unwieldy if we have a lot of information we
 want to save. Another option is to save our outputs in lists. Lists are
 extremely flexible ways of storing information.</p>
@@ -591,22 +591,22 @@ for(i in 1:50){
 
 head(RESULTS)</code></pre>
 <pre><code>## [[1]]
-## [1] -0.06051995  1.31545430  1.73042002
+## [1] 0.1190726 0.8743004 0.7644012
 ## 
 ## [[2]]
-## [1] -0.2963394  0.8132182  0.6613238
+## [1] -0.3982022  1.1832765  1.4001432
 ## 
 ## [[3]]
-## [1] -0.4555713  1.1302510  1.2774672
+## [1] -0.06569074  1.22540336  1.50161339
 ## 
 ## [[4]]
-## [1] 0.3220461 0.8549752 0.7309826
+## [1] -0.3616272  0.5366671  0.2880116
 ## 
 ## [[5]]
-## [1] -0.4397040  0.8757825  0.7669950
+## [1] 0.07722271 1.00177547 1.00355410
 ## 
 ## [[6]]
-## [1] -0.3693155  0.6546879  0.4286163</code></pre>
+## [1] -0.1734071  0.7629300  0.5820622</code></pre>
 <p>Here each slot in the list contains a vector of length 3 which
 contains the estimated mean, standard deviation, and variance. Storing
 results in a list is very convenient because everything gets stored in
@@ -619,12 +619,12 @@ RESULTS_CLEAN &lt;- data.frame(RESULTS_CLEAN)
 names(RESULTS_CLEAN) &lt;- c(&quot;mean&quot;, &quot;sd&quot;, &quot;var&quot;)
 head(RESULTS_CLEAN)</code></pre>
 <pre><code>##          mean        sd       var
-## 1 -0.06051995 1.3154543 1.7304200
-## 2 -0.29633942 0.8132182 0.6613238
-## 3 -0.45557132 1.1302510 1.2774672
-## 4  0.32204614 0.8549752 0.7309826
-## 5 -0.43970397 0.8757825 0.7669950
-## 6 -0.36931552 0.6546879 0.4286163</code></pre>
+## 1  0.11907256 0.8743004 0.7644012
+## 2 -0.39820219 1.1832765 1.4001432
+## 3 -0.06569074 1.2254034 1.5016134
+## 4 -0.36162716 0.5366671 0.2880116
+## 5  0.07722271 1.0017755 1.0035541
+## 6 -0.17340708 0.7629300 0.5820622</code></pre>
 <hr />
 </div>
 <div id="nested-for-loops" class="section level2">
