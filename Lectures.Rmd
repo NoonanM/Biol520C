@@ -36,12 +36,16 @@ Lecture slides and recordings for Biol 520C: Statistical modelling for biologica
 
 <a href="Lectures/03_Probability.pdf" target="_blank">Slides.</a>
 
+<a href="https://ubc.zoom.us/rec/share/x0et1cQXeQWlBmgiBdepHxj2uWW8T1VsbPYuQhgTsnrFKjBREu-noxyA9cyxhOty.32mvJ4I7nfgoI6IJ" target="_blank">Recording - 2024.</a>
+
 <a href="https://ubc.zoom.us/rec/share/HJqt-WkM4sQnfR79YrWxfxNoZO9_GpWQnSu1G73yc7JvoCHOeaYaQrta16eLxkHU.nbpvWrU5avB-dQXz" target="_blank">Recording - 2023.</a>
 
 
 #### Lecture 04 - Likelihood
 
 <a href="Lectures/04_Likelihood.pdf" target="_blank">Slides. </a>
+
+<a href="https://ubc.zoom.us/rec/share/T8NXeQ8sgd0-wC4HrmWMvhvevorZFJAmB73EqyOp6e-6k6kQBYb7fZltqJ9eFHww.Wf4E-pV9djzNZXpD" target="_blank">Recording - 2024.</a>
 
 <a href="https://ubc.zoom.us/rec/share/XuV_dXMZ38hwfNr06jNqP3Io8PAW76J2Cbxqi0vxQIWz700QwvvnFON4UQL0Bi47.q8FpHpXRReF4-Hyt" target="_blank">Recording - 2023.</a>
 
@@ -54,11 +58,15 @@ Lecture slides and recordings for Biol 520C: Statistical modelling for biologica
 
 <a href="Lectures/05_Multiple_Linear_Regression.pdf" target="_blank">Slides. </a>
 
+<a href="https://ubc.zoom.us/rec/share/CrK0Za8bLB0ITZL0XlFDKBcPzfIo-aSm5yCj8wj4qpVmFfAlqYAbujX5TIbb8Fjl.n6uLbU-1apWLg6rE" target="_blank">Recording - 2024.</a>
+
 <a href="https://ubc.zoom.us/rec/share/aXsD4vfEv-I8RGgnECHoIh-pvy_niveq2YquHuMaphZIozSMSPc7AYTHQ6EAMV5-.jkxdJtyeTWbVJNSA" target="_blank">Recording - 2023.</a>
 
 #### Lecture 06 - Interpreting Residuals
 
 <a href="Lectures/06_Residuals.pdf" target="_blank">Slides. </a>
+
+<a href="https://ubc.zoom.us/rec/share/k5KgDaSs8obAxt6pCm8sb-seqrqVmGfhWvuq3PoMqQ2kAITKAr2bYGwAKDoJgM3U.Z0p_OHVyUmjt7xJ6" target="_blank">Recording - 2024.</a>
 
 <a href="https://ubc.zoom.us/rec/share/vEduJeGqKx6H-ZOW4RwzPop92Mhkmx5JO7EpwyOvaKpJ-u8-vPmcU01Ll7MQXsYw.zYMcWrFgF_960Q8m" target="_blank">Recording - 2023.</a>
 
