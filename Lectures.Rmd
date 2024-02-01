@@ -75,6 +75,8 @@ Lecture slides and recordings for Biol 520C: Statistical modelling for biologica
 
 <a href="Lectures/07_Mixed_Models.pdf" target="_blank">Slides. </a>
 
+<a href="https://ubc.zoom.us/rec/share/fnKPSbZBeIDvE_njkpEnc_EBpAGyZRJtDcMdimYAy8hr6hIC7fIyJsxl2t4BMhpb.IOUdp9Buher_8mFf" target="_blank">Recording - 2024.</a> 
+
 <a href="https://ubc.zoom.us/rec/share/m4wkZJoUxftCtobAI_mU7uvzhIIpobShuq7W3CUPtCEuIYy-fCquMK9_sTpSQUy_.MYQ0xYm47YpZotzr" target="_blank">Recording - 2022 (There was a technical issue in 2023).</a> 
 
 

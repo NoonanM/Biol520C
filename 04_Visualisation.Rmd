@@ -1,6 +1,14 @@
 ---
 title: "Practical 04 - Visualising Nested Data Prior to Analysis"
 #author: "Michael Noonan"
+output:
+  html_document:
+    css: tutorial.css
+    fig_caption: yes
+    highlight: textmate
+    theme: flatly
+    toc: yes
+    toc_float: yes
 ---
 
 ```{r setup, include=FALSE}
@@ -10,7 +18,7 @@ knitr::opts_chunk$set(echo = TRUE, fig.width=8, fig.height=8)
 
 ```{r, echo = FALSE}
 ```
-This page was last updated on `r format(Sys.time(), '%B %d, %Y')`.
+
 
 * * *
 ## Background
@@ -32,30 +40,31 @@ In this Practical you will:
 * Check for any correlations between the potential predictors variables.
 * Lay out a plan for how you expect to approach the modelling process.
 
-These data will be used again in Practical 05 when we explore model fitting, selection, and model averaging. Our goal right now is dive into these data to get a feel for their structure so we know how to approach the modelling process.
+These data will be used again in Practical 05 when we explore model fitting, selection, and model averaging. Our goal right now is dive into these data to get a feel for their structure so we know how to approach the modelling process. You are asked to complete the following exercises and submit to Canvas before the deadline. In addition to the points detailed below, 5 points are assigned to the cleanliness of the code and resulting pdf document. Only knit documents (.pdf, .doc, or .html) will be accepted. Unknit .Rmd files will not be graded.
 
 ### Plot the predictors against the response
 
 One of the first things to do when you start working with a new dataset is plot all of the potential predictors against the response(s) in order to get a feel for what the relationship is going to be. This can also be a useful process for identifying whether the relationship is non-linear and should be modeled as e.g. a polynomial (but we will not explore that here). Let's look at negs per chick versus arrival time, food treatment, the sex of the parent, and Nest ID.
 
-1. <ol>
+1. 3 points <ol>
 * Import the owl dataset (ensure your factors are actually factors).
-* Use boxplots to inspect whether the number of negs per chick differs by food treatment, the sex of the parent, and/or Nest ID.
-* Plot a scatterplot of the number of negs per chick as a function of arrival time.
-* Briefly describe what you see.
+* Use boxplots to inspect whether the number of negs per chick differs by food treatment, the sex of the parent, and/or Nest ID.  -- 1 point(s)
+* Plot a scatterplot of the number of negs per chick as a function of arrival time.  -- 1 point(s)
+* Briefly describe what you see.  -- 1 point(s)
 </ol>
 
 ```{R  fig.height = 8, fig.width = 8}
+
 ```
 
 ### Visualise the sampling
 
-The next thing to do when you get your hands on some data is to understand how balanced/unbalanced the sampling was. This is especially true for nested data (no pun intended). If certain groups are over represented, there is a chance that they can outweigh others and vice versa for underrepresented groups. Mixed effects models can, to some extent, handle unbalanced designs, but it is good to know about this a priori. For example, if 95% of the data were to have come from 1 nest, then this can result in a number of problems.
+The next thing to do when you get your hands on some data is to understand how balanced/unbalanced the sampling was. This is especially true for nested data (no pun intended). If certain groups are over represented, there is a chance that they can outweigh others and vice versa for underrepresented groups. Mixed effects models can, to some extent, handle unbalanced designs, but it is good to know about this _a priori_. For example, if 95% of the data were to have come from 1 nest, then this can result in a number of challenges.
 
-1. <ol>
-* Use barplots to plot the amount of data in the different groups for each of the variables
-* Describe patterns in sampling you see in these plots
-* Generate and inspect a table of the number of samples in each nest for each level of i) food treatments and ii) the parent's sex. Is there any cause for concern?
+1. 3 points <ol>
+* Use barplots to plot the amount of data in the different groups for each of the variables.  -- 1 point(s)
+* Describe patterns in sampling you see in these plots.  -- 1 point(s)
+* Generate and inspect a table of the number of samples in each nest for each level of i) food treatments and ii) the parent's sex. Is there any cause for concern?  -- 1 point(s)
 
 __Note:__ This will be easier if you make use of the `table()` function.
 </ol>
@@ -67,13 +76,13 @@ __Note:__ This will be easier if you make use of the `table()` function.
 
 These data are nested, or hierarchical in nature and there are some balancing issues. At this stage it is useful to check and see if the response variable differs across the sampling groups to get a feel for how balancing might influence the modelling process. This can help tell us whether or not we will need to worry about fitting mixed-effect models to our data, and how partial shrinkage might come into play. For example if a heavily over sampled nest also has a higher number of negs per chick than any other nest, it can pull the regression towards itself. In our initial inspection above, there were some potential imbalances related to the various treatments/sampling groups. Let's explore this further.
 
-1. <ol>
-* Create a boxplot depicting the number of negs per chick in each nest. Describe what you see in relation to the sampling you just explored.
-* Plot the mean number of negs per chick in each nest versus the amount of data for each nest (hint: the `aggregate()` function is useful here). Visually, do you see a cause for concern? Fit a simple linear model to confirm.
-* Create a boxplot of the number of negs per chick grouped by both nest and food treatment. Is this cause for concern?
-* Create a boxplot of the number of negs per chick grouped by both nest and sex of the parent. Is this cause for concern?
-* Plot The number of negs per chick as a function of arrival time. Colour the data by nest ID. Do you see any patterns that might skew conventional regressional analyses?
-* Make this same plot again, but now add a regression line for the number of negs per chick as a function of arrival time for each nest (hint: a for loop can do this straightforwardly). Do you think there will be a need for a variable slope model? What about a variable intercept model? 
+1. 7 points <ol>
+* Create a boxplot depicting the number of negs per chick in each nest. Describe what you see in relation to the sampling you just explored.   -- 1 point(s)
+* Plot the mean number of negs per chick in each nest versus the amount of data for each nest (hint: the `aggregate()` function is useful here). Visually, do you see a cause for concern? Fit a simple linear model to confirm.  -- 1 point(s)
+* Create a boxplot of the number of negs per chick grouped by both nest and food treatment. Is this cause for concern?  -- 1 point(s)
+* Create a boxplot of the number of negs per chick grouped by both nest and sex of the parent. Is this cause for concern?  -- 1 point(s)
+* Plot The number of negs per chick as a function of arrival time. Colour the data by nest ID. Do you see any patterns that might skew conventional regressional analyses?  -- 1 point(s)
+* Make this same plot again, but now add a regression line for the number of negs per chick as a function of arrival time for each nest (hint: you can do this either via ggplot or using a for loop). Do you think there will be a need for a variable slope model? What about a variable intercept model?  -- 2 point(s)
 </ol>
 
 ```{R}
@@ -83,12 +92,13 @@ These data are nested, or hierarchical in nature and there are some balancing is
 
 Remember that when fitting multiple regression models, correlations between predictor variables can bias results. Before analysing a dataset it's important to check for any potential correlations and/or relationships between the predictor variables. Here we have i) arrival time, a continuous variable; ii) the sex of the parent, a factor with two levels; and iii) the food treatment, a factor with two levels.
 
-1. <ol>
-* Use a combination of boxplots and simple linear models to check whether arrival time differs between the sexes of the parents and the food treatment. Do you see any issues with including these predictor variables in a model?
+1. 2 points <ol>
+* Use a combination of boxplots and simple linear models to check whether arrival time differs between the sexes of the parents and the food treatment. Do you see any issues with including these predictor variables in a model?  -- 2 point(s)
 
 </ol>
 
 ```{R  fig.height = 4, fig.width = 8}
+
 ```
 
 
@@ -96,7 +106,7 @@ Remember that when fitting multiple regression models, correlations between pred
 
 The whole point of generating all of these visual diagnostic plots was to figure out how we would build a model identifying the factors influencing begging behaviour of nestling owls.
 
-1. <ol>
-* Briefly detail how you expect to model these data.
+1. 5 points <ol>
+* Briefly detail how you expect to model these data.  -- 5 point(s)
 </ol>
 

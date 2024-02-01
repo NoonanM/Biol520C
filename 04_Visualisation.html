@@ -415,7 +415,6 @@ Prior to Analysis</h1>
 </div>
 
 
-<p>This page was last updated on January 26, 2024.</p>
 <hr />
 <div id="background" class="section level2">
 <h2>Background</h2>
@@ -459,7 +458,11 @@ process.</li>
 <p>These data will be used again in Practical 05 when we explore model
 fitting, selection, and model averaging. Our goal right now is dive into
 these data to get a feel for their structure so we know how to approach
-the modelling process.</p>
+the modelling process. You are asked to complete the following exercises
+and submit to Canvas before the deadline. In addition to the points
+detailed below, 5 points are assigned to the cleanliness of the code and
+resulting pdf document. Only knit documents (.pdf, .doc, or .html) will
+be accepted. Unknit .Rmd files will not be graded.</p>
 <div id="plot-the-predictors-against-the-response"
 class="section level3">
 <h3>Plot the predictors against the response</h3>
@@ -471,16 +474,18 @@ non-linear and should be modeled as e.g. a polynomial (but we will not
 explore that here). Let’s look at negs per chick versus arrival time,
 food treatment, the sex of the parent, and Nest ID.</p>
 <ol style="list-style-type: decimal">
-<li><ol></li>
+<li>3 points
+<ol></li>
 </ol>
 <ul>
 <li>Import the owl dataset (ensure your factors are actually
 factors).</li>
 <li>Use boxplots to inspect whether the number of negs per chick differs
-by food treatment, the sex of the parent, and/or Nest ID.</li>
+by food treatment, the sex of the parent, and/or Nest ID. – 1
+point(s)</li>
 <li>Plot a scatterplot of the number of negs per chick as a function of
-arrival time.</li>
-<li>Briefly describe what you see.
+arrival time. – 1 point(s)</li>
+<li>Briefly describe what you see. – 1 point(s)
 </ol></li>
 </ul>
 </div>
@@ -491,19 +496,21 @@ understand how balanced/unbalanced the sampling was. This is especially
 true for nested data (no pun intended). If certain groups are over
 represented, there is a chance that they can outweigh others and vice
 versa for underrepresented groups. Mixed effects models can, to some
-extent, handle unbalanced designs, but it is good to know about this a
-priori. For example, if 95% of the data were to have come from 1 nest,
-then this can result in a number of problems.</p>
+extent, handle unbalanced designs, but it is good to know about this
+<em>a priori</em>. For example, if 95% of the data were to have come
+from 1 nest, then this can result in a number of challenges.</p>
 <ol style="list-style-type: decimal">
-<li><ol></li>
+<li>3 points
+<ol></li>
 </ol>
 <ul>
 <li>Use barplots to plot the amount of data in the different groups for
-each of the variables</li>
-<li>Describe patterns in sampling you see in these plots</li>
+each of the variables. – 1 point(s)</li>
+<li>Describe patterns in sampling you see in these plots. – 1
+point(s)</li>
 <li>Generate and inspect a table of the number of samples in each nest
 for each level of i) food treatments and ii) the parent’s sex. Is there
-any cause for concern?</li>
+any cause for concern? – 1 point(s)</li>
 </ul>
 <strong>Note:</strong> This will be easier if you make use of the
 <code>table()</code> function.
@@ -524,28 +531,29 @@ itself. In our initial inspection above, there were some potential
 imbalances related to the various treatments/sampling groups. Let’s
 explore this further.</p>
 <ol style="list-style-type: decimal">
-<li><ol></li>
+<li>7 points
+<ol></li>
 </ol>
 <ul>
 <li>Create a boxplot depicting the number of negs per chick in each
 nest. Describe what you see in relation to the sampling you just
-explored.</li>
+explored. – 1 point(s)</li>
 <li>Plot the mean number of negs per chick in each nest versus the
 amount of data for each nest (hint: the <code>aggregate()</code>
 function is useful here). Visually, do you see a cause for concern? Fit
-a simple linear model to confirm.</li>
+a simple linear model to confirm. – 1 point(s)</li>
 <li>Create a boxplot of the number of negs per chick grouped by both
-nest and food treatment. Is this cause for concern?</li>
+nest and food treatment. Is this cause for concern? – 1 point(s)</li>
 <li>Create a boxplot of the number of negs per chick grouped by both
-nest and sex of the parent. Is this cause for concern?</li>
+nest and sex of the parent. Is this cause for concern? – 1 point(s)</li>
 <li>Plot The number of negs per chick as a function of arrival time.
 Colour the data by nest ID. Do you see any patterns that might skew
-conventional regressional analyses?</li>
+conventional regressional analyses? – 1 point(s)</li>
 <li>Make this same plot again, but now add a regression line for the
 number of negs per chick as a function of arrival time for each nest
-(hint: a for loop can do this straightforwardly). Do you think there
-will be a need for a variable slope model? What about a variable
-intercept model?
+(hint: you can do this either via ggplot or using a for loop). Do you
+think there will be a need for a variable slope model? What about a
+variable intercept model? – 2 point(s)
 </ol></li>
 </ul>
 </div>
@@ -559,13 +567,14 @@ relationships between the predictor variables. Here we have i) arrival
 time, a continuous variable; ii) the sex of the parent, a factor with
 two levels; and iii) the food treatment, a factor with two levels.</p>
 <ol style="list-style-type: decimal">
-<li><ol></li>
+<li>2 points
+<ol></li>
 </ol>
 <ul>
 <li>Use a combination of boxplots and simple linear models to check
 whether arrival time differs between the sexes of the parents and the
 food treatment. Do you see any issues with including these predictor
-variables in a model?</li>
+variables in a model? – 2 point(s)</li>
 </ul>
 </ol>
 </div>
@@ -575,10 +584,11 @@ variables in a model?</li>
 was to figure out how we would build a model identifying the factors
 influencing begging behaviour of nestling owls.</p>
 <ol style="list-style-type: decimal">
-<li><ol></li>
+<li>5 points
+<ol></li>
 </ol>
 <ul>
-<li>Briefly detail how you expect to model these data.
+<li>Briefly detail how you expect to model these data. – 5 point(s)
 </ol></li>
 </ul>
 </div>
