@@ -415,7 +415,7 @@ Selection, and Model Averaging</h1>
 </div>
 
 
-<p>This page was last updated on February 01, 2024.</p>
+<p>This page was last updated on February 12, 2024.</p>
 <hr />
 <div id="background" class="section level2">
 <h2>Background</h2>
@@ -464,6 +464,14 @@ fit to empirical data.</li>
 <li>Visualise parameter estimates</li>
 <li>Describe the biological importance of a model</li>
 </ul>
+<p>These data will be used again in Practical 05 when we explore model
+fitting, selection, and model averaging. Our goal right now is dive into
+these data to get a feel for their structure so we know how to approach
+the modelling process. You are asked to complete the following exercises
+and submit to Canvas before the deadline. In addition to the points
+detailed below, 5 points are assigned to the cleanliness of the code and
+resulting pdf document. Only knit documents (.pdf, .doc, or .html) will
+be accepted. Unknit .Rmd files will not be graded.</p>
 <hr />
 </div>
 <div id="linear-mixed-effects-regression-model" class="section level2">
@@ -496,16 +504,19 @@ and visually inspect them to get a feel for their structure.</p>
 <div id="data-import-and-visual-diagnostics" class="section level3">
 <h3>Data import and visual diagnostics</h3>
 <ol style="list-style-type: decimal">
-<li><ol></li>
+<li>3 points
+<ol></li>
 </ol>
 <ul>
 <li>Import the owl dataset.</li>
 <li>Plot a histogram of the response variable NegPerChick. Describe what
-you see.</li>
+you see. – 1 point(s)</li>
 <li>Plot the relationship between NegPerChick and the 4 potential
 explanatory variables and briefly describe what you see in each figure.
+– 2 point(s)
 </ol></li>
 </ul>
+<pre class="r"><code>data &lt;- read.csv(&quot;https://noonanm.github.io/Biol520C/Practical_Datasets/Owls.csv&quot;)</code></pre>
 </div>
 <div id="initial-model-fit-and-inspection" class="section level3">
 <h3>Initial model fit and inspection</h3>
@@ -513,31 +524,36 @@ explanatory variables and briefly describe what you see in each figure.
 fit a basic multiple linear regression model to your data as ‘quick and
 dirty’ approach to getting a feel for what direction you need to go.</p>
 <ol style="list-style-type: decimal">
-<li><ol></li>
+<li>6 points
+<ol></li>
 </ol>
 <ul>
 <li>Fit a multiple linear regression model to predict NegPerChick as a
-function of the interaction between the sex of the parent and the food
-treatment, and the sex of the parent and arrival time.</li>
-<li>Plot and inspect the ordinary residuals and describe what you
-see.</li>
+function of the interaction between both i) the sex of the parent and
+the food treatment, and ii) the sex of the parent and arrival time
+(note: you should include the marginal effects by making use of the
+<code>*</code> notation for specifying the interactions). – 1
+point(s)</li>
+<li>Plot and inspect the ordinary residuals and describe what you see. –
+1 point(s)</li>
 <li>Apply a <span class="math inline">\(\log_{10}(Y + 1)\)</span>
 transformation to the NegPerChick variable and re-fit the model (why the
-+1?).</li>
-<li>Plot and inspect the ordinary residuals, describe what you see.</li>
++1?). – 1 point(s)</li>
+<li>Plot and inspect the ordinary residuals, describe what you see. – 1
+point(s)</li>
 <li>Visually check for a ‘nest’ effect by using a boxplot to compare the
-residuals against the nest ID. Describe what you see.
+residuals against the nest ID. Describe what you see. – 2 point(s)
 </ol></li>
 </ul>
 </div>
 <div id="chose-a-random-effect-structure" class="section level3">
 <h3>Chose a random effect structure</h3>
-<p>After getting a general feel for the features you will need to
-account for in your data, the next step is to identify the most
-appropriate random effect structure for the data and model. Starting
-with a multiple linear regression model that contains the full range of
-fixed effects that we will be interested in testing, we compare 3
-models:</p>
+<p>After getting a general feel for the features that you expect the
+need to account for in your data, the next step (for these data anyway)
+is to identify the most appropriate random effect structure for the data
+and model. Starting with a multiple linear regression model that
+contains the full range of fixed effects that we will be interested in
+testing, we compare 3 models:</p>
 <ul>
 <li>A model with only fixed effects</li>
 <li>A mixed effects model with a random intercept</li>
@@ -546,29 +562,44 @@ models:</p>
 <p>These models are then compared using likelihood ratio tests and AIC
 values.</p>
 <ol style="list-style-type: decimal">
-<li><ol></li>
+<li>5 points
+<ol></li>
 </ol>
 <ul>
 <li>Use the <code>gls()</code> function to fit a multiple linear
 regression model to predict log transformed NegPerChick as a function of
 the interaction between the sex of the parent and the food treatment,
-and the sex of the parent and arrival time.</li>
+and the sex of the parent and arrival time. – 1 point(s)</li>
 <li>Use the <code>lme()</code> function to fit the same model, but with
-a random intercept around data from the same nest.</li>
-<li>Fit a third model with a random intercept and slope. Here assume the
-relationship between sibling negotiation and arrival time changes
-between nests.</li>
+a random intercept around data from the same nest. – 1 point(s)</li>
+<li>Fit a third model with a random intercept and slope that assumes
+that the relationship between sibling negotiation and arrival time
+changes between nests. – 1 point(s)</li>
 <li>Use the <code>anova()</code> function to compare the models.
 Describe the results and decide which random effect structure you should
 use for these data. In particular what are the results of the likelihood
-ratio tests, and what model does AIC model selection favour?</li>
+ratio tests, and what model does AIC model selection favour? – 2
+point(s)</li>
 </ul>
 </br> <strong>Note:</strong> Make sure that all of the models are fit
-using ML. Models fit by a mix of ML and REML can not be compared using
-likelihood ratio tests, and models fit using REML can not usually be
-compared by AIC (there are certain cases where this is possible, but
-they are few).
+using ML by specifying <code>method = "ML"</code>. Models fit by a mix
+of ML and REML can not be compared using likelihood ratio tests or AIC
+values. We will not be covering REML in this course, but this is
+something you should be aware of.
 </ol>
+<p>A likelihood ratio test indicates that a mixed effects model with a
+random intercept is a significant improvement over the model that
+contains only fixed effects (<span class="math inline">\(\mathcal{L} =
+27.34\)</span>, df = 1, <span class="math inline">\(p &lt;
+0.0001\)</span>). A mixed effects model with a random slope and
+intercept offers an even further improvement of the random intercept
+only model (<span class="math inline">\(\mathcal{L} = 13.35\)</span>, df
+= 1, <span class="math inline">\(p = 0.0013\)</span>). The random slope
+and intercept model is also favoured by AIC based model selection with
+an AIC value of -10.1, compared to AIC = -0.8 for the random intercept
+model, and AIC = 24.6 for the fixed effects only model. Collectively,
+this information suggests that a random slope and intercept is the most
+appropriate random effects structure for these data.</p>
 </div>
 <div id="inspect-the-model-for-any-new-issues" class="section level3">
 <h3>Inspect the model for any new issues</h3>
@@ -576,20 +607,21 @@ they are few).
 next perform some diagnostic checks to ensure there are no glaring
 issues remaining.</p>
 <ol style="list-style-type: decimal">
-<li><ol></li>
+<li>5 points
+<ol></li>
 </ol>
 <ul>
 <li>Plot the residuals against the fitted values for the best fit model
-you identified in exercise 3. Describe what you see.</li>
+you identified in exercise 3. Describe what you see. – 1 point(s)</li>
 <li>Use a boxplot to plot the residuals against the sex of the parent.
-Describe what you see.</li>
+Describe what you see. – 1 point(s)</li>
 <li>Use a boxplot to plot the residuals against the food treatment.
-Describe what you see.</li>
-<li>Plot the residuals against arrival time and describe what you
-see.</li>
+Describe what you see. – 1 point(s)</li>
+<li>Plot the residuals against arrival time and describe what you see. –
+1 point(s)</li>
 <li>Use a boxplot to plot the residuals against which nest the data came
 from. Visually check for a remaining ‘nest’ effect and describe what you
-see.
+see. – 1 point(s)
 </ol></li>
 </ul>
 </div>
@@ -603,37 +635,24 @@ and AIC values, or automatically using the <code>dredge()</code>
 function from the <code>MuMin</code> package. We will explore both
 options.</p>
 <ol style="list-style-type: decimal">
-<li><ol></li>
+<li>9 points
+<ol></li>
 </ol>
 <ul>
 <li>Use the <code>summary()</code> function to obtain the parameter
-estimates for the model. Looking at the parameter estimates, the
-standard errors, and p-values, which terms do you think might be worth
-dropping?</li>
-<li>Re-fit the model using maximum likelihood (this is needed to make
-likelihood ratio tests on models with different fixed effects
-meaningful).</li>
+estimates for the model you identified above. Looking at the parameter
+estimates, the standard errors, and p-values, which terms do you think
+might be worth dropping? – 1 point(s)</li>
 <li>Use likelihood ratio tests to test whether the interaction terms are
-worth keeping. Describe the results.</li>
+worth keeping. Describe the results. – 1 point(s)</li>
 <li>Obtain a summary of the reduced model. Are there any terms that look
-like they could be dropped?</li>
+like they could be dropped? – 1 point(s)</li>
 <li>Use likelihood ratio tests to test whether the remaining fixed
-effects terms are worth keeping. Describe the results at each step.</li>
+effects terms are worth keeping. Describe the results at each step. – 4
+point(s)</li>
 <li>Perform AICc based model selection using the <code>dredge()</code>
-function from the <code>MuMin</code> package.</li>
-<li>Compare the results of the two processes.
-</ol></li>
-</ul>
-</div>
-<div id="re-fit-the-model-with-reml" class="section level3">
-<h3>Re-fit the model with REML</h3>
-<p>The selected model should be re-fit using REML to reduce the
-small-sample-size biases of ML.</p>
-<ol style="list-style-type: decimal">
-<li><ol></li>
-</ol>
-<ul>
-<li>Re-fit the selected model using REML.
+function from the <code>MuMin</code> package. – 1 point(s)</li>
+<li>Compare the results of the two processes. – 1 point(s)
 </ol></li>
 </ul>
 </div>
@@ -643,20 +662,18 @@ small-sample-size biases of ML.</p>
 should perform a (hopefully) final round of diagnostic checks to ensure
 there are no issues remaining with our model</p>
 <ol style="list-style-type: decimal">
-<li><ol></li>
+<li>4 points
+<ol></li>
 </ol>
 <ul>
 <li>Plot the residuals against the fitted values. Are there any
-patterns?</li>
-<li>Check for normality of the residuals using a histogram.</li>
-<li>Obtain a summary of the selected model. How much correlation is
-there between the fxed effects. Is there any cause for concern?</li>
-<li>Try mean centering arrival time and re-fitting the selected model.
-Compare the these results with what you just saw.</li>
+patterns? – 1 point(s)</li>
+<li>Check for normality of the residuals using a histogram. – 1
+point(s)</li>
 <li>What is the inter-class correlation for data from the same nest?
 What is the design effect for the mean number of samples per nest box?
 What is the <span class="math inline">\(\approx\)</span>effective sample
-size?
+size? – 2 point(s)
 </ol></li>
 </ul>
 </div>
@@ -666,47 +683,33 @@ size?
 class="math inline">\(\Delta\)</span>AICc of 2 of the top model, this
 may be a situation that could benefit from model averaging.</p>
 <ol style="list-style-type: decimal">
-<li><ol></li>
+<li>3 points
+<ol></li>
 </ol>
 <ul>
 <li>Subset all models within <span
 class="math inline">\(\Delta\)</span>AICc of 2 of the top model (see
-<code>help(subset.model.selection)</code>).</li>
+<code>help(subset.model.selection)</code>). – 1 point(s)</li>
 <li>Perform model averaging on these models using the
-<code>model.avg()</code> function.</li>
+<code>model.avg()</code> function. – 1 point(s)</li>
 <li>Describe how the average fit compares to the previously selected
-model.</li>
+model. – 1 point(s)
+</ol></li>
 </ul>
-<p></br></p>
-<p><strong>Bonus Questions:</strong></p>
-<ul>
-<li>Plot the parameter estimates <span
-class="math inline">\(\pm\)</span> the 95% confidence intervals of the
-averaged model (see <code>help(coef)</code> and
-<code>help(confint)</code>).</li>
-<li>Use the <code>prettify()</code> function from the <code>papeR</code>
-package to plot the parameter estimates <span
-class="math inline">\(\pm\)</span> the 95% confidence intervals of the
-previously selected model.</li>
-</ul>
-</ol>
 </div>
 <div id="describe-the-importance-of-the-model" class="section level3">
 <h3>Describe the importance of the model</h3>
 <p>The whole point of fitting this model was to identify the factors
 influencing begging behaviour of nestling owls.</p>
 <ol style="list-style-type: decimal">
-<li><ol></li>
+<li>5 points
+<ol></li>
 </ol>
 <ul>
-<li>Provide a brief biological description the selected model (you can
-read how <a href="https://doi.org/10.1016/j.anbehav.2007.01.027">Roulin
-and Bersier (2007)</a> described their results from these same
-data).</li>
-<li>Use <span class="math inline">\(\Delta\)</span>AICc values and
-effect sizes to compare the selected model to a random effects model
-with only a fixed intercept (i.e., the information gained by including
-the fixed parameters).
+<li>Provide a brief biological description the selected model and the
+support for the selected model (you can read how <a
+href="https://doi.org/10.1016/j.anbehav.2007.01.027">Roulin and Bersier
+(2007)</a> described their results from these same data). – 5 point(s)
 </ol></li>
 </ul>
 </div>
