@@ -415,7 +415,6 @@ Autocorrelation</h1>
 </div>
 
 
-<p>This page was last updated on February 12, 2024.</p>
 <script type="text/x-mathjax-config">
 MathJax.Hub.Register.StartupHook('TeX Jax Ready', function () {
   MathJax.InputJax.TeX.prefilterHooks.Add(function (data) {
@@ -480,6 +479,11 @@ alone.</li>
 <code>R</code></li>
 <li>Fit models that correct for phylogenetic autocorrelation.</li>
 </ul>
+<p>You are asked to complete the following exercises and submit to
+Canvas before the deadline. In addition to the points detailed below, 5
+points are assigned to the cleanliness of the code and resulting pdf
+document. Only knit documents (.pdf, .doc, or .html) will be accepted.
+Unknit .Rmd files will not be graded.</p>
 <hr />
 </div>
 <div id="spatial-autocorrelation" class="section level2">
@@ -527,7 +531,8 @@ forested or not (1 = forested 2= not forested)</li>
 percentage</li>
 </ul>
 <ol style="list-style-type: decimal">
-<li><ol></li>
+<li>6 points
+<ol></li>
 </ol>
 <ul>
 <li>Load the <code>nlme</code> package.</li>
@@ -537,28 +542,33 @@ percentage</li>
 the same dataset.</li>
 <li>Create a scatterplot with <code>SDI</code> on the X and
 <code>pH</code> on the Y. Do you expect there to be a significant
-relationship?</li>
+relationship? – 1 point(s)</li>
 <li>Plot the spatial coordinates of the data and colour the locations by
 whether or not the site was forested. Do you see any patterns in the
 spatial distribution of forest cover? Describe whether or not this might
-impact spatial autocorrelation in pH.</li>
+impact spatial autocorrelation in pH. – 1 point(s)</li>
 <li>Fit a fixed-effects model predicting pH from the 3-way interaction
 between SDI, log-scaled altitude, and forest cover using the
-<code>gls</code> function. (Fit the model via ML not REML).</li>
-<li>Inspect the summary overview of the model.</li>
-<li>Plot the normalized residuals against the fitted values.</li>
+<code>gls</code> function. (Fit the model via ML not REML). – 1
+point(s)</li>
+<li>Inspect the summary overview of the model. – 0.5 point(s)</li>
+<li>Plot the normalized residuals against the fitted values. – 0.5
+point(s)</li>
 <li>Make a plot of the residuals in space by plotting the spatial
 coordinates of the data and colour the locations by the value of the
-residuals. What do you see?
+residuals. What do you see? – 2 point(s)
 </ol></li>
 </ul>
+<pre class="r"><code>library(nlme)</code></pre>
+<pre><code>## Warning: package &#39;nlme&#39; was built under R version 4.1.2</code></pre>
+<pre class="r"><code>data &lt;- read.csv(&quot;https://noonanm.github.io/Biol520C/Practical_Datasets/SDI2003.csv&quot;)</code></pre>
 <div id="detecting-spatial-autocorrelation" class="section level3">
 <h3>Detecting spatial autocorrelation</h3>
 <p>Spatial autocorrelation can be difficult to see in a simple residuals
 vs. fitted plot because they are not designed for this purpose.`Bubble
 plots’ are an easy tool to quickly assess the residuals for potential
 autocorrelation, but can be hard to read and not very formal. We will
-cover two tools for assesing your data for spatial autocorrelation:
+cover two tools for assessing your data for spatial autocorrelation:
 Moran’s I and variograms.</p>
 <div id="morans-i" class="section level4">
 <h4>Moran’s I</h4>
@@ -585,17 +595,19 @@ class="math inline">\(w_{ij}\)</span>.</p>
 <code>R</code> packages for calculating Moran’s I but today we will work
 with the implementation in the <code>ape</code> package.</p>
 <ol style="list-style-type: decimal">
-<li><ol></li>
+<li>3 points
+<ol></li>
 </ol>
 <ul>
 <li>Load the <code>ape</code> and <code>fields</code> packages.</li>
-<li>Create a vector of spatial coordinates for the SDI dataset</li>
+<li>Create a vector of spatial coordinates for the SDI dataset. – 0.5
+point(s)</li>
 <li>Use the <code>rdist</code> function from the <code>fields</code>
 package to generate a matrix of distances between the coordinates that
-will be used as the weights.</li>
+will be used as the weights. – 0.5 point(s)</li>
 <li>Calculate Moran’s I of the residuals using the <code>Moran.I</code>
-function from the <code>ape</code> package.</li>
-<li>Breifly describe the outcome.
+function from the <code>ape</code> package. – 1 point(s)</li>
+<li>Briefly describe the outcome. – 1 point(s)
 </ol></li>
 </ul>
 </div>
@@ -616,16 +628,18 @@ variograms. In other words the shape of a dataset’s empirical variogram
 can provide clues on which spatial correlation model is most
 appropriate. Let’s see what that looks like for the SDI data.</p>
 <ol style="list-style-type: decimal">
-<li><ol></li>
+<li>3 points
+<ol></li>
 </ol>
 <ul>
-<li>Create a vector of spatial coordinates for the SDI dataset</li>
+<li>Create a vector of spatial coordinates for the SDI dataset – 0.5
+point(s)</li>
 <li>Use the <code>Variogram</code> function from the <code>nlme</code>
 package to calculate the semi-variogram of the linear model. Be sure to
 include a <code>nugget</code> effect, and remember to specify the
 spatial coordinates via the <code>form</code> argument (see
-<code>help(Variogram.lme)</code>).</li>
-<li>Plot the fitted variogram and describe the outcome.
+<code>help(Variogram.lme)</code>). – 1 point(s)</li>
+<li>Plot the fitted variogram and describe the outcome.– 1.5 point(s)
 </ol></li>
 </ul>
 </div>
@@ -642,15 +656,20 @@ clues on which model is most appropriate for the data, but here we are
 not so lucky. There is a clear nugget, but otherwise not much of a
 patter to work with.</p>
 <ol style="list-style-type: decimal">
-<li><ol></li>
+<li>6 points
+<ol></li>
 </ol>
 <ul>
 <li>Refit the same model, but this time add each of the different
-spatial autocorrelation structures in turn.</li>
-<li>Identify the best spatial autocorrelation structure via AIC.</li>
-<li>Calculate the semi-variogram of the best-fit model.</li>
-<li>Plot the fitted variogram and describe the outcome.</li>
-<li>Calculate Moran’s I on the residuals of the best-fit model.
+spatial autocorrelation structures in turn. – 2 point(s)</li>
+<li>Identify the best spatial autocorrelation structure via AIC. – 1
+point(s)</li>
+<li>Calculate the semi-variogram of the best-fit model. – 1
+point(s)</li>
+<li>Plot the fitted variogram and describe the outcome. – 1
+point(s)</li>
+<li>Calculate Moran’s I on the residuals of the best-fit model. – 1
+point(s)
 </ol></li>
 </ul>
 </div>
@@ -662,36 +681,21 @@ better fit the data. We might also try a number of data transformations,
 but the real issue here is that there is a missing co-variate. This can
 be seen in a bubble plot of the normalized residuals.</p>
 <ol style="list-style-type: decimal">
-<li><ol></li>
+<li>3 points
+<ol></li>
 </ol>
 <ul>
 <li>load the <code>gstat</code> and <code>sp</code> packages.</li>
 <li>Create a new dataframe with three columns: the normalised residuals
 from the first linear model, the easting of each location, and the
-northing of each location.</li>
+northing of each location. – 1 point(s)</li>
 <li>Use the <code>coordinates()</code> function to define the easting
-and northing as spatial coordinates (see
-<code>?sp::coordinates</code>).</li>
+and northing as spatial coordinates (see <code>?sp::coordinates</code>).
+– 1 point(s)</li>
 <li>Use the <code>bubble()</code> function to create a bubble plot of
-the residuals. Do you see any patterns?
+the residuals. Do you see any patterns? – 1 point(s)
 </ol></li>
 </ul>
-<p>The negative residuals are clustered in the south and south-east,
-whereas the positive residuals are clustered in the west and north-west.
-Remember, the underlying reason for spatial autocorrelation is that many
-of the drivers of biological patterns such as environmental conditions,
-topography, ecosystem structure/composition act at large spatial scales.
-Here, some factor is causing pH to differ systematically between
-catchments in the south and south-east and those in the west and
-north-west, but without information on what this factor is we can not
-fully correct the issue. Remember our earlier exercises, any pattern
-that remains in the residuals is a pattern that isn’t being explained by
-the model. Here there is a clear pattern, so if you were working with
-these data you would need to think hard about what additional co-variate
-you might be able to include (geology? human development?). For the time
-being, it is best to refrain from making any general conclusions about
-the relationship between SDI, forest cover, and pH from these data
-alone.</p>
 <hr />
 </div>
 </div>
@@ -742,17 +746,20 @@ body size, and depth, and we’ll begin with a naive analysis that ignores
 phylogenetic relationships, so that we have a baseline for
 comparison.</p>
 <ol style="list-style-type: decimal">
-<li><ol></li>
+<li>3 points
+<ol></li>
 </ol>
 <ul>
 <li>Import the rockfish dataset.</li>
 <li>Fit a model predicting maximum age from either depth or body size
 (your choice). As before, fit the model using <code>gls()</code> via ML
-not REML.</li>
-<li>Inspect the summary overview of the model.</li>
-<li>Plot the normalized residuals against the fitted values.
+not REML. – 1 point(s)</li>
+<li>Inspect the summary overview of the model. – 1 point(s)</li>
+<li>Plot the normalized residuals against the fitted values. – 1
+point(s)
 </ol></li>
 </ul>
+<pre class="r"><code>data &lt;- read.csv(&quot;https://noonanm.github.io/Biol520C/Practical_Datasets/rockfish.csv&quot;)</code></pre>
 <div id="working-with-phylogenies" class="section level3">
 <h3>Working with Phylogenies</h3>
 <p>The first step in a phylogentically controlled regression is
@@ -770,22 +777,22 @@ branches)</li>
 node)</li>
 </ul>
 <ol style="list-style-type: decimal">
-<li><ol></li>
+<li>5 points
+<ol></li>
 </ol>
 <ul>
 <li>Import the rockfish phylogeny using the <code>read.tree()</code>
 function from the <code>ape</code> package.</li>
 <li>Run the <code>summary()</code> and <code>plot()</code> commands on
-the tree to get a feel for what you’re working with.</li>
-<li>Plot the tree again, but now experiment with the <code>type</code>
-argument.</li>
+the tree to get a feel for what you’re working with. – 1 point(s)</li>
 <li>Plot the tree again, but now colour the tip labels by age using the
-<code>tip.color</code> argument.</li>
+<code>tip.color</code> argument. – 1 point(s)</li>
 <li>Plot the tree one more time, but now colour the tip labels by the
-value of the residuals.</li>
-<li>Describe what you have learned from these figures.
+value of the residuals. – 2 point(s)</li>
+<li>Describe what you have learned from these figures. – 1 point(s)
 </ol></li>
 </ul>
+<pre class="r"><code>tree &lt;- ape::read.tree(&quot;https://noonanm.github.io/Biol520C/Practical_Datasets/rockfish.phy.txt&quot;)</code></pre>
 </div>
 <div id="including-phylogenic-correlation-structures"
 class="section level3">
@@ -794,21 +801,23 @@ class="section level3">
 phylogenetic dependence using the correlation structures provided by the
 <code>ape</code> package.</p>
 <ol style="list-style-type: decimal">
-<li><ol></li>
+<li>6 points
+<ol></li>
 </ol>
 <ul>
 <li>Refit the same model as above but this time add a correlation
-structure based on Pagel’s <span
-class="math inline">\(\lambda\)</span>.</li>
+structure based on Pagel’s <span class="math inline">\(\lambda\)</span>.
+– 2 point(s)</li>
 <li>Check the AIC of this model against your previous fit. Was there any
-noticeable improvement?</li>
+noticeable improvement? – 1 point(s)</li>
 <li>Return a summary of the fitted model. What is the value of <span
 class="math inline">\(\lambda\)</span> Does this suggest a strong
-phylogenetic signal?</li>
+phylogenetic signal? – 1 point(s)</li>
 <li>Plot the age as a function of the variable you chose in your models.
-Add the two fitted regression lines and compare the results.</li>
+Add the two fitted regression lines and compare the results. – 1
+point(s)</li>
 <li>Describe the effect of accounting for phylogenetic inertia on the
-regression model.
+regression model. – 2 point(s)
 </ol></li>
 </ul>
 </div>

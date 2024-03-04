@@ -84,11 +84,15 @@ Lecture slides and recordings for Biol 520C: Statistical modelling for biologica
 
 <a href="Lectures/08_Model_Selection.pdf" target="_blank">Slides. </a>
 
+<a href="https://ubc.zoom.us/rec/share/rFscZf5v1rppIhvduIB7OYDb7KYpdgqY1a6_RbRTiVJevn-nQnKdgY3DtdXLQk7R.aouKGYR3qoaa_jb4" target="_blank">Recording - 2024.</a> 
+
 <a href="https://ubc.zoom.us/rec/share/ZoZkugUOxgGHFXWhwFwyOhcDyRlDL7Fze5uefyIO_8uS6eGyCTZNVKG4dli1GCV_.wY7-waxZtf81i7Wp" target="_blank">Recording - 2023.</a>
 
 #### Lecture 09 - Model Selection and Model Averaging
 
 <a href="Lectures/09_Model_Averaging.pdf" target="_blank">Slides. </a>
+
+<a href="https://ubc.zoom.us/rec/share/-J2dSQ9Q3NRq6OHG5GrpvgRHDDezNjLayXKH0uIkyK48Fd_XDOCU5vaMwWCA82A.kwPRTEJQ3apyRt2k" target="_blank">Recording - 2024.</a> 
 
 <a href="https://ubc.zoom.us/rec/share/bJPhLers-004vw2H0Itk1gtmvy-2hvDDOafFGBRqXJ7dbCARj5UR4pqeYEnz2gSO.Uo6Jiri-QPu6J4Ca" target="_blank">Recording - 2023.</a>
 
@@ -104,11 +108,15 @@ Lecture slides and recordings for Biol 520C: Statistical modelling for biologica
 
 <a href="Lectures/10_Heteroscedasticity.pdf" target="_blank">Slides. </a>
 
+<a href="https://ubc.zoom.us/rec/share/rBar-aBMJ4-GcJCRhoRfOq5EA88C8xv7SRa1lFBsYS8pvMWe3Xao1HySxi_kL8AM.YnP4MCHY9UX-aH6f" target="_blank">Recording - 2024.</a> 
+
 <a href="https://ubc.zoom.us/rec/share/YDIEtUiXpzuN9AU0lMN487C9jC3-jQex95vKBFAC4aUwt9jdc2ydALH0rj6vSI55.6ZAnCkUwQPquLdvy?startTime=1676045128000" target="_blank">Recording - 2023.</a>
 
 #### Lecture 11 Autocorrelation 1: Temporal Autocorrelation
 
 <a href="Lectures/11_Autocorrelation_1.pdf" target="_blank">Slides. </a>
+
+<a href="https://ubc.zoom.us/rec/share/-g59WPlmj3OWdzOcrdr7efmMnWQbjP_GdabVaEkNeZbJQ9ITIbjFcWL3w9O48Hx4.Mg8QTPW76KgE5PAx" target="_blank">Recording - 2024.</a> 
 
 <a href="https://ubc.zoom.us/rec/share/EcyI5lYNSfFi6v0mgxHyOliGCjbG-IDPB-omP4KOIqvMGIYZCRvhGab7V_NxX-nD.yXorLt_j5_xmDd2z?startTime=1676477167000" target="_blank">Recording - 2023.</a>
 
@@ -116,11 +124,15 @@ Lecture slides and recordings for Biol 520C: Statistical modelling for biologica
 
 <a href="Lectures/12_Autocorrelation_2.pdf" target="_blank">Slides. </a>
 
+<a href="https://ubc.zoom.us/rec/share/wmk_9FEC0drgtX3UEmYBvYI6HBvAGWdKziRI3uTDTODBl8angNfAnoI2pxy85nNF.4N2OT0ihusBSbCqW?startTime=1709152247000" target="_blank">Recording - 2024.</a> 
+
 <a href="https://ubc.zoom.us/rec/share/x1mSUUTy644GF3jhJTTm8ewmV1m1Q0nvscAVPk6eKCvfWOkovhd86ARqfIPlBqKg.1gbg5vvPDw_IJAtP?startTime=1676649882000" target="_blank">Recording - 2023.</a>
 
 #### Lecture 13 Autocorrelation 3: Phylogenetic Autocorrelation
 
 <a href="Lectures/13_Autocorrelation_3.pdf" target="_blank">Slides. </a>
+
+<a href="https://ubc.zoom.us/rec/share/-P8ox4IzdYnGQCuoCh1Kggl-OGg1pSMfiajPBNuVEIxVYOQmGBIiTHfIlgvxk4yT.hMT74VQFf1-Kxvxq" target="_blank">Recording - 2024.</a>
 
 <a href="https://ubc.zoom.us/rec/share/0NsYixXNGMb3xBKtTCwEpS5jb57Y1bgQrFCIpUn1mPFISxs-mxLWouLx9av05cmv.MAs7d21er4RhUqqn?startTime=1677859471000" target="_blank">Recording - 2023.</a>
 
@@ -132,9 +144,14 @@ Lecture slides and recordings for Biol 520C: Statistical modelling for biologica
 
 <br />
 
-<a href="Lectures/14_GLMs_1.pdf" target="_blank">Lecture 14 Generalised Linear Models 1: Intro to GLMs and Modelling Count Data </a>
+#### Lecture 14 Generalised Linear Models 1: Intro to GLMs and Modelling Count Data
 
-<a href="Lectures/15_GLMs_2.pdf" target="_blank">Lecture 15 Generalised Linear Models 2: Modelling Binary and Proportional Data </a>
+<a href="Lectures/Lectures/14_GLMs_1.pdf" target="_blank">Slides. </a>
+
+
+#### Lecture 15 Generalised Linear Models 2: Modelling Binary and Proportional Data
+
+<a href="Lectures/Lectures/15_GLMs_2.pdf" target="_blank">Slides. </a>
 
 <br />
 
@@ -144,7 +161,11 @@ Lecture slides and recordings for Biol 520C: Statistical modelling for biologica
 
 <br />
 
-<a href="Lectures/16_Stochastic_Simulation.pdf" target="_blank">Lecture 16 Stochastic Simulation and Power Analysis </a>
+#### Lecture 16 Stochastic Simulation and Power Analysis
 
-<a href="Lectures/17_NonLinearity.pdf" target="_blank">Lecture 17 Deterministic functions for Modelling Biological Data </a>
+<a href="Lectures/16_Stochastic_Simulation.pdf" target="_blank">Slides </a>
+
+#### Lecture 17 Deterministic functions for Modelling Biological Data 
+
+<a href="Lectures/17_NonLinearity.pdf" target="_blank">Slides. </a>
 
