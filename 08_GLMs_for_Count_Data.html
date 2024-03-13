@@ -13,7 +13,7 @@
 
 <title>Practical 08 - Generalised Linear Models for Count Data</title>
 
-<script src="site_libs/header-attrs-2.23/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.26/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -415,7 +415,6 @@ for Count Data</h1>
 </div>
 
 
-<p>This page was last updated on March 04, 2024.</p>
 <script type="text/x-mathjax-config">
 MathJax.Hub.Register.StartupHook('TeX Jax Ready', function () {
   MathJax.InputJax.TeX.prefilterHooks.Add(function (data) {
@@ -461,7 +460,8 @@ distributed residuals is not a reasonable assumption for your data:</p>
 <li><strong>Nothing.</strong> If the residuals are <span
 class="math inline">\(\sim\)</span>normally distributed and the spread
 isn’t bad, this isn’t a terrible assumption (remember, no model is ever
-going to be 100% correct).</li>
+going to be 100% correct, so this can be a viable option in some
+cases).</li>
 <li><strong>Transform your data.</strong> Shoehorning your data to fit
 the assumptions of normality can work, but it changes the relationship
 between your response and your predictors. It’s also not very practical
@@ -472,6 +472,11 @@ applying linear models to generalised linear models (GLMs) can give you
 more flexibility when modelling data that do not easily fit into the
 standard Gaussian framework.</li>
 </ul>
+<p>You are asked to complete the following exercises and submit to
+Canvas before the deadline. In addition to the points detailed below, 5
+points are assigned to the cleanliness of the code and resulting pdf
+document. Only knit documents (.pdf, .doc, or .html) will be accepted.
+Unknit .Rmd files will not be graded.</p>
 <div id="generalised-linear-models-glms" class="section level3">
 <h3>Generalised Linear Models (GLMs)</h3>
 <p>``<em>In statistics, the generalized linear model (GLM) is a flexible
@@ -569,29 +574,32 @@ class="math inline">\(^2\)</span>)</li>
 is with a simple linear regression model. This can work fine in many
 cases, so let’s see if we can get away with this here.</p>
 <ol style="list-style-type: decimal">
-<li><ol></li>
+<li>6 points
+<ol></li>
 </ol>
 <ul>
 <li>Install and load the <code>faraway</code> and <code>nlme</code>
-package and import the <code>gala</code> dataset.</li>
+package and import the <code>gala</code> dataset. – 0.5 point(s)</li>
 <li>Log10 transform the <code>Area</code> data and store this as a new
-variable in the same dataset called <code>log.area</code>.</li>
+variable in the same dataset called <code>log.area</code>. – 0.5
+point(s)</li>
 <li>Create a scatterplot with the log10 transformed <code>Area</code> on
 the X and <code>Species</code> on the Y. Do you expect there to be a
 significant relationship? Does a Gaussian linear model look appropriate
-for these data?</li>
+for these data? – 1 point(s)</li>
 <li>Fit a linear model predicting <code>Species</code> from log10
-transformed <code>Area</code> using the <code>gls</code> function.</li>
-<li>Inspect the summary overview of the model.</li>
+transformed <code>Area</code> using the <code>gls</code> function. – 0.5
+point(s)</li>
+<li>Inspect the summary overview of the model. – 0.5 point(s)</li>
 <li>Create a scatterplot with the log10 transformed <code>Area</code> on
 the X and <code>Species</code> on the Y. Use the <code>abline()</code>
-function to plot the fitted model.</li>
-<li>Plot the residuals against the fitted values.</li>
+function to plot the fitted model. – 0.5 point(s)</li>
+<li>Plot the residuals against the fitted values. – 0.5 point(s)</li>
 <li>Use the <code>predict()</code> function on this model to predict the
 most likely outcomes for the fitted values. Do these numbers seem
-plausible?</li>
+plausible? – 1 point(s)</li>
 <li>Inspect the fitted model and all of the outputs you just generated.
-Do you think that this is a good model for these data?
+Do you think that this is a good model for these data? – 1 point(s)
 </ol></li>
 </ul>
 </div>
@@ -601,17 +609,16 @@ Do you think that this is a good model for these data?
 try to fit a second order polynomial model to correct for the disconnect
 between the fitted model and the data.</p>
 <ol style="list-style-type: decimal">
-<li><ol></li>
+<li>3 points
+<ol></li>
 </ol>
 <ul>
-<li>Add a second order polynomial term to the first model.</li>
-<li>Inspect the summary overview of this new model.</li>
-<li>Create a scatterplot with the log10 transformed <code>Area</code> on
-the X and <code>Species</code> on the Y.</li>
-<li>Plot the fitted model.</li>
-<li>Plot the residuals against the fitted values.</li>
+<li>Add a second order polynomial term to the first model. – 1
+point(s)</li>
+<li>Inspect the summary overview of this new model. – 0.5 point(s)</li>
+<li>Plot the residuals against the fitted values. – 0.5 point(s)</li>
 <li>Inspect the fitted model and all of the outputs you just generated.
-Do you think that this correction is sufficient?
+Do you think that this correction is sufficient? – 1 point(s)
 </ol></li>
 </ul>
 </div>
@@ -665,19 +672,21 @@ e^{\beta_0 + \beta_1 \times \mathrm{log.area}_i}\)</span>
 <p>This whole process is streamlined via the <code>glm()</code>
 function, which we will now use to try and improve our model</p>
 <ol style="list-style-type: decimal">
-<li><ol></li>
+<li>5 points
+<ol></li>
 </ol>
 <ul>
 <li>Fit a generalised linear model predicting <code>Species</code> from
 log10 transformed <code>Area</code> using the <code>glm</code> function.
 Be sure to specify the distribution you want to model from and the link
-function.</li>
-<li>Inspect the summary overview of the model.</li>
+function. – 1 point(s)</li>
+<li>Inspect the summary overview of the model. – 1 point(s)</li>
 <li>Calculate the pseudo R-squared for the fitted GLM model. Does this
-seem good?</li>
+seem good? – 1 point(s)</li>
 <li>Create a scatterplot with the log10 transformed <code>Area</code> on
-the X and <code>Species</code> on the Y.</li>
-<li>Use <code>abline()</code> to plot the fitted model. What happened?
+the X and <code>Species</code> on the Y. – 1 point(s)</li>
+<li>Use <code>abline()</code> to plot the fitted model. What happened? –
+1 point(s)
 </ol></li>
 </ul>
 <p>In a GLM framework we have a link function that lies between <span
@@ -686,27 +695,29 @@ simply plot the fitted model on a linear scale without factoring in the
 link function, we can not place our fitted model on the appropriate
 scale. We need to work around this when visualising GLMs.</p>
 <ol style="list-style-type: decimal">
-<li><ol></li>
+<li>5 points
+<ol></li>
 </ol>
 <ul>
 <li>Create a data frame called <code>New_Data</code> that is comprised
 of a single column called <code>log.area</code> that is made up of a
-sequence of 200 numbers between -2 to 4.</li>
+sequence of 200 numbers between -2 to 4. – 1 point(s)</li>
 <li>Use these ‘data’ combined with the <code>predict()</code> function
 to generate predictions from the fitted GLM model. You will need to
 correctly specify some of the arguments of this function, so set
 <code>newdata = New_Data</code>, <code>type = "link"</code>, and
 <code>se = TRUE</code>. Run <code>class()</code> and
-<code>names()</code> on the output of <code>predict()</code>.</li>
+<code>names()</code> on the output of <code>predict()</code>. – 1
+point(s)</li>
 <li>The <code>fit</code> slot of this list contains the model’s
 deterministic prediction. The <code>fit.se</code> slot contains the
 standard errors of the predictions. Use the <code>fit</code> slot to
 plot the fitted GLM overlayed on the original data. Remember <span
 class="math inline">\(\mu_i = e^{\eta}\)</span>, so you need to
-transform the predictions before plotting them.</li>
+transform the predictions before plotting them. – 2 point(s)</li>
 <li>Use the <code>fit.se</code> slot to plot the 95% confidence bands.
 Note: the 95% CIs = <span class="math inline">\(\mu_i \pm SE \times
-1.96\)</span>.
+1.96\)</span>. – 1 point(s)
 </ol></li>
 </ul>
 </div>
@@ -717,18 +728,20 @@ overdispersion. Overdispersion means that the variance is larger than
 the mean (when we compare what we would expect from a Poisson
 distribution).</p>
 <ol style="list-style-type: decimal">
-<li><ol></li>
+<li>3 points
+<ol></li>
 </ol>
 <ul>
 <li>Check for overdispersion by calculating the following: Residual
 Deviance / degrees of freedom on the residual deviance. (Large values
-are bad in this context)</li>
+are bad in this context) – 1 point(s)</li>
 <li>It is also possible to check the significance of this using a
 chisquare test. Check if this overdispersion is significant by
 calculating the following:
-<code>1-pchisq(residual deviance, degrees of freedom on the residual deviance)</code></li>
-<li>Are the data over-dispersed, or is a Poisson assumption
-appropriate?</li>
+<code>1-pchisq(residual deviance, degrees of freedom on the residual deviance)</code>
+– 1 point(s)</li>
+<li>Are the data over-dispersed, or is a Poisson assumption appropriate?
+– 1 point(s)</li>
 </ul>
 <p></br></p>
 <strong>Note:</strong> You can get the information needed for this
@@ -746,18 +759,20 @@ negative binomial distribution is often a viable alternative to the
 Poisson distribution as it allows for more heterogeneity because
 variance <span class="math inline">\(\neq\)</span> mean.</p>
 <ol style="list-style-type: decimal">
-<li><ol></li>
+<li>5 points
+<ol></li>
 </ol>
 <ul>
 <li>Load in the <code>MASS</code> package.</li>
 <li>Fit a negative binomial model predicting <code>Species</code> from
 log10 transformed <code>Area</code> using the <code>glm.nb()</code>
 function from the <code>MASS</code> package. Be sure to specify the link
-function.</li>
-<li>Inspect the summary overview of the model.</li>
+function. – 1 point(s)</li>
+<li>Inspect the summary overview of the model. – 0.5 point(s)</li>
 <li>Plot the fitted model and 95% CIs using the same steps as in
-Exercise 4. How does this fit compare to the Poisson model?</li>
-<li>Which of the two GLM models would AIC favour?
+Exercise 4. How does this fit compare to the Poisson model? – 3 points
+point(s)</li>
+<li>Which of the two GLM models would AIC favour? – 0.5 point(s)
 </ol></li>
 </ul>
 <hr />

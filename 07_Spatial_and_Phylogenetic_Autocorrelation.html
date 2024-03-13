@@ -13,7 +13,7 @@
 
 <title>Practical 07 - Spatial and Phylogenetic Autocorrelation</title>
 
-<script src="site_libs/header-attrs-2.23/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.26/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -559,9 +559,8 @@ coordinates of the data and colour the locations by the value of the
 residuals. What do you see? – 2 point(s)
 </ol></li>
 </ul>
-<pre class="r"><code>library(nlme)</code></pre>
-<pre><code>## Warning: package &#39;nlme&#39; was built under R version 4.1.2</code></pre>
-<pre class="r"><code>data &lt;- read.csv(&quot;https://noonanm.github.io/Biol520C/Practical_Datasets/SDI2003.csv&quot;)</code></pre>
+<pre class="r"><code>library(nlme)
+data &lt;- read.csv(&quot;https://noonanm.github.io/Biol520C/Practical_Datasets/SDI2003.csv&quot;)</code></pre>
 <div id="detecting-spatial-autocorrelation" class="section level3">
 <h3>Detecting spatial autocorrelation</h3>
 <p>Spatial autocorrelation can be difficult to see in a simple residuals

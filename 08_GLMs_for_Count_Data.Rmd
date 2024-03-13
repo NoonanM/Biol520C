@@ -16,7 +16,6 @@ knitr::opts_chunk$set(echo = TRUE, fig.width=6, fig.height=6)
 
 ```
 
-This page was last updated on `r format(Sys.time(), '%B %d, %Y')`.
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Register.StartupHook('TeX Jax Ready', function () {
@@ -42,9 +41,11 @@ We can get a ___lot___ of mileage out of this formulation, but the problem with 
 
 There are three steps you can take if you think that Gaussian distributed residuals is not a reasonable assumption for your data:
 
-* __Nothing.__ If the residuals are $\sim$normally distributed and the spread isn't bad, this isn't a terrible assumption (remember, no model is ever going to be 100% correct).
+* __Nothing.__ If the residuals are $\sim$normally distributed and the spread isn't bad, this isn't a terrible assumption (remember, no model is ever going to be 100% correct, so this can be a viable option in some cases).
 * __Transform your data.__ Shoehorning your data to fit the assumptions of normality can work, but it changes the relationship between your response and your predictors. It's also not very practical for discrete response variables because most transformations will not make these continuous in any meaningful way.
 * __Choose another distribution.__ Switching from applying linear models to generalised linear models (GLMs) can give you more flexibility when modelling data that do not easily fit into the standard Gaussian framework.
+
+You are asked to complete the following exercises and submit to Canvas before the deadline. In addition to the points detailed below, 5 points are assigned to the cleanliness of the code and resulting pdf document. Only knit documents (.pdf, .doc, or .html) will be accepted. Unknit .Rmd files will not be graded.
 
 ### Generalised Linear Models (GLMs)
 
@@ -98,36 +99,28 @@ In Johnson and Raven's paper, the authors used regression analyses to explore th
 
 One of the simples places to start when fitting a model to a datset is with a simple linear regression model. This can work fine in many cases, so let's see if we can get away with this here.
 
-1. <ol>
-* Install and load the `faraway` and `nlme` package and import the `gala` dataset.
-* Log10 transform the `Area` data and store this as a new variable in the same dataset called `log.area`.
-* Create a scatterplot with the log10 transformed `Area` on the X and `Species` on the Y. Do you expect there to be a significant relationship? Does a Gaussian linear model look appropriate for these data?
-* Fit a linear model predicting `Species` from log10 transformed `Area` using the `gls` function.
-* Inspect the summary overview of the model.
-* Create a scatterplot with the log10 transformed `Area` on the X and `Species` on the Y. Use the `abline()` function to plot the fitted model.
-* Plot the residuals against the fitted values.
-* Use the `predict()` function on this model to predict the most likely outcomes for the fitted values. Do these numbers seem plausible?
-* Inspect the fitted model and all of the outputs you just generated. Do you think that this is a good model for these data?
+1. 6 points <ol>
+* Install and load the `faraway` and `nlme` package and import the `gala` dataset. -- 0.5 point(s)
+* Log10 transform the `Area` data and store this as a new variable in the same dataset called `log.area`. -- 0.5 point(s)
+* Create a scatterplot with the log10 transformed `Area` on the X and `Species` on the Y. Do you expect there to be a significant relationship? Does a Gaussian linear model look appropriate for these data? -- 1 point(s)
+* Fit a linear model predicting `Species` from log10 transformed `Area` using the `gls` function. -- 0.5 point(s)
+* Inspect the summary overview of the model. -- 0.5 point(s)
+* Create a scatterplot with the log10 transformed `Area` on the X and `Species` on the Y. Use the `abline()` function to plot the fitted model. -- 0.5 point(s)
+* Plot the residuals against the fitted values. -- 0.5 point(s)
+* Use the `predict()` function on this model to predict the most likely outcomes for the fitted values. Do these numbers seem plausible? -- 1 point(s)
+* Inspect the fitted model and all of the outputs you just generated. Do you think that this is a good model for these data? -- 1 point(s)
 </ol>
-
-```{r, message=FALSE}
-```
 
 ### Attempting corrections
 
 The data look non-linear, so if we knew nothing about GLMs, we could try to fit a second order polynomial model to correct for the disconnect between the fitted model and the data. 
 
-1. <ol>
-* Add a second order polynomial term to the first model.
-* Inspect the summary overview of this new model.
-* Create a scatterplot with the log10 transformed `Area` on the X and `Species` on the Y.
-* Plot the fitted model.
-* Plot the residuals against the fitted values.
-* Inspect the fitted model and all of the outputs you just generated. Do you think that this correction is sufficient?
+1. 3 points <ol>
+* Add a second order polynomial term to the first model. -- 1 point(s)
+* Inspect the summary overview of this new model. -- 0.5 point(s)
+* Plot the residuals against the fitted values. -- 0.5 point(s)
+* Inspect the fitted model and all of the outputs you just generated. Do you think that this correction is sufficient? -- 1 point(s)
 </ol>
-
-```{r, message=FALSE}
-```
 
 ### Modelling Count Data using GLMs
 
@@ -167,61 +160,51 @@ $\log(\mathrm{Species}_i) = \beta_0 + \beta_1 \times \mathrm{log.area}_i \quad \
 
 This whole process is streamlined via the `glm()` function, which we will now use to try and improve our model
 
-1. <ol>
-* Fit a generalised linear model predicting `Species` from log10 transformed `Area` using the `glm` function. Be sure to specify the distribution you want to model from and the link function.
-* Inspect the summary overview of the model.
-* Calculate the pseudo R-squared for the fitted GLM model. Does this seem good?
-* Create a scatterplot with the log10 transformed `Area` on the X and `Species` on the Y.
-* Use `abline()` to plot the fitted model. What happened?
+1. 5 points <ol>
+* Fit a generalised linear model predicting `Species` from log10 transformed `Area` using the `glm` function. Be sure to specify the distribution you want to model from and the link function. -- 1 point(s)
+* Inspect the summary overview of the model. -- 1 point(s)
+* Calculate the pseudo R-squared for the fitted GLM model. Does this seem good? -- 1 point(s)
+* Create a scatterplot with the log10 transformed `Area` on the X and `Species` on the Y. -- 1 point(s)
+* Use `abline()` to plot the fitted model. What happened? -- 1 point(s)
 </ol>
-
-```{r, message=FALSE}
-```
 
 
 In a GLM framework we have a link function that lies between $\eta$ and the response variable. If we simply plot the fitted model on a linear scale without factoring in the link function, we can not place our fitted model on the appropriate scale. We need to work around this when visualising GLMs.
 
-1. <ol>
-* Create a data frame called `New_Data` that is comprised of a single column called `log.area` that is made up of a sequence of 200 numbers between -2 to 4.
-* Use these 'data' combined with the `predict()` function to generate predictions from the fitted GLM model. You will need to correctly specify some of the arguments of this function, so set `newdata = New_Data`, `type = "link"`, and `se = TRUE`. Run `class()` and `names()` on the output of `predict()`.
-* The `fit` slot of this list contains the model's deterministic prediction. The `fit.se` slot contains the standard errors of the predictions. Use the `fit` slot to plot the fitted GLM overlayed on the original data. Remember $\mu_i = e^{\eta}$, so you need to transform the predictions before plotting them.
-* Use the `fit.se` slot to plot the 95% confidence bands. Note: the 95% CIs = $\mu_i \pm SE \times 1.96$.
+1. 5 points <ol>
+* Create a data frame called `New_Data` that is comprised of a single column called `log.area` that is made up of a sequence of 200 numbers between -2 to 4. -- 1 point(s)
+* Use these 'data' combined with the `predict()` function to generate predictions from the fitted GLM model. You will need to correctly specify some of the arguments of this function, so set `newdata = New_Data`, `type = "link"`, and `se = TRUE`. Run `class()` and `names()` on the output of `predict()`. -- 1 point(s)
+* The `fit` slot of this list contains the model's deterministic prediction. The `fit.se` slot contains the standard errors of the predictions. Use the `fit` slot to plot the fitted GLM overlayed on the original data. Remember $\mu_i = e^{\eta}$, so you need to transform the predictions before plotting them. -- 2 point(s)
+* Use the `fit.se` slot to plot the 95% confidence bands. Note: the 95% CIs = $\mu_i \pm SE \times 1.96$. -- 1 point(s)
 </ol>
 
-```{R}
-```
 
 ### Overdispersion
 
 Remember that the potential problem with Poisson GLMs is overdispersion. Overdispersion means that the variance is larger than the mean (when we compare what we would expect from a Poisson distribution).
 
-1. <ol>
-* Check for overdispersion by calculating the following: Residual Deviance / degrees of freedom on the residual deviance. (Large values are bad in this context)
-* It is also possible to check the significance of this using a chisquare test. Check if this overdispersion is significant by calculating the following: `1-pchisq(residual deviance, degrees of freedom on the residual deviance)`
-* Are the data over-dispersed, or is a Poisson assumption appropriate? 
+1. 3 points <ol>
+* Check for overdispersion by calculating the following: Residual Deviance / degrees of freedom on the residual deviance. (Large values are bad in this context) -- 1 point(s)
+* It is also possible to check the significance of this using a chisquare test. Check if this overdispersion is significant by calculating the following: `1-pchisq(residual deviance, degrees of freedom on the residual deviance)` -- 1 point(s)
+* Are the data over-dispersed, or is a Poisson assumption appropriate?  -- 1 point(s)
 
 </br>
 
 __Note:__ You can get the information needed for this exercise by running summary on the fitted model.
 </ol>
 
-```{R}
-```
-
 ### Negative binomial GLM on count data
 
 Switching from a Gaussian distribution to a Poisson distribution is often a good fix for modelling count data, but it's not always the most appropriate distribution for count data. One of the primary reasons why a Poisson won't work very well on count data is over-dispersion (because the variance is tied to the mean and therefore less flexible). The negative binomial distribution is often a viable alternative to the Poisson distribution as it allows for more heterogeneity because variance $\neq$ mean.
 
-1. <ol>
+1. 5 points <ol>
 * Load in the `MASS` package.
-* Fit a negative binomial model predicting `Species` from log10 transformed `Area` using the `glm.nb()` function from the `MASS` package. Be sure to specify the link function.
-* Inspect the summary overview of the model.
-* Plot the fitted model and 95% CIs using the same steps as in Exercise 4. How does this fit compare to the Poisson model?
-* Which of the two GLM models would AIC favour?
+* Fit a negative binomial model predicting `Species` from log10 transformed `Area` using the `glm.nb()` function from the `MASS` package. Be sure to specify the link function. -- 1 point(s)
+* Inspect the summary overview of the model. -- 0.5 point(s)
+* Plot the fitted model and 95% CIs using the same steps as in Exercise 4. How does this fit compare to the Poisson model? -- 3 points point(s)
+* Which of the two GLM models would AIC favour? -- 0.5 point(s)
 </ol>
 
-```{R}
-```
 
 ***
 ## References
