@@ -13,9 +13,9 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, fig.width=6, fig.height=6)
-```
+#setwd("~/Dropbox (Personal)/Teaching_Material/Biol_520C/Practicals/09_Logistic_Regression")
 
-This page was last updated on `r format(Sys.time(), '%B %d, %Y')`.
+```
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Register.StartupHook('TeX Jax Ready', function () {
@@ -27,6 +27,7 @@ data.math = data.math.replace(/^% <!\[CDATA\[/, '').replace(/%\]\]>$/, '');
 
 * * *
 ## Background
+
 
 Last practical we saw how generalised linear models (GLMs) can give you more flexibility when modelling count data that do not easily fit into the standard Gaussian framework. We learned that to fit a GLM we need to carry out 3 steps beyond those required by conventional regressional analyses:
 
@@ -45,7 +46,7 @@ Applying GLMs to these data is also commonly referred to as 'logistic regression
 
 Logistic regression is a method for fitting a regression curve, $y = f(x)$, when $y$ consists of proportions, probabilities, or binary coded (0,1–failure,success) data (i.e., anything bound between 0 and 1). Like linear regression, logistic regression makes a number of key assumptions:
 
-* The true conditional probabilities are a logistic function of the independent variables (i.e., correct model specification).
+* The true conditional probabilities are a logistic function of the independent variables (i.e., correct model specification). 
 * No important variables are omitted \& no extra one included.
 * The independent variables are measured without error.
 * The observations are independent.
@@ -95,6 +96,8 @@ In this Practical we will:
 * Fit models to generalised linear regression models (GLMs) to 0,1 and proportion data using logistic regression.
 * Learn how to plot and interpret fitted logistic regression models.
 
+You are asked to complete the following exercises and submit to Canvas before the deadline. In addition to the points detailed below, 5 points are assigned to the cleanliness of the code and resulting pdf document. Only knit documents (.pdf, .doc, or .html) will be accepted. Unknit .Rmd files will not be graded.
+
 * * *
 ## Modelling discrete 0,1 Data
 As biologists we often find ourselves with discrete data with values that be either 0 or 1. The Gaussian distribution is continuous and has support between $-\infty, \infty$, so it's clearly not a good option when have this kind of data. If we model these data using a linear regression model, the stochastic part of our model will be misspecified, so our model's predictive power will be low, the residuals will almost always look terrible and, typically, no amount of transformations will help us. We need a deterministic function that maps the values between 0 and 1, and a distribution that makes more sense. In other words, if we're working with discrete, 0,1 data, we're probably going to need to build our models in a logistic regression framework. To explore this concept we are going to use data from:
@@ -118,46 +121,46 @@ In Ozgul et al's paper, the authors explored factors influencing the prevalence 
 ### Visualising 0,1 Data
 The first thing to do when working with a new dataset is to carry exploratory data visualisation. Visualising binary data can be challenging, however, and many standard data visualisation tools will not result in readily interpretable figures. Here we will compare traditional scatter plots and box plots with two new approaches.
 
-1. <ol>
+1. 4 points <ol>
 * Import the `gophertortoise` dataset. Make sure that sex is imported as a factor.
-* Create a scatter plot of infection status as a function of carapace length (`CL`). Add a regression line to this as a visual aid. Do you expect there to be a relationship? Do you expect it to be strong?
-* Another option for visualising 0,1 data are conditional density plots. These display smoothed proportions of each category (0 or 1) within various levels of a continuous variable. Use the `cdplot()` function to create a conditional density plot of infection status as a function of carapace length (`CL`). If this more or less clear than the scatter plot? Note: For plotting purposes, `status` will have to be a factor here.
-* Create a boxplot of infection status as a function of sex. Is this an informative figure? Do you expect there to be a relationship between these variables?
-* Create a frequency table of the number of infected/non-infected individuals as a function of sex.
-* Create a barplot with frequencies of infected vs. non infected on the Y axis and sex category on the X. Do you see any differences in the proportion infected or not in any of the three categories?
-* Visually, do you expect to see a relationship between carapace length, sex, and infection status?
+* Create a scatter plot of infection status as a function of carapace length (`CL`). Add a regression line to this as a visual aid. Do you expect there to be a relationship? Do you expect it to be strong?  -- 1 point(s)
+* Another option for visualising 0,1 data are conditional density plots. These display smoothed proportions of each category (0 or 1) within various levels of a continuous variable. Use the `cdplot()` function to create a conditional density plot of infection status as a function of carapace length (`CL`). If this more or less clear than the scatter plot? Note: For plotting purposes, `status` will have to be a factor here.   -- 0.5 point(s)
+* Create a boxplot of infection status as a function of sex. Is this an informative figure? Do you expect there to be a relationship between these variables?   -- 0.5 point(s)
+* Create a frequency table of the number of infected/non-infected individuals as a function of sex.  -- 0.5 point(s)
+* Create a barplot with frequencies of infected vs. non infected on the Y axis and sex category on the X. Do you see any differences in the proportion infected or not in any of the three categories?  -- 0.5 point(s)
+* Visually, do you expect to see a relationship between carapace length, sex, and infection status?  -- 1 point(s)
 </ol>
 
-```{r}
+```{r, message=FALSE}
 ```
 
 ### Fitting and selecting Logistic Regression Models
 
 After getting a feel for the data, the next step is to fit a logistic regression model and perform model selection to identify the best fit model for the data.
 
-1. <ol>
-* Fit a logistic regression model predicting `status` from `CL`, `Sex`, and the interaction between these using the `glm` function. Be sure to specify the correct distribution and link function for these data.
-* Inspect the summary overview of the full model.
-* Carry out AICc based model selection. What terms should you keep? which can be dropped? Refit the selected model.
-* Plot the residuals of the selected model against the fitted values.
-* Pseudo R$^2$ values are not very useful in a logistic regression framework and the residuals are usually difficult to interpret. Use the `CVbinary()` function from the `DAAG` package to cross-validate the model.
-* What was the $\Delta$AICc between the selected model and the intercept only model. Calculate the evidence ratio to quantify how much the best fit model was an improvement over an intercept only model?
-* Briefly describe the best fit model and the cross validation results.
+1. 6 points <ol>
+* Fit a logistic regression model predicting `status` from `CL`, `Sex`, and the interaction between these using the `glm` function. Be sure to specify the correct distribution and link function for these data.  -- 1 point(s)
+* Inspect the summary overview of the full model.  -- 0.5 point(s)
+* Carry out AICc based model selection. What terms should you keep? which can be dropped? Refit the selected model.  -- 1 point(s)
+* Plot the residuals of the selected model against the fitted values.  -- 0.5 point(s)
+* Pseudo R$^2$ values are not very useful in a logistic regression framework and the residuals are usually difficult to interpret. Use the `CVbinary()` function from the `DAAG` package to cross-validate the model.  -- 1 point(s)
+* What was the $\Delta$AICc between the selected model and the intercept only model. Calculate the evidence ratio to quantify how much the best fit model was an improvement over an intercept only model?  -- 1 point(s)
+* Briefly describe the best fit model and the cross validation results.  -- 1 point(s)
 </ol>
 
-```{r}
+```{r, message=FALSE}
 ```
 
 ### Visualising a Logistic Regression Model
 
 In a GLM framework we have a link function that lies between the fitted model and the response variable. As we saw last practical, if we simply plot the fitted model on a linear scale without factoring in the link function, we can not place our fitted model on the appropriate scale. We need to work around this when visualising GLMs. We also have the complication here that we have two parameters to visualise, carapace length, and sex.
 
-1. <ol>
-* Create a data frame called `New_Data` that is comprised of two columns. The first should be called `CL` that is made up of a sequence of numbers between the minimum and maximum values of `CL` by steps of 0.1, the second should be called `Sex`, and should be a column filled with the factor `"F"`.
-* Use these data combined with the `predict()` function to generate predictions from the fitted GLM model. You will need to correctly specify some of the arguments of this function, so set `newdata = New_Data`, and `type = "response"`.
-* The output of this prediction contains the model's deterministic prediction for the infection probability of females on a logit scale.
-* Repeat this process for males and juveniles.
-* Use these predictions to plot the fitted GLM overlaid on the original data for each sex. 
+1. 6 points <ol>
+* Create a data frame called `New_Data` that is comprised of two columns. The first should be called `CL` that is made up of a sequence of numbers between the minimum and maximum values of `CL` by steps of 0.1, the second should be called `Sex`, and should be a column filled with the factor `"F"`.  -- 1 point(s)
+* Use these data combined with the `predict()` function to generate predictions from the fitted GLM model. You will need to correctly specify some of the arguments of this function, so set `newdata = New_Data`, and `type = "response"`.  -- 1 point(s)
+* The output of this prediction contains the model's deterministic prediction for the infection probability of females on a logit scale. 
+* Repeat this process for males and juveniles.  -- 2 point(s)
+* Use these predictions to plot the fitted GLM overlaid on the original data for each sex. -- 2 point(s)
 
 </br>
 Note: If we wanted to add confidence intervals the process would be the same as we saw in Practical 8, but with 9 lines the plot would be difficult to interpret so we will not do that here.
@@ -175,7 +178,6 @@ Fitting a logistic regression to proportion data is very similar to fitting a lo
 
 [Vonesh and Bolker (2005) Compensatory larval responses shift trade-offs associated with predator-induced hatching plasticity. Ecology 86:1580-1591](https://esajournals.onlinelibrary.wiley.com/doi/abs/10.1890/04-0535)
 
-
 These data are openly available as part of the `emdbook` package. Variables in this dataset include:
 
 * `density`: initial tadpole density (number of tadpoles in a 1.2 x 0.8 x 0.4 m tank) [experiment 1]
@@ -184,15 +186,15 @@ These data are openly available as part of the `emdbook` package. Variables in t
 * `surv`: number surviving
 * `propsurv`: proportion surviving (=surv/density) [experiment 1]
 
-1. <ol>
+1. 5 points <ol>
 * Load in the `emdbook` package and import the `ReedfrogPred` dataset.
-* Create two box plots, one depicting the proportion surviving as a function of body size, the second the proportion surviving as a function of predator treatment.
-* Do you expect to see a relationship between either of these factors and the proportion surviving?
-* Fit a logistic regression model predicting `propsurv` from `size`, `pred`, and the interaction between these using the `glm` function.
-* Inspect the summary overview of the full model.
-* Carry out AICc based model selection. What terms should you keep? which can be dropped? Refit the selected model.
-* What was the $\Delta$AICc between the selected model and the intercept only model. Calculate the evidence ratio to quantify how much the best fit model was an improvement over an intercept only model?
-* Briefly describe the best fit model.
+* Create two box plots, one depicting the proportion surviving as a function of body size, the second the proportion surviving as a function of predator treatment.  -- 0.5 point(s)
+* Do you expect to see a relationship between either of these factors and the proportion surviving?  -- 0.5 point(s)
+* Fit a logistic regression model predicting `propsurv` from `size`, `pred`, and the interaction between these using the `glm` function.  -- 1 point(s)
+* Inspect the summary overview of the full model.  -- 0.5 point(s)
+* Carry out AICc based model selection. What terms should you keep? which can be dropped? Refit the selected model.  -- 1 point(s)
+* What was the $\Delta$AICc between the selected model and the intercept only model. Calculate the evidence ratio to quantify how much the best fit model was an improvement over an intercept only model?  -- 0.5 point(s)
+* Briefly describe the best fit model.  -- 1 point(s)
 </ol>
 
 ```{R fig.height = 4, fig.width = 8}

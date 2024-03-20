@@ -415,7 +415,6 @@ Generalised Linear Models for 0,1 and Proportion Data</h1>
 </div>
 
 
-<p>This page was last updated on March 15, 2024.</p>
 <script type="text/x-mathjax-config">
 MathJax.Hub.Register.StartupHook('TeX Jax Ready', function () {
 MathJax.InputJax.TeX.prefilterHooks.Add(function (data) {
@@ -538,6 +537,11 @@ proportion data using logistic regression.</li>
 <li>Learn how to plot and interpret fitted logistic regression
 models.</li>
 </ul>
+<p>You are asked to complete the following exercises and submit to
+Canvas before the deadline. In addition to the points detailed below, 5
+points are assigned to the cleanliness of the code and resulting pdf
+document. Only knit documents (.pdf, .doc, or .html) will be accepted.
+Unknit .Rmd files will not be graded.</p>
 <hr />
 </div>
 </div>
@@ -586,32 +590,35 @@ challenging, however, and many standard data visualisation tools will
 not result in readily interpretable figures. Here we will compare
 traditional scatter plots and box plots with two new approaches.</p>
 <ol style="list-style-type: decimal">
-<li><ol></li>
+<li>4 points
+<ol></li>
 </ol>
 <ul>
 <li>Import the <code>gophertortoise</code> dataset. Make sure that sex
 is imported as a factor.</li>
 <li>Create a scatter plot of infection status as a function of carapace
 length (<code>CL</code>). Add a regression line to this as a visual aid.
-Do you expect there to be a relationship? Do you expect it to be
-strong?</li>
+Do you expect there to be a relationship? Do you expect it to be strong?
+– 1 point(s)</li>
 <li>Another option for visualising 0,1 data are conditional density
 plots. These display smoothed proportions of each category (0 or 1)
 within various levels of a continuous variable. Use the
 <code>cdplot()</code> function to create a conditional density plot of
 infection status as a function of carapace length (<code>CL</code>). If
 this more or less clear than the scatter plot? Note: For plotting
-purposes, <code>status</code> will have to be a factor here.</li>
+purposes, <code>status</code> will have to be a factor here. – 0.5
+point(s)</li>
 <li>Create a boxplot of infection status as a function of sex. Is this
 an informative figure? Do you expect there to be a relationship between
-these variables?</li>
+these variables? – 0.5 point(s)</li>
 <li>Create a frequency table of the number of infected/non-infected
-individuals as a function of sex.</li>
+individuals as a function of sex. – 0.5 point(s)</li>
 <li>Create a barplot with frequencies of infected vs. non infected on
 the Y axis and sex category on the X. Do you see any differences in the
-proportion infected or not in any of the three categories?</li>
+proportion infected or not in any of the three categories? – 0.5
+point(s)</li>
 <li>Visually, do you expect to see a relationship between carapace
-length, sex, and infection status?
+length, sex, and infection status? – 1 point(s)
 </ol></li>
 </ul>
 </div>
@@ -622,28 +629,30 @@ class="section level3">
 regression model and perform model selection to identify the best fit
 model for the data.</p>
 <ol style="list-style-type: decimal">
-<li><ol></li>
+<li>6 points
+<ol></li>
 </ol>
 <ul>
 <li>Fit a logistic regression model predicting <code>status</code> from
 <code>CL</code>, <code>Sex</code>, and the interaction between these
 using the <code>glm</code> function. Be sure to specify the correct
-distribution and link function for these data.</li>
-<li>Inspect the summary overview of the full model.</li>
+distribution and link function for these data. – 1 point(s)</li>
+<li>Inspect the summary overview of the full model. – 0.5 point(s)</li>
 <li>Carry out AICc based model selection. What terms should you keep?
-which can be dropped? Refit the selected model.</li>
-<li>Plot the residuals of the selected model against the fitted
-values.</li>
+which can be dropped? Refit the selected model. – 1 point(s)</li>
+<li>Plot the residuals of the selected model against the fitted values.
+– 0.5 point(s)</li>
 <li>Pseudo R<span class="math inline">\(^2\)</span> values are not very
 useful in a logistic regression framework and the residuals are usually
 difficult to interpret. Use the <code>CVbinary()</code> function from
-the <code>DAAG</code> package to cross-validate the model.</li>
+the <code>DAAG</code> package to cross-validate the model. – 1
+point(s)</li>
 <li>What was the <span class="math inline">\(\Delta\)</span>AICc between
 the selected model and the intercept only model. Calculate the evidence
 ratio to quantify how much the best fit model was an improvement over an
-intercept only model?</li>
+intercept only model? – 1 point(s)</li>
 <li>Briefly describe the best fit model and the cross validation
-results.
+results. – 1 point(s)
 </ol></li>
 </ul>
 </div>
@@ -658,7 +667,8 @@ scale. We need to work around this when visualising GLMs. We also have
 the complication here that we have two parameters to visualise, carapace
 length, and sex.</p>
 <ol style="list-style-type: decimal">
-<li><ol></li>
+<li>6 points
+<ol></li>
 </ol>
 <ul>
 <li>Create a data frame called <code>New_Data</code> that is comprised
@@ -666,18 +676,18 @@ of two columns. The first should be called <code>CL</code> that is made
 up of a sequence of numbers between the minimum and maximum values of
 <code>CL</code> by steps of 0.1, the second should be called
 <code>Sex</code>, and should be a column filled with the factor
-<code>"F"</code>.</li>
+<code>"F"</code>. – 1 point(s)</li>
 <li>Use these data combined with the <code>predict()</code> function to
 generate predictions from the fitted GLM model. You will need to
 correctly specify some of the arguments of this function, so set
-<code>newdata = New_Data</code>, and
-<code>type = "response"</code>.</li>
+<code>newdata = New_Data</code>, and <code>type = "response"</code>. – 1
+point(s)</li>
 <li>The output of this prediction contains the model’s deterministic
 prediction for the infection probability of females on a logit
 scale.</li>
-<li>Repeat this process for males and juveniles.</li>
+<li>Repeat this process for males and juveniles. – 2 point(s)</li>
 <li>Use these predictions to plot the fitted GLM overlaid on the
-original data for each sex.</li>
+original data for each sex. – 2 point(s)</li>
 </ul>
 </br> Note: If we wanted to add confidence intervals the process would
 be the same as we saw in Practical 8, but with 9 lines the plot would be
@@ -721,27 +731,28 @@ a 1.2 x 0.8 x 0.4 m tank) [experiment 1]</li>
 [experiment 1]</li>
 </ul>
 <ol style="list-style-type: decimal">
-<li><ol></li>
+<li>5 points
+<ol></li>
 </ol>
 <ul>
 <li>Load in the <code>emdbook</code> package and import the
 <code>ReedfrogPred</code> dataset.</li>
 <li>Create two box plots, one depicting the proportion surviving as a
 function of body size, the second the proportion surviving as a function
-of predator treatment.</li>
+of predator treatment. – 0.5 point(s)</li>
 <li>Do you expect to see a relationship between either of these factors
-and the proportion surviving?</li>
+and the proportion surviving? – 0.5 point(s)</li>
 <li>Fit a logistic regression model predicting <code>propsurv</code>
 from <code>size</code>, <code>pred</code>, and the interaction between
-these using the <code>glm</code> function.</li>
-<li>Inspect the summary overview of the full model.</li>
+these using the <code>glm</code> function. – 1 point(s)</li>
+<li>Inspect the summary overview of the full model. – 0.5 point(s)</li>
 <li>Carry out AICc based model selection. What terms should you keep?
-which can be dropped? Refit the selected model.</li>
+which can be dropped? Refit the selected model. – 1 point(s)</li>
 <li>What was the <span class="math inline">\(\Delta\)</span>AICc between
 the selected model and the intercept only model. Calculate the evidence
 ratio to quantify how much the best fit model was an improvement over an
-intercept only model?</li>
-<li>Briefly describe the best fit model.
+intercept only model? – 0.5 point(s)</li>
+<li>Briefly describe the best fit model. – 1 point(s)
 </ol></li>
 </ul>
 <hr />
