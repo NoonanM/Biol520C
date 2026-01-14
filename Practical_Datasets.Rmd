@@ -3,7 +3,7 @@ title: "Datasets for practicals"
 output: html_document
 ---
   
-  ```{r setup, include=FALSE}
+```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
@@ -15,9 +15,9 @@ This page contains the datasets needed to complete the practicals for this cours
 
 <a href="Practical_Datasets/Musteloid_Data.csv" >Musteloid traits</a>
 
-<a href="Practical_Datasets/Anteater_Passage_Use.csv" >Anteater passage use.</a>
+<!-- <a href="Practical_Datasets/Anteater_Passage_Use.csv" >Anteater passage use.</a> -->
 
-<!-- <a href="Practical_Datasets/Wasp_Choice.csv" >Wasp choice.</a> -->
+<a href="Practical_Datasets/Wasp_Choice.csv" >Wasp choice.</a>
 
 </br>
 

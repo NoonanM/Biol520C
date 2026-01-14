@@ -13,7 +13,7 @@
 
 <title>Practical 01 - An introduction to R as a programming language</title>
 
-<script src="site_libs/header-attrs-2.26/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -526,7 +526,7 @@ hanging + sign)</p>
 <code>esc</code> to cancel the incomplete command.</p>
 <p>An incorrect command will return an error message</p>
 <pre class="r"><code>2+X</code></pre>
-<pre><code>## Error in eval(expr, envir, enclos): object &#39;X&#39; not found</code></pre>
+<pre><code>## Error: object &#39;X&#39; not found</code></pre>
 <p>When entering commands, it is important to know that <code>R</code>
 will ignore any text that follows after a hash symbol <code>#</code>.
 This is a useful way for adding comments in an <code>R</code> script, or
@@ -534,7 +534,7 @@ blocking out certain unwanted commands without deleting them
 outright.</p>
 <pre class="r"><code>The following text returns an error so the command below does not run
 2+2</code></pre>
-<pre><code>## Error: &lt;text&gt;:1:5: unexpected symbol
+<pre><code>## Error in parse(text = input): &lt;text&gt;:1:5: unexpected symbol
 ## 1: The following
 ##         ^</code></pre>
 <pre class="r"><code>#But the hash allows you to include readable text without generating errors
@@ -597,7 +597,7 @@ memory) using the <code>rm()</code> function</p>
 <pre><code>## [1] 9</code></pre>
 <pre class="r"><code>rm(X)
 X</code></pre>
-<pre><code>## Error in eval(expr, envir, enclos): object &#39;X&#39; not found</code></pre>
+<pre><code>## Error: object &#39;X&#39; not found</code></pre>
 <p>Variables do not have to be a single value and can take on more
 complex structure. For example, vectors are fundamental to programming,
 and many programs you write will build up vectors. All elements of a

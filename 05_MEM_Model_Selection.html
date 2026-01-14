@@ -13,7 +13,7 @@
 
 <title>Practical 05 - Mixed Effect Models, Model Selection, and Model Averaging</title>
 
-<script src="site_libs/header-attrs-2.26/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -415,7 +415,7 @@ Selection, and Model Averaging</h1>
 </div>
 
 
-<p>This page was last updated on March 20, 2024.</p>
+<p>This page was last updated on January 13, 2026.</p>
 <hr />
 <div id="background" class="section level2">
 <h2>Background</h2>
@@ -424,11 +424,14 @@ for non-independence in nested data. In matrix notation a linear mixed
 effects model can be represented as</p>
 <center>
 <span class="math inline">\(\overbrace{\mathbf{y}}^{\mbox{N x 1}} \quad
-= \quad \overbrace{\underbrace{\mathbf{X}}_{\mbox{N x p}} \quad
+= \quad
+\overbrace{\underbrace{\mathbf{X}}_{\mbox{N x p}} \quad
 \underbrace{\boldsymbol{\beta}}_{\mbox{p x 1}}}^{\mbox{N x 1}} \quad +
-\quad \overbrace{\underbrace{\mathbf{Z}}_{\mbox{N x qJ}} \quad
+\quad
+\overbrace{\underbrace{\mathbf{Z}}_{\mbox{N x qJ}} \quad
 \underbrace{\boldsymbol{b}}_{\mbox{qJ x 1}}}^{\mbox{N x 1}} \quad +
-\quad \overbrace{\boldsymbol{\varepsilon}}^{\mbox{N x 1}}\)</span>
+\quad
+\overbrace{\boldsymbol{\varepsilon}}^{\mbox{N x 1}}\)</span>
 </center>
 <p></br></p>
 <p><span class="math inline">\(\boldsymbol{y_i}\)</span> is the vector

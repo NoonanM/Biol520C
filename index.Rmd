@@ -13,20 +13,19 @@ Advanced course on biostatistics focused on combining data with models to genera
 
 ## Course Objectives
 
-This course combines lectures on theory and concepts with time practicing statistical tools in `R` based software packages. The course is designed to equip students with the tools and knowledge they need to perform a variety of regression-based analyses that can model common features of biological data. For each topic, there will be a core lecture module and a lab based practical module. With the lectures, students will learn the theory behind core modelling tools including multiple linear regression, mixed effects models, generalised linear models, and generalised least squares, while the lab modules are intended to provide a pathway that students can follow over the longer term as their skills develop. 
+This course combines lectures on theory and concepts with time practicing statistical tools in R based software packages. The course is designed to equip students with the tools and knowledge they need to perform a variety of regression-based analyses that can model common features of biological data. For each topic, there will be a core lecture module and a lab based practical module. With the lectures, students will learn the theory behind core modelling tools including multiple linear regression, mixed effects models, generalised linear models, and generalised least squares, while the practicals are intended to provide a pathway that students can follow over the longer term as their skills develop.
 
 
 Learning Outcomes:
 
-* Fit regression models via maximum likelihood
-*	Interpret residuals to assess/improve a model’s fit
-*	Fit models with fixed and random effects
-*	Fit models with non-Gaussian error distributions
-*	Fit non-linear models
-*	Handle non-independence in data, including phylogenetic inertia and temporal/spatial autocorrelation
-*	Perform AIC-based model selection
-*	Build models to simulate data and conduct power analyses
-*	Link questions, analyses, and studying design
+* Fit regression models using the principle of maximum likelihood
+* Analyze and interpret residuals from regression models to assess model fit, and determine model improvement strategies. Fit and interpret models that include both fixed and random effects.
+* Apply regression techniques to fit models with non-Gaussian error distributions.
+* Fit and assess non-linear models, and interpret model parameters.
+* Identify and manage non-independent data structures, including those influenced by phylogenetic inertia and temporal/spatial autocorrelation.
+* Apply AIC-based model selection to compare and evaluate competing statistical models.
+* Build and implement data simulation models and conduct power analyses.
+* Integrate research questions, study design, and analytical approaches
 
 ## Course Format
 
@@ -34,7 +33,7 @@ __Lectures__: Lectures will cover the core concepts of the course. Lecture slide
 
 __Practicals__: The practicals use structured tutorials to guide students on the use of the open-source software program R for applying the methods learned in the lectures to data. The lectures will cover the material required for students to complete the practical assignments, however, they are designed to be complementary and not all the material in the practicals will be covered in the lectures and vice versa. These also provide training on communicating the results of statistical analyses, with a focus on reproducibility. Assessment of student learning will be based on submitted assignments (see detailed schedule below).
 
-__Core project__: The core research project is a major component of the course and is designed to train students in data analysis and presentation using best practices in open science. The core project is divided into 3 components aimed at replicating the typical analytical process: 1) initial hypothesis and expected outcome(s); 2) a verbal presentation of the analyses and findings; and 3) the submission of a paper describing the work (see details below).
+__Core project__: The core research project is a major component of the course and is designed to train students in data analysis, interpretation, and scientific communication using best practices in open science. The project is divided into two components that mirror a typical analytical workflow:  1) Development of an initial hypothesis and expected outcome(s), and 2) A verbal presentation of the analyses and findings.
 
 
 ## Pre-course Checklist
@@ -58,65 +57,89 @@ The assignments and evaluation for this course are structured along two distinct
 |                                    |      |                                           |
 |------------------------------------|------|-------------------------------------------|
 | Hypothesis and expected outcome(s) | 5%   | Week 4                                    |
-| Paper                              | 35%  | Week 13                                   |
-| Presentation                       | 10%  | Weeks 12 & 13                             |
-| Practicals (10)                    | 40%  | Due on ~weekly basis (see schedule below) |
+| Presentation                       | 30%  | Weeks 12 & 13                             |
+| Practicals (10)                    | 25%  | Due on ~weekly basis (see schedule below) |
 | Participation from practicals      | 10%  | Due on ~weekly basis (see schedule below) |
+| Take-home exam                     | 30%  | Week 14                                   |
 | Total                              | 100% |                                           |
 
-### Practical Assignments and Participation (50%)
-Beginning the first week of class, students will be asked to complete practical assignments on an approximately weekly basis (schedule below). There will be a total of 10 practicals to be completed throughout the course. Each is designed to provide students with the opportunity to learn how to apply the methods learned in the lectures to data using the statistical software R. The purpose of these practical assignments is to ensure that students have the practical skills necessary to complete effective statistical analyses and data presentation that are central to science. The skills gained by completing each week’s assignment will help students complete their theses and research projects. The course web page on github will host the practicals, and the various datasets associated with each practical. Lectures will be given on Tuesdays and Thursdays. After the Thursdays lecture, we will have covered all of the material that is needed to complete the week’s practical assignment material which is due before the start of the following Thursday lecture (to be submitted online via canvas).
+### Practical Assignments and Participation (35%)
+Beginning in the first week of class, students will complete practical assignments on an approximately weekly basis (see schedule below). A total of ten practical assignments will be completed throughout the course. These practicals are designed to provide hands-on experience applying the statistical methods introduced in lectures to real biological datasets using the statistical software R. The primary purpose of the practical assignments is to ensure that students develop the practical skills required to conduct effective statistical analyses and communicate results clearly and reproducibly. The skills developed through these assignments are directly transferable to students’ thesis work and independent research projects. Practical assignments, along with the associated datasets, will be hosted on the course GitHub webpage. All submissions must be completed electronically via Canvas. Lectures will be held on Mondays and Wednesdays. By the end of the Wednesday lecture, all material required to complete that week’s practical will have been covered. Practical assignments are due before the start of the following Wednesday lecture.
 
-__Grading__: Students are to submit answers to all questions in the practical. Each practical assignment is worth a total of 5% of your total grade. Of this, 1% is given for submitting the tutorial on time, irrespective of whether or not the answers are correct. This is intended as the participation component of the course. The remaining 4% comes from the answers provided. Solutions to each the practicals will be posted after the weekly submission deadline. Late practicals will be accepted after the solutions have been posted, but no participation grade will be given.
+__Grading__: Each practical assignment is worth 3.5% of the final course grade, for a total of 35% across all ten practicals. Of this:
+
+* 1% is awarded for submitting the assignment on time, regardless of correctness. This component constitutes the participation grade for the course.
+
+* The remaining 2.5% is based on the accuracy of the responses, the quality and clarity of the analysis, well-structured and well-commented code, and the quality of figures and data presentation.
+
+Solutions to each practical assignment will be posted after the submission deadline. Late practicals will be accepted after solutions have been released; however, late submissions will not receive the participation component of the grade. No extensions will be granted for practical assignments except under documented exceptional circumstances.
 
  
 
 ### Hypothesis and expected outcome(s) (5%)
-At the end of week four, students will be expected to submit a one page proposal describing the study system they will be working on for their course project, the initial hypothesis, the expected outcome, and the data that they will be using to address this question.
-
-__Grading__: All submitted proposals will receive a grade of 5/5. Late assignments will receive a grade of 0. In addition, no other assignment related to the core project will be accepted until the study proposal has been submitted.
-
-### Papers (35%)
-Students will be required to complete one core written assignments for this course. This assignment is designed to provide students with an opportunity to apply what they have learned in the lectures and practicals in an unguided format as they would if they were analysing data outside of a classroom setting. For this paper, students will apply the modelling tools covered in the lectures on an empirical dataset (details below) and write a short scientific paper about their work on these data and summarise their findings. This paper should be comprised of six sections: Introduction, Methods, Results, Discussion, References, and an Appendix Section.
-
-_Introduction_: Provide a brief description of the study system from which the data come and an outline of what questions you intend on exploring with the data, citing all relevant literature. Length: ca. 1-2 pages.
-
-_Methods_: Briefly describe how the data were collected and what variables are included. Provide a detailed description of the analytical workflow that was applied to the data, citing all relevant literature and statistical packages employed. There should be enough information that anyone can reproduce the workflow if they had access to the data. Length: As long as necessary.
-
-_Results_: Length: Describe your statistical findings. Tables and figures should be used throughout. Length: As long as necessary.
-
-_Discussion_: Provide a brief summary of your findings and place them in a biological context. Length: ca. 1-2 pages
-
-_References_: Include references to all necessary literature.
-
-_Appendix_: The appendix material should include an html document created via R markdown that details every step of the analyses. The code should be commented and clearly show how you arrived at the numbers presented in your results from the data on hand.
+By the end of Week 4, students must submit a one-page proposal describing the study system they will use for their course project. The proposal should clearly state the initial hypothesis, the expected outcome(s), and the dataset(s) that will be used to address the research question. This assignment is intended to function as a light form of preregistration. Its purpose is to encourage students to articulate their analytical questions, hypotheses, and expectations a priori, before conducting formal analyses. By doing so, this assignment helps distinguish between confirmatory analyses (testing pre-specified hypotheses) and exploratory analyses, and reduces the risk of post hoc hypothesis generation, fishing expeditions, or p-hacking. Students are not penalised if the results ultimately do not support the initial hypothesis. Instead, the emphasis is on clearly documenting the original expectations and analytical intent prior to seeing the results.
 
  
-__Datasets__: To complete these assignments, students will have access to a number of pre-selected datasets. Students can opt to use their own data to complete these assignments if they prefer, and are highly encouraged to do so, but must seek instructor approval. If you intend on using your own data, it is recommended that you discuss this with the instructor as early as possible. The pre-selected datasets are available on the course website.
 
-__Grading__: Students are to submit their final paper by the end of the day on Sunday of the 13th week of the course Papers will be graded out of 100, and will be worth a total of 35% of your total grade. Each section has the following value: Introduction 10%, Methods 25%, Results 20%, Discussion 10%, References 5%, and an Appendix Section 30%. Late papers will have 10% deducted per day that they are overdue, and will receive a grade of zero if more than 10 days late without a valid excuse.
+__Grading__: This assignment is assessed on a completion basis. All proposals that meet the submission requirements will receive full credit (5/5). Late submissions will receive a grade of 0. Submission of this assignment is a prerequisite for all subsequent core project components. No further project-related assignments will be accepted until the hypothesis and expected outcome(s) proposal has been submitted.
+
+### Presentations (30%)
+Students will complete a core data analysis assignment as the capstone component of the course. Each student will deliver a 15-minute conference-style presentation based on their analyses. This assignment is designed to provide students with an opportunity to apply the statistical modelling tools introduced in lectures and practicals in an unguided setting, analogous to analysing data outside of a classroom environment. For this presentation, students will apply the modelling approaches covered in the course to an empirical dataset of their choosing (see Datasets below) and present their work in a professional scientific format. Presentations should be organised into the following sections:
+ 
+
+__Presentation structure__
+
+__Introduction__ Provide a brief description of the study system and clearly state the research question(s) being addressed. Relevant background literature should be cited.
+Recommended length: ~2–3 minutes.
+
+__Methods__ Briefly describe how the data were collected and what variables are included. Provide a detailed description of the analytical workflow applied to the data, including model structure, assumptions, and justification for methodological choices. All relevant literature and statistical packages should be cited. The description should be sufficiently detailed that the analysis could be reproduced by others with access to the data.
+Recommended length: ~6–7 minutes.
+
+__Results__ Present the statistical results using appropriate figures and tables. Results should be explicitly contrasted with the predictions stated in the Hypothesis and Expected Outcome(s) assignment, noting where outcomes align with or differ from initial expectations. Students are not evaluated on whether results support their initial hypotheses, but on the clarity, appropriateness, and transparency of their analytical decisions and interpretation.
+Recommended length: ~3–5 minutes.
+
+__Discussion / Conclusion__ Summarise the key findings and place them in a biological context. Unexpected or null results should be discussed where relevant.
+Recommended length: ~1–2 minutes.
+
+__References__ Include references for all data sources, methods, and background literature.
+
+_Note: The recommended section lengths are guidelines rather than strict requirements. The primary emphasis of the presentation should be on the statistical modelling itself, including rationale for analytical choices, assumptions of the methods used, and potential sources of bias or uncertainty. Overly long introductions or discussions should be avoided._
+
+__Reproducibility appendix__
+
+In addition to the in-class presentation, students must submit a reproducibility appendix generated using R Markdown (PDF, HTML, or Word format). This document should detail every step of the analysis presented, including all data processing, model fitting, and figure generation. Code should be clearly commented and structured to allow full reproducibility of the results shown in the presentation.
+
+ 
+__Datasets__: Students may select from a set of pre-approved datasets provided on the course website. Students are strongly encouraged to use their own data where possible; however, instructor approval is required. In general, there are no restrictions on data type, provided that the statistical methods covered in the course are appropriate. Datasets requiring specialised bioinformatics or preprocessing pipelines (e.g., RNA-seq pipelines) are not permitted. Students intending to use their own data are encouraged to discuss suitability with the instructor as early as possible.
+
+__Submission:__ Presentation slides must be submitted in advance of the presentation date (exact deadline to be announced later in the semester). The order of presentations will be determined randomly in class on the day of the presentations.
+
+__Grading:__ The presentation will be worth 20% of your total grade. Grading will based on a pre-provided rubric. The appendix material will be worth 10% of your total grade. 
 
 
-### Presentations (10%)
-Prior to submitting their papers to the instructor, students will be required to give a 15-minute presentation to the class. The presentation should include all of the sections that are included in the paper (detailed above), however the appendix detailing the R code that was used should be integrated into the methods section of the presentation.
 
-__Grading__: Grading will based on <a href="Biol520C_Presentation_Rubric.pdf" target="_blank">the following rubric.</a>
+### Take-Home Final Exam (30%)
+The take-home final exam will consist of a set of questions designed to assess students’ understanding of the core statistical concepts covered in the course. The exam will be comprehensive, and material from both lectures and practical assignments may be tested. The exam will emphasise statistical reasoning, interpretation, and model evaluation, rather than rote calculation. Questions may require students to interpret model outputs, assess assumptions, justify analytical choices, and evaluate alternative modelling approaches.
+
+ 
+
+__Grading:__ The final exam is worth 30% of the final course grade.
 
 ## Lecture Outline
 (Approximate schedule of topics covered in lectures)
 
 | Week        | Lecture Topics                                                                        | Practical Assignment                                                                                     |
 |-------------------|---------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------|
-| 1      | Course introduction; Regression refresher                                             | Practical 01: Introduction to R as a programming language (4%)                                           |
-| 2     | Probability theory; Likelihood; Maximum likelihood                                    | Practical 02: Deterministic and stochastic models, simple linear regression, and maximum likelihood (4%) |
-| 3     | Multiple linear regression; Parameter interactions; Interpreting residuals            | Practical 03: Multiple linear regression, Residuals (4%)                                                 |
-| 4  | Mixed effects models; Model Selection; Information criterion                          | Practical 04: Data visualisation (4%);  Hypothesis and predictions due (5%)                              |
-| 5       | Model Selection; Model averaging; Heteroskedasticity                                  | Practical 05: Mixed effect models, model selection, and model averaging (4%)                             |
-| 6     | Temporal autocorrelation; Spatial Autocorrelation                                     | Practical 06: Heteroskedasticity; Autocorrelation Function; Models with autocorrelated errors (4%)       |
-| 7     | Phylogenetic inertia; Phylogenetically controlled regression                          | Practical 07: Spatial and Phylogenetic Autocorrelation (4%)                                              |
-| 8     | Non-Gaussian residuals; Generalised linear regression Poisson and Logistic regression |  Practical 08: Generalised Linear Models for Count Data (4%)                                             |
-| 9  | Zero-inflated data; Non-linear modelling; Deterministic functions                     | Practical 09: GLMs for Binary and Proportion Data (4%)                                                   |
-| 10    | Stochastic simulation and power analysis; Course Overview                             | Practical 10: Stochastic Simulations, Power Analysis, Non-linear models (4%)                             |
+| 1      | Course introduction; Regression refresher                                             | Practical 01: Introduction to R as a programming language                                           |
+| 2     | Probability theory; Likelihood; Maximum likelihood                                    | Practical 02: Deterministic and stochastic models, simple linear regression, and maximum likelihood |
+| 3     | Multiple linear regression; Parameter interactions; Interpreting residuals            | Practical 03: Multiple linear regression, Residuals                                                 |
+| 4  | Mixed effects models; Model Selection; Information criterion                          | Practical 04: Data visualisation;  Hypothesis and predictions due                              |
+| 5       | Model Selection; Model averaging; Heteroskedasticity                                  | Practical 05: Mixed effect models, model selection, and model averaging                             |
+| 6     | Temporal autocorrelation; Spatial Autocorrelation                                     | Practical 06: Heteroskedasticity; Autocorrelation Function; Models with autocorrelated errors       |
+| 7     | Phylogenetic inertia; Phylogenetically controlled regression                          | Practical 07: Spatial and Phylogenetic Autocorrelation                                              |
+| 8     | Non-Gaussian residuals; Generalised linear regression Poisson and Logistic regression |  Practical 08: Generalised Linear Models for Count Data                                             |
+| 9  | Zero-inflated data; Non-linear modelling; Deterministic functions                     | Practical 09: GLMs for Binary and Proportion Data                                                   |
+| 10    | Stochastic simulation and power analysis; Course Overview                             | Practical 10: Stochastic Simulations, Power Analysis, Non-linear models                             |
 | 11    |  Independent Project Work                                                             | No Practical                                                                                             |
-| 12 |  Student presentations (10%)                                                          |  No Practical                                                                                            |
-| 13     | Student presentations (10%)                                                           | Term paper due (35%)                                                                                     |
+| 12 |  Student presentations                                                          |  No Practical                                                                                            |
+| 13     | Student presentations                                                           | Term presentations due (35%)                                                                                     |

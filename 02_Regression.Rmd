@@ -9,11 +9,13 @@ output:
     theme: flatly
     toc: yes
     toc_float: yes
+    mathjax: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, fig.width=6, fig.height=4)
 ```
+
 
 * * *
 ## Background
@@ -27,33 +29,35 @@ In this Practical you will:
 * Estimate a parameter via maximum log-likelihood estimation
 * Estimate confidence intervals via log-likelihood profiles
 
-You are asked to complete the following exercises and submit to Canvas before the deadline. In addition to the points detailed below, 5 points are assigned to the cleanliness of the code and resulting pdf document. Only knit documents (.pdf, .doc, or .html) will be accepted. Unknit .Rmd files will not be graded.
-
 * * *
 ## Deterministic models
-Statistical models are typically comprised of a deterministic component, that describes the core behaviour of a system, and a stochastic component that describes the system's randomness.
+Statistical models are typically comprised of a deterministic component, that describes the basic trend in a system, and a stochastic component that describes the system's randomness.
 
-Let us suppose that we are interested in the relationship between body mass and age for some species, and our hypothesis is that mass is proportional to age. Because there are many different mathematical models that would be consistent with this verbal description of our hypothesis, this do not give us any clear way of actually testing the validity of our hypothesis. We are instead going to formalise this hypothesis according to a simple linear deterministic model:
+Let us supose that we are interested in the relationship between body mass and age for some species, and our hypothesis is that mass is proportional to age. This verbal description of our hypothesis does not give us any clear way of actually testing our hypothesis. We are instead going to formalise this hypothesis acroding to a simple linear deterministic model:
 
 <center>
 $mass_i = \beta_0 + age_i \beta_1$
 </center>
 </br>
 
-The parameter $\beta_0$ describes the intercept of this model (i.e., baseline body mass at age 0), and $\beta_1$ describes the slope (i.e., the rate at which body bass changes with age). When an individual is born, it starts out with some mass, so the intercept is probably non-zero. Let's say our intercept here is $\beta_0 = 2$, meaning individuals at age 0 have a mass of 2kg. Let's also say that we know for every unit of time the animal ages, the mass increases by 1kg (i.e., $\beta_1 = 1$). For these parameter values, we can then more explicitly describe the deterministic relationship between body mass and age as:
+The parameter $\beta_0$ describes the intercept of this model, and $\beta_1$ the slope. When an individual is born, it starts out with some mass, so the intercept is probably non-zero. Let's say our intercept here is $\beta_0 = 1$, meaning individuals at age 0 have a mass of 1kg. Let's also say that we know for every unit of time the animal ages, the mass increases by 2kg (i.e., $\beta_1 = 2$). We can then more formally express the deterministic relationship as:
 
 <center>
-$mass_i = 2 + age_i\times1$
+$mass_i = 1 + age_i\times2$
 </center>
 </br>
 
 1. 3 points <ol>
 * Write an `R` function that expresses this relationship. -- 1 point(s)
-* Generate a vector of ages from 0 to 20 years, separated by 1 year. -- 0.5 point(s)
-* Use the deterministic model to predict the mass of animals of these ages. -- 0.5 point(s)
-* Plot the data to inspect the results. -- 0.5 point(s)
-* Generate predictions for 20 animals all of age 5 and print the results.-- 0.5 point(s)
+* Generate a vector of ages from 0 to 20 years, seperated by 1 year -- 0.5 point(s)
+* Use the deterministic model to predict the mass of animals of these ages -- 0.5 point(s)
+* Plot the data to inspect the results -- 0.5 point(s)
+* Generate predictions for 20 animals all of age 5 and inspect the results -- 0.5 point(s)
 </ol>
+
+```{r}
+
+```
 
 
 * * *
@@ -62,18 +66,26 @@ Stochastic models describe the randomness of the process. Simple linear regressi
 
 
 <center>
-$mass_i = \beta_0 + age_i \beta_1 + \varepsilon_i, \quad \quad$ where $\quad \varepsilon_i \sim \mathcal{N}(0,\,\sigma^{2})$ 
+$$
+mass_i = \beta_0 + \beta_1 age_i + \varepsilon_i,
+\qquad \varepsilon_i \sim \mathcal{N}(0, \sigma^2)
+$$
 </center>
 </br>
 
 Going back to our numbers from above, what we're now saying is that all animals of age 5 will have a mass that's Gaussian distributed around 11.
 
 1. 3 points <ol>
-* Write a new function for our previous model that also includes a Gaussian distributed stochastic component with standard deviation of 1. Note: You will need to make use of the `rnorm()` function. -- 1.5 point(s)
+* Write a new function for our previous model that also includes a Gaussian distributed stochastic component with standard deviation of 2. Note: You will need to make use of the `rnorm()` function. -- 1.5 point(s)
 * Generate 60 uniformly distributed ages between 0 and 20. Note: You will need to make use of the `runif()` function. -- 0.5 point(s)
 * Use the stochastic model to predict the mass of these 60 animals. -- 0.5 point(s)
-* Plot the data to inspect the results. -- 0.5 point(s)
+* Plot the data to inspect the results.  -- 0.5 point(s)
 </ol>
+
+```{r}
+
+```
+
 
 ***
 ## Independent and identically distributed (IID) errors
@@ -91,32 +103,40 @@ The first thing our model is saying, is that for any age $i$, we can expect mass
 
 </br>
 
-1. 3 points <ol>
+1. 4 points <ol>
 * Use the `set.seed()` function to set the random seed as 1 (this will ensure consistent results).  -- 0.5 point(s)
-* Generate predictions for 1000 animals all of age 10.  -- 0.5 point(s)
+* Generate predictions for 1000 animals all of age 5.   -- 0.5 point(s)
 * Use a histogram to inspect the results.  -- 0.5 point(s)
 * Calculate the errors for these predictions.  -- 0.5 point(s)
-* Calculate the mean of the errors.  -- 0.5 point(s)
+* Calculate the mean of the errors. -- 0.5 point(s)
 * Use a histogram to inspect the distribution of errors.  -- 0.5 point(s)
+* Describe how the histogram allows us to diagnose the IID assumption.  -- 1 point(s)
 </ol>
 
+```{r}
+
+```
 
 
 The second thing our model is saying, is that for any age $i$, we can expect the distribution of errors to be identical.
 
-1. 3 points <ol>
-* Calculate the errors on predictions for 1000 animals all of age 3.  -- 0.5 point(s)
-* Calculate the errors on predictions for 1000 animals all of age 27.  -- 0.5 point(s)
-* Calculate the mean of each of these error distributions.  -- 0.5 point(s)
-* Use histograms to inspect the results. Note: Use different colours for the two distributions. You can use `add = TRUE` to overlay to plots.  -- 1 point(s)
-* Describe what you have observed in the results.  -- 0.5 point(s)
+1. 4 points <ol>
+* Quantify the errors on predictions for 1000 animals all of age 5.  -- 0.5 point(s)
+* Quantify the errors on predictions for 1000 animals all of age 30.  -- 0.5 point(s)
+* Calculate the means of these error distributions.  -- 0.5 point(s)
+* Use histograms to inspect the results. Note: Use different colours for the two distributions. You can also use `add = TRUE` to overlay to plots.  -- 1 point(s)
+* What would the figure look like if the IID assumption was broken?  -- 1 point(s)
 </ol>
+
+```{r}
+
+```
 
 *** 
 ## Fitting simple linear models in R
 Simple linear regression models can be easily fit in `R` either by manually estimating the regression coefficients, or via the `lm()` function.
 
-1. 7 points <ol>
+1. 9 points <ol>
 Using a dataset of musteloid traits taken from a study by [Noonan et al. (2016)](https://doi.org/10.1002/ece3.2480), we will determine whether there is any evidence of a linear relationship between female body mass and mean litter size (i.e., mean number of offspring a female has at a given time). The data are available on the course website and the code to import them is detailed below. From these data, you will need to complete the following steps:
 
 * Remove any instances of missing data. -- 0.5 point(s)
@@ -126,24 +146,34 @@ Using a dataset of musteloid traits taken from a study by [Noonan et al. (2016)]
 * Use the `summary()` to inspect the results. -- 0.5 point(s)
 * Plot the data and the fitted regression line. -- 1 point(s)
 * Use a histogram to plot the residuals for visual inspection. Describe how the residuals compare to those in exercise 4. -- 1 point(s)
+* Based on these residuals, do you think these data meet the assumptions of simple linear regression? What led you to make that decision? -- 2 point(s)
 </ol>
+
+```{r}
+
+```
 
 ***
 ## Maximum likelihood
 
 
-1. 10 points <ol>
-
-Wildlife-vehicle collisions (WVCs) represent a serious source of mortality for giant anteaters (_Myrmecophaga tridactyla_) in Brazil. Road passage structures are often used as measures to help wildlife safely cross roads, but, to be effective, animals need to use them. [Noonan et al. (2021)](https://doi.org/10.1111/acv.12728) used GPS tracking data to determine whether anteaters actively used passage structures to cross highways. Each time one of the 38 monitored animals crossed a road, it was recorded whether they used the structure or not. After ca. 1 year of monitoring, a total of 1575 road crossings were observed. The question is, are giant anteaters using crossing structure more than would be expected by chance alone.
+1. 14 points <ol>
+A tiny species of parasitic wasp, Trichogramma brassicae, rides on female cabbage white butterflies, Pieris brassicae. When a butterfly lays her eggs, the wasp climbs off of the female and parasitizes the freshly laid eggs. [Fatouros et al. (2005)](https://www.nature.com/articles/433704a) carried out trials to determine whether the wasps can distinguish mated female butterflies from unmated females (recently mated females are more likely to lay eggs than unmated females and would make a better choice ride/follow around). In each trial a single wasp was presented with two female cabbage white butterflies, one an unmated female, the other recently mated, and the choice of which butterly to ride was recorded. The question is, are the wasps making an informed decision, or are the randomly selecting butterflies.
 
 </br>
-Answer this by applying maximum likelihood estimation to the proportion of road crossing events that occurred via a passage structure. You will need to carry out the following steps:
+Answer this by applying maximum likelihood estimation of the proportion of parasitic wasp individuals that choose the mated butterflies. You will need to cary out the following steps:
 
-* Use the `table()` function to create a frequency table.  -- 1 point(s)
-* From these data, calculate the likelihood and negative log-likelihood of random passage use. Note these are 0/1 data, what distribution should you use? What parameter values would result in a random, 50/50 split?  -- 1 point(s)
+* Import and inspect the mate choice data. Note: use the `table()` function to create a frequency table.  -- 1 point(s)
+* Calculate the likelihood and log-likelihood of random host choice. Note these are yes/no data, what distribution should you use? What parameter values would result in a random, 50/50 split? -- 1 point(s)
 * Calculate the negative log-likelihood of a range of parameter values that allow you to find the maximum likelihood. Note, you can make use of the `seq()` function.  -- 2 point(s)
 * Find the minimum negative log-likelihood estimate.  -- 1 point(s)
 * Plot the negative log-likelihood curve.  -- 1 point(s)
+* Explain why the likelihood surface has the shape you observe.  -- 2 point(s)
 * Calculate the likelihood-based 95% confidence interval. Note: We learned in the lecture that an approximate 95% confidence interval is within 1.92 of the minimum negative log-likelihood.  -- 3 point(s)
-* What do the ML estimate and 95% confidence interval tell you about passage structure use? Is it random, or non-random? Are giant anteaters using passage structures significantly more or less than random? -- 1 point(s)
+* What do the ML estimate and 95% confidence interval tell you about host choice? Is it random, or non-random? -- 1 point(s)
+* How would increasing/decreasing the sample size change the inference you just made? Be specific in your answer with respect to the likelihood profile.  -- 2 point(s)
 </ol>
+
+```{R}
+
+```

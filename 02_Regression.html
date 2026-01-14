@@ -13,7 +13,7 @@
 
 <title>Practical 02 - Deterministic models, stochastic models, simple linear regression, and maximum likelihood</title>
 
-<script src="site_libs/header-attrs-2.26/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
@@ -430,43 +430,35 @@ data.</li>
 <li>Estimate a parameter via maximum log-likelihood estimation</li>
 <li>Estimate confidence intervals via log-likelihood profiles</li>
 </ul>
-<p>You are asked to complete the following exercises and submit to
-Canvas before the deadline. In addition to the points detailed below, 5
-points are assigned to the cleanliness of the code and resulting pdf
-document. Only knit documents (.pdf, .doc, or .html) will be accepted.
-Unknit .Rmd files will not be graded.</p>
 <hr />
 </div>
 <div id="deterministic-models" class="section level2">
 <h2>Deterministic models</h2>
 <p>Statistical models are typically comprised of a deterministic
-component, that describes the core behaviour of a system, and a
-stochastic component that describes the system’s randomness.</p>
-<p>Let us suppose that we are interested in the relationship between
-body mass and age for some species, and our hypothesis is that mass is
-proportional to age. Because there are many different mathematical
-models that would be consistent with this verbal description of our
-hypothesis, this do not give us any clear way of actually testing the
-validity of our hypothesis. We are instead going to formalise this
-hypothesis according to a simple linear deterministic model:</p>
+component, that describes the basic trend in a system, and a stochastic
+component that describes the system’s randomness.</p>
+<p>Let us supose that we are interested in the relationship between body
+mass and age for some species, and our hypothesis is that mass is
+proportional to age. This verbal description of our hypothesis does not
+give us any clear way of actually testing our hypothesis. We are instead
+going to formalise this hypothesis acroding to a simple linear
+deterministic model:</p>
 <center>
 <span class="math inline">\(mass_i = \beta_0 + age_i \beta_1\)</span>
 </center>
 <p></br></p>
 <p>The parameter <span class="math inline">\(\beta_0\)</span> describes
-the intercept of this model (i.e., baseline body mass at age 0), and
-<span class="math inline">\(\beta_1\)</span> describes the slope (i.e.,
-the rate at which body bass changes with age). When an individual is
+the intercept of this model, and <span
+class="math inline">\(\beta_1\)</span> the slope. When an individual is
 born, it starts out with some mass, so the intercept is probably
 non-zero. Let’s say our intercept here is <span
-class="math inline">\(\beta_0 = 2\)</span>, meaning individuals at age 0
-have a mass of 2kg. Let’s also say that we know for every unit of time
-the animal ages, the mass increases by 1kg (i.e., <span
-class="math inline">\(\beta_1 = 1\)</span>). For these parameter values,
-we can then more explicitly describe the deterministic relationship
-between body mass and age as:</p>
+class="math inline">\(\beta_0 = 1\)</span>, meaning individuals at age 0
+have a mass of 1kg. Let’s also say that we know for every unit of time
+the animal ages, the mass increases by 2kg (i.e., <span
+class="math inline">\(\beta_1 = 2\)</span>). We can then more formally
+express the deterministic relationship as:</p>
 <center>
-<span class="math inline">\(mass_i = 2 + age_i\times1\)</span>
+<span class="math inline">\(mass_i = 1 + age_i\times2\)</span>
 </center>
 <p></br></p>
 <ol style="list-style-type: decimal">
@@ -476,13 +468,13 @@ between body mass and age as:</p>
 <ul>
 <li>Write an <code>R</code> function that expresses this relationship. –
 1 point(s)</li>
-<li>Generate a vector of ages from 0 to 20 years, separated by 1 year. –
+<li>Generate a vector of ages from 0 to 20 years, seperated by 1 year –
 0.5 point(s)</li>
 <li>Use the deterministic model to predict the mass of animals of these
-ages. – 0.5 point(s)</li>
-<li>Plot the data to inspect the results. – 0.5 point(s)</li>
-<li>Generate predictions for 20 animals all of age 5 and print the
-results.– 0.5 point(s)
+ages – 0.5 point(s)</li>
+<li>Plot the data to inspect the results – 0.5 point(s)</li>
+<li>Generate predictions for 20 animals all of age 5 and inspect the
+results – 0.5 point(s)
 </ol></li>
 </ul>
 <hr />
@@ -494,10 +486,10 @@ linear regression accounts for stochasticity by assuming that each
 observation <span class="math inline">\(age_i\)</span> is drawn from a
 normal distribution.</p>
 <center>
-<span class="math inline">\(mass_i = \beta_0 + age_i \beta_1 +
-\varepsilon_i, \quad \quad\)</span> where <span
-class="math inline">\(\quad \varepsilon_i \sim
-\mathcal{N}(0,\,\sigma^{2})\)</span>
+<span class="math display">\[
+mass_i = \beta_0 + \beta_1 age_i + \varepsilon_i,
+\qquad \varepsilon_i \sim \mathcal{N}(0, \sigma^2)
+\]</span>
 </center>
 <p></br></p>
 <p>Going back to our numbers from above, what we’re now saying is that
@@ -509,7 +501,7 @@ all animals of age 5 will have a mass that’s Gaussian distributed around
 </ol>
 <ul>
 <li>Write a new function for our previous model that also includes a
-Gaussian distributed stochastic component with standard deviation of 1.
+Gaussian distributed stochastic component with standard deviation of 2.
 Note: You will need to make use of the <code>rnorm()</code> function. –
 1.5 point(s)</li>
 <li>Generate 60 uniformly distributed ages between 0 and 20. Note: You
@@ -551,39 +543,42 @@ around 0 (remember that <span class="math inline">\(\varepsilon_i = y_i
 - (\beta_0 + x_i \beta_1)\)</span>).</p>
 <p></br></p>
 <ol style="list-style-type: decimal">
-<li>3 points
+<li>4 points
 <ol></li>
 </ol>
 <ul>
 <li>Use the <code>set.seed()</code> function to set the random seed as 1
 (this will ensure consistent results). – 0.5 point(s)</li>
-<li>Generate predictions for 1000 animals all of age 10. – 0.5
+<li>Generate predictions for 1000 animals all of age 5. – 0.5
 point(s)</li>
 <li>Use a histogram to inspect the results. – 0.5 point(s)</li>
 <li>Calculate the errors for these predictions. – 0.5 point(s)</li>
 <li>Calculate the mean of the errors. – 0.5 point(s)</li>
 <li>Use a histogram to inspect the distribution of errors. – 0.5
-point(s)
+point(s)</li>
+<li>Describe how the histogram allows us to diagnose the IID assumption.
+– 1 point(s)
 </ol></li>
 </ul>
 <p>The second thing our model is saying, is that for any age <span
 class="math inline">\(i\)</span>, we can expect the distribution of
 errors to be identical.</p>
 <ol style="list-style-type: decimal">
-<li>3 points
+<li>4 points
 <ol></li>
 </ol>
 <ul>
-<li>Calculate the errors on predictions for 1000 animals all of age 3. –
+<li>Quantify the errors on predictions for 1000 animals all of age 5. –
 0.5 point(s)</li>
-<li>Calculate the errors on predictions for 1000 animals all of age 27.
-– 0.5 point(s)</li>
-<li>Calculate the mean of each of these error distributions. – 0.5
+<li>Quantify the errors on predictions for 1000 animals all of age 30. –
+0.5 point(s)</li>
+<li>Calculate the means of these error distributions. – 0.5
 point(s)</li>
 <li>Use histograms to inspect the results. Note: Use different colours
-for the two distributions. You can use <code>add = TRUE</code> to
+for the two distributions. You can also use <code>add = TRUE</code> to
 overlay to plots. – 1 point(s)</li>
-<li>Describe what you have observed in the results. – 0.5 point(s)
+<li>What would the figure look like if the IID assumption was broken? –
+1 point(s)
 </ol></li>
 </ul>
 <hr />
@@ -594,7 +589,7 @@ overlay to plots. – 1 point(s)</li>
 either by manually estimating the regression coefficients, or via the
 <code>lm()</code> function.</p>
 <ol style="list-style-type: decimal">
-<li>7 points
+<li>9 points
 <ol>
 Using a dataset of musteloid traits taken from a study by <a
 href="https://doi.org/10.1002/ece3.2480">Noonan et al. (2016)</a>, we
@@ -616,7 +611,11 @@ estimator. – 2 point(s)</li>
 point(s)</li>
 <li>Plot the data and the fitted regression line. – 1 point(s)</li>
 <li>Use a histogram to plot the residuals for visual inspection.
-Describe how the residuals compare to those in exercise 4. – 1 point(s)
+Describe how the residuals compare to those in exercise 4. – 1
+point(s)</li>
+<li>Based on these residuals, do you think these data meet the
+assumptions of simple linear regression? What led you to make that
+decision? – 2 point(s)
 </ol></li>
 </ul>
 <hr />
@@ -624,42 +623,48 @@ Describe how the residuals compare to those in exercise 4. – 1 point(s)
 <div id="maximum-likelihood" class="section level2">
 <h2>Maximum likelihood</h2>
 <ol style="list-style-type: decimal">
-<li>10 points
-<ol></li>
+<li>14 points
+<ol>
+A tiny species of parasitic wasp, Trichogramma brassicae, rides on
+female cabbage white butterflies, Pieris brassicae. When a butterfly
+lays her eggs, the wasp climbs off of the female and parasitizes the
+freshly laid eggs. <a
+href="https://www.nature.com/articles/433704a">Fatouros et
+al. (2005)</a> carried out trials to determine whether the wasps can
+distinguish mated female butterflies from unmated females (recently
+mated females are more likely to lay eggs than unmated females and would
+make a better choice ride/follow around). In each trial a single wasp
+was presented with two female cabbage white butterflies, one an unmated
+female, the other recently mated, and the choice of which butterly to
+ride was recorded. The question is, are the wasps making an informed
+decision, or are the randomly selecting butterflies.</li>
 </ol>
-<p>Wildlife-vehicle collisions (WVCs) represent a serious source of
-mortality for giant anteaters (<em>Myrmecophaga tridactyla</em>) in
-Brazil. Road passage structures are often used as measures to help
-wildlife safely cross roads, but, to be effective, animals need to use
-them. <a href="https://doi.org/10.1111/acv.12728">Noonan et
-al. (2021)</a> used GPS tracking data to determine whether anteaters
-actively used passage structures to cross highways. Each time one of the
-38 monitored animals crossed a road, it was recorded whether they used
-the structure or not. After ca. 1 year of monitoring, a total of 1575
-road crossings were observed. The question is, are giant anteaters using
-crossing structure more than would be expected by chance alone.</p>
-<p></br> Answer this by applying maximum likelihood estimation to the
-proportion of road crossing events that occurred via a passage
-structure. You will need to carry out the following steps:</p>
+<p></br> Answer this by applying maximum likelihood estimation of the
+proportion of parasitic wasp individuals that choose the mated
+butterflies. You will need to cary out the following steps:</p>
 <ul>
-<li>Use the <code>table()</code> function to create a frequency table. –
-1 point(s)</li>
-<li>From these data, calculate the likelihood and negative
-log-likelihood of random passage use. Note these are 0/1 data, what
-distribution should you use? What parameter values would result in a
-random, 50/50 split? – 1 point(s)</li>
+<li>Import and inspect the mate choice data. Note: use the
+<code>table()</code> function to create a frequency table. – 1
+point(s)</li>
+<li>Calculate the likelihood and log-likelihood of random host choice.
+Note these are yes/no data, what distribution should you use? What
+parameter values would result in a random, 50/50 split? – 1
+point(s)</li>
 <li>Calculate the negative log-likelihood of a range of parameter values
 that allow you to find the maximum likelihood. Note, you can make use of
 the <code>seq()</code> function. – 2 point(s)</li>
 <li>Find the minimum negative log-likelihood estimate. – 1 point(s)</li>
 <li>Plot the negative log-likelihood curve. – 1 point(s)</li>
+<li>Explain why the likelihood surface has the shape you observe. – 2
+point(s)</li>
 <li>Calculate the likelihood-based 95% confidence interval. Note: We
 learned in the lecture that an approximate 95% confidence interval is
 within 1.92 of the minimum negative log-likelihood. – 3 point(s)</li>
 <li>What do the ML estimate and 95% confidence interval tell you about
-passage structure use? Is it random, or non-random? Are giant anteaters
-using passage structures significantly more or less than random? – 1
-point(s)
+host choice? Is it random, or non-random? – 1 point(s)</li>
+<li>How would increasing/decreasing the sample size change the inference
+you just made? Be specific in your answer with respect to the likelihood
+profile. – 2 point(s)
 </ol></li>
 </ul>
 </div>
@@ -735,7 +740,7 @@ $(document).ready(function ()  {
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
-    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    script.src  = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js";
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
 </script>
