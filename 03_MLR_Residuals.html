@@ -442,10 +442,10 @@ regression models to our data. Multiple linear regression models
 typically take the form:</p>
 <center>
 <span class="math inline">\(y_i = \beta_0 + \beta_1 x_1 + \beta_2 x_2 +
-... \beta_m x_m + \varepsilon_i\)</span>
+... \beta_m x_m + \varepsilon_i\)</span>,
 </center>
 <p></br></p>
-<p>, where <span class="math inline">\(y_i\)</span> represents our
+<p>where <span class="math inline">\(y_i\)</span> represents our
 response variable (indexed by <span class="math inline">\(i\)</span>),
 <span class="math inline">\(beta_0 ... beta_n\)</span> represent the
 regression coefficients that we are trying to estimate, <span
@@ -487,10 +487,11 @@ variables you should consider dropping? Why/why not? – 1 point(s)</li>
 <li>Fit a simple linear regression model to model the relationship
 between <code>bird_species</code> and <code>island_area</code>. – 1
 point(s)</li>
-<li>Manually calculate the the ordinary residuals, then compare them to
-the output of the <code>residuals()</code> function. – 1 point(s)</li>
-<li>Plot the ordinary residuals against the fitted values, plot a
-histogram of the ordinary residuals, describe what you see. – 0.5
+<li>Calculate the the ordinary residuals, plot the ordinary residuals
+against the fitted values, plot a histogram of the ordinary residuals,
+describe what you see. – 1 point(s)</li>
+<li>Based on what you see in the residuals, what can you say about the
+model’s assumptions of normality and heteroskedasticity? – 0.5
 point(s)</li>
 <li>Fit a model that includes all of the predictor variables from
 <code>island_area</code>, <code>maximum_altitude</code>, and
@@ -512,30 +513,22 @@ point(s)</li>
 observed data, and they are also used to calculate the coefficient of
 determination (i.e., R-squared). A model’s R-squared value is the
 proportion of the variance in the response variable that is predictable
-from the predictor(s). You will often see ecologists say things like our
-model explained 87% of the variance in our response variable. In most
-cases they are getting this number from a model’s R-squared.</p>
-<ol style="list-style-type: decimal">
-<li>2 points
-<ol></li>
-</ol>
-<ul>
-<li>Manually calculate the R-squared value for the full model you just
-fit to the bird species abundance data. – 1 point(s)</li>
-<li>Compare this value to the output of <code>summary()</code>. – 1
-point(s)
-</ol></li>
-</ul>
-<p>The problem with R-squared values is that they don’t take into
-account the number of parameters in the model. If we keep adding
-meaningless parameters to a model to soak up some of the residual
+from the predictor(s). You will often see researchers say something like
+our model explained 87% of the variance in our response variable’. In
+most cases they are getting this number from a model’s R-squared. This
+can be informative, however, a challenge with R-squared values is that
+they don’t take into account the number of parameters in the model. If
+we keep adding parameters to a model to soak up some of the residual
 variation, the R-square will necessarily decrease, which can trick us
-into thinking we have a better model.</p>
+into thinking we have a better model even if the parameters are not
+biologically meaningful.</p>
 <ol style="list-style-type: decimal">
-<li>4 points
+<li>5 points
 <ol></li>
 </ol>
 <ul>
+<li>Calculate the R-squared value for the full model you just fit to the
+bird species abundance data. – 1 point(s)</li>
 <li>Make a figure showing the relationship between island age and bird
 diversity. From these data, do you think that island age is driving bird
 diversity. – 1 point(s)</li>
@@ -543,9 +536,9 @@ diversity. – 1 point(s)</li>
 <code>island_age</code>. What happened to the R-squared? Is this a
 meaningful measure of model performance? – 1 point(s)</li>
 <li>Generate 12 randomly distributed numbers from a distribution of your
-choice. Add these to your dataset, and refit the model you just fit but
-now include these random numbers. Describe the effect on the R-squared.
-– 2 point(s)
+choice. Add these as an additional column to your dataset, and refit the
+model you just fit but now include these random numbers. Describe the
+effect on the R-squared. – 2 point(s)
 </ol></li>
 </ul>
 </div>
@@ -559,13 +552,14 @@ number of parameters in the model. As a correction, the adjusted
 R-square is ‘adjusted’ based on the number of parameters in the
 model.</p>
 <ol style="list-style-type: decimal">
-<li>2 points
+<li>3 points
 <ol></li>
 </ol>
 <ul>
 <li>Compare the adjusted R-squared value you obtained in exercise 2,
-with that from the model with the random noise. Describe what you see
-now. – 2 point(s)
+with that from the model with the random noise. – 1 point(s)</li>
+<li>How do R-squared and adjusted R-squared compare in their ability to
+assess model performance. – 2 point(s)
 </ol></li>
 </ul>
 <hr />
@@ -580,28 +574,30 @@ residuals (i.e., variance in the data that is not explained by the
 model) get larger as the prediction moves from small to large values of
 x (or from large to small).</p>
 <ol style="list-style-type: decimal">
-<li>3 points
+<li>4 points
 <ol></li>
 </ol>
 <ul>
-<li>Describe how the following function works to generate
-heteroskedastic data: – 1 point(s)</li>
+<li>Describe why the following function would generate heteroskedastic
+data: – 1 point(s)</li>
 </ul>
 <pre class="r"><code>hetero &lt;- function(x) {
   B_0 &lt;- 0
   B_1 &lt;- 2
-  sigma = x^2
-  eps = rnorm(x,mean=0,sd=sqrt(sigma))
+  sigma = 2*x
+  eps = rnorm(x,mean=0,sd=sigma)
   y = B_0 + B_1*x + eps
   y
 }</code></pre>
 <ul>
-<li>Use this function to generate 400 uniformly sampled data points
-between 1 and 60. – 0.5 point(s)</li>
-<li>Plot the data and describe what you see. – 0.5 point(s)</li>
-<li>Fit a model to these data. – 0.5 point(s)</li>
-<li>Plot the residuals against the fitted values and describe the
-effect. – 0.5 point(s)
+<li>Generate 400 uniformly sampled x values between 1 and 60, and using
+this function generate 400 corresponding y values. – 0.5 point(s)</li>
+<li>Plot the relationship between x and y and describe what you see. –
+0.5 point(s)</li>
+<li>Fit a simple linear model to these data. – 0.5 point(s)</li>
+<li>Plot the residuals against the fitted values. – 0.5 point(s)</li>
+<li>What do these residuals tell you about the model’s assumptions? – 1
+point(s)
 </ol></li>
 </ul>
 </div>
@@ -629,16 +625,18 @@ interesting features rather than incorporate them into your
 model.</p></li>
 </ul>
 <ol style="list-style-type: decimal">
-<li>2 points
+<li>3 points
 <ol></li>
 </ol>
 <ul>
-<li>Attempt to fix the heteroscedasticity in these data by square root
-transforming the y values. – 0.5 point(s)</li>
+<li>Attempt to fix the heteroscedasticity in these data by applying a
+transformation to the y values. – 0.5 point(s)</li>
 <li>Plot the transformed data and fitted regression line. – 0.5
 point(s)</li>
 <li>Plot the residuals against the fitted values and describe the effect
-of the transformation. – 1 point(s)
+of the transformation. – 1 point(s)</li>
+<li>What does this tell you about the capacity to handle
+heteroskedasticity via transformations? – 1 point(s)
 </ol></li>
 </ul>
 </div>
